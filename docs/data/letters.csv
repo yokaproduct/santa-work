@@ -1,0 +1,11 @@
+﻿id,lang,template_type,line1,line2,line3,correct_item_id,distractor_ids,uniqueness_note,review_status,added_version
+L001,ja,A,"赤い 車が ほしいです。","","","item_car_red","item_car_blue|item_train_red|item_bicycle_red","「赤い」かつ「車」は1つだけ","approved","1.0"
+L002,ja,A,"青い ぼうしが ほしい。","","","item_cap_blue","item_cap_red|item_gloves_blue|item_muffler_blue","「青い」かつ「ぼうし」は1つだけ","approved","1.0"
+L003,ja,A,"黄色い ボールが ほしい。","","","item_ball_yellow","item_ball_blue|item_balloon_yellow|item_cap_yellow","「黄色い」かつ「ボール」は1つだけ","approved","1.0"
+L004,ja,A,"くまの ぬいぐるみが","ほしいです。","","item_plush_bear","item_plush_rabbit|item_book_bear|item_clothes_bear","ぬいぐるみは1つだけ","approved","1.0"
+L005,ja,B,"くまは もう 持って いる。","ちがう どうぶつが いい。","","item_plush_rabbit","item_plush_bear|item_book_bear|item_clothes_bear","「どうぶつ」かつ「くまでない」は1つだけ(本・ふくは動物ではない)","approved","1.0"
+L006,ja,B,"赤い 色は すきじゃ ない。","車が ほしいです。","","item_car_blue","item_car_red|item_bicycle_blue|item_bicycle_red","「車」かつ「赤くない」は1つだけ(自転車は車ではない)","approved","1.0"
+L007,ja,B,"本は たくさん あります。","べつの ものが ほしい。","","item_ball_blue","item_book_picture|item_book_comic|item_book_story","本でないものは1つだけ","approved","1.0"
+L008,ja,C,"車の おもちゃと トレカと","ゲームと ゲーム機が","ほしいです。","item_game","item_book_picture|item_shoes|item_ball_blue","手紙に出る4語のうち、4択に含まれるのは「ゲーム」だけ","approved","1.0"
+L009,ja,C,"クレヨンと 画用紙と","ねん土と はさみが","ほしいです。","item_crayon","item_pencil|item_notebook|item_tricycle","手紙に出る4語のうち、4択に含まれるのは「クレヨン」だけ","approved","1.0"
+L010,ja,C,"サッカーボールと","なわとびと 一りん車と","ぼうしが ほしい。","item_cap_red","item_book_picture|item_blocks|item_kendama","手紙に出る4語のうち、4択に含まれるのは「ぼうし」だけ","approved","1.0"

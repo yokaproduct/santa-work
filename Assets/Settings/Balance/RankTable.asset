@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23eb47bfc4ee2574ca700301ec99e573, type: 3}
+  m_Name: RankTable
+  m_EditorClassIdentifier: Santa.Runtime::Santa.Game.RankTable
+  ranks:
+  - titleTextKey: rank.trainee
+    scoreThreshold: 0
+    badgeIcon: {fileID: 0}
+  - titleTextKey: rank.junior
+    scoreThreshold: 800
+    badgeIcon: {fileID: 0}
+  - titleTextKey: rank.veteran
+    scoreThreshold: 1800
+    badgeIcon: {fileID: 0}
+  - titleTextKey: rank.super
+    scoreThreshold: 3000
+    badgeIcon: {fileID: 0}
+  - titleTextKey: rank.master
+    scoreThreshold: 4200
+    badgeIcon: {fileID: 0}

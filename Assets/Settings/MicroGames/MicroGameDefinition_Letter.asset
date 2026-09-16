@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a96a9c5057530a479a84769928aa6d7, type: 3}
+  m_Name: MicroGameDefinition_Letter
+  m_EditorClassIdentifier: Santa.Runtime::Santa.MicroGames.MicroGameDefinition
+  id: letter
+  prefab: {fileID: 1906072156572428900, guid: 50af864aa71d11543a0932c933952fb8, type: 3}
+  promptTextKey: micro.letter.prompt
+  titleTextKey: micro.letter.title
+  shortTitleTextKey: micro.letter.shortTitle
+  introCardTextKey: micro.letter.introCard.body
+  introCardImage: {fileID: 0}
+  questionSource: {fileID: 11400000, guid: d67f0a13b2c200941aaa4bd48f097a02, type: 2}
+  questionsPerUnit: 1
+  enabled: 1

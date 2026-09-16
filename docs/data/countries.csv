@@ -1,0 +1,11 @@
+﻿id,name_ja,name_en,flag_sprite_id,region_id,weight,review_status,added_version
+jp,"日本","Japan",flag_jp,asia,1.0,approved,1.0
+in,"インド","India",flag_in,asia,1.0,approved,1.0
+fr,"フランス","France",flag_fr,europe,1.0,approved,1.0
+it,"イタリア","Italy",flag_it,europe,1.0,approved,1.0
+ke,"ケニア","Kenya",flag_ke,africa,1.0,approved,1.0
+ma,"モロッコ","Morocco",flag_ma,africa,1.0,approved,1.0
+us,"アメリカ","United States",flag_us,north_america,1.0,approved,1.0
+mx,"メキシコ","Mexico",flag_mx,north_america,1.0,approved,1.0
+br,"ブラジル","Brazil",flag_br,south_america,1.0,approved,1.0
+au,"オーストラリア","Australia",flag_au,oceania,1.0,approved,1.0

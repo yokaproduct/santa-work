@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a96a9c5057530a479a84769928aa6d7, type: 3}
+  m_Name: MicroGameDefinition_Wrap
+  m_EditorClassIdentifier: Santa.Runtime::Santa.MicroGames.MicroGameDefinition
+  id: wrap
+  prefab: {fileID: 6697316727416051320, guid: decd403e5b0e70e488107e279979d7f8, type: 3}
+  promptTextKey: micro.wrap.prompt
+  titleTextKey: micro.wrap.title
+  shortTitleTextKey: micro.wrap.shortTitle
+  introCardTextKey: micro.wrap.introCard.body
+  introCardImage: {fileID: 0}
+  questionSource: {fileID: 11400000, guid: 363ea258b6b0f8144ab4697566a42d46, type: 2}
+  questionsPerUnit: 3
+  enabled: 1

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0dd0272fe7a73146afdeb776c793614, type: 3}
+  m_Name: GameBalanceSettings
+  m_EditorClassIdentifier: Santa.Runtime::Santa.Game.GameBalanceSettings
+  promptDuration: 1.5
+  playDuration: 12
+  judgeEffectDuration: 0.35
+  finishSequenceDuration: 1.5
+  finishSaveAtTime: 0.25
+  finishBgmFadeSeconds: 0.15
+  countdownNormal: 3
+  countdownRetry: 1.5
+  requiredUnits: 3
+  baseScore: 100
+  comboTiers:
+  - minCombo: 10
+    multiplier: 2
+  - minCombo: 6
+    multiplier: 1.5
+  - minCombo: 3
+    multiplier: 1.2
+  - minCombo: 0
+    multiplier: 1
+  minRemainingTimeToStartNewMicroGame: 2.7

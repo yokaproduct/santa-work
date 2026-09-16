@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dec1156e0b51f42872832d88a5a121, type: 3}
+  m_Name: PromptEffectSettings
+  m_EditorClassIdentifier: Santa.Runtime::Santa.Game.PromptEffectSettings
+  pushInDuration: 0.22
+  exitDuration: 0.18
+  backdropColor: {r: 0, g: 0, b: 0, a: 1}
+  textScaleStart: 1
+  textScalePunch: 1
+  textScaleOvershoot: 1
+  textScaleSettle: 1
+  textScaleGrooveEnd: 1
+  textScaleExitEnd: 1
+  punchTime: 0.08
+  overshootTime: 0.14
+  burstScaleStart: 0.6
+  burstScalePunch: 1.1
+  burstScaleSettle: 1
+  burstAlphaGrooveEnd: 0.5
+  burstRotationDegPerSecond: 30
+  flashAlpha: 0
+  flashFadeOutEndTime: 0.12
+  shakeStartTime: 0.06
+  shakeEndTime: 0.26
+  shakePositionAmplitude: 0
+  shakeRotationAmplitudeDeg: 0
+  shakeIntervalSeconds: 0.02
+  beatTimes:
+  - 0.55
+  beatBumpAmount: 0
+  beatBumpDuration: 0.1

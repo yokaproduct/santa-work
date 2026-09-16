@@ -1,0 +1,296 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b0075238df8434c975b6e22569b891, type: 3}
+  m_Name: LetterQuestionTable
+  m_EditorClassIdentifier: Santa.Runtime::Santa.MicroGames.Letter.LetterQuestionTable
+  questions:
+  - id: L001
+    lang: ja
+    templateType: A
+    line1: "\u8D64\u3044 \u8ECA\u304C \u307B\u3057\u3044\u3067\u3059\u3002"
+    line2: 
+    line3: 
+    correctItemId: item_car_red
+    distractorIds:
+    - item_car_blue
+    - item_train_red
+    - item_bicycle_red
+    uniquenessNote: "\u300C\u8D64\u3044\u300D\u304B\u3064\u300C\u8ECA\u300D\u306F1\u3064\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L002
+    lang: ja
+    templateType: A
+    line1: "\u9752\u3044 \u307C\u3046\u3057\u304C \u307B\u3057\u3044\u3002"
+    line2: 
+    line3: 
+    correctItemId: item_cap_blue
+    distractorIds:
+    - item_cap_red
+    - item_gloves_blue
+    - item_muffler_blue
+    uniquenessNote: "\u300C\u9752\u3044\u300D\u304B\u3064\u300C\u307C\u3046\u3057\u300D\u306F1\u3064\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L003
+    lang: ja
+    templateType: A
+    line1: "\u9EC4\u8272\u3044 \u30DC\u30FC\u30EB\u304C \u307B\u3057\u3044\u3002"
+    line2: 
+    line3: 
+    correctItemId: item_ball_yellow
+    distractorIds:
+    - item_ball_blue
+    - item_balloon_yellow
+    - item_cap_yellow
+    uniquenessNote: "\u300C\u9EC4\u8272\u3044\u300D\u304B\u3064\u300C\u30DC\u30FC\u30EB\u300D\u306F1\u3064\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L004
+    lang: ja
+    templateType: A
+    line1: "\u304F\u307E\u306E \u306C\u3044\u3050\u308B\u307F\u304C"
+    line2: "\u307B\u3057\u3044\u3067\u3059\u3002"
+    line3: 
+    correctItemId: item_plush_bear
+    distractorIds:
+    - item_plush_rabbit
+    - item_book_bear
+    - item_clothes_bear
+    uniquenessNote: "\u306C\u3044\u3050\u308B\u307F\u306F1\u3064\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L005
+    lang: ja
+    templateType: B
+    line1: "\u304F\u307E\u306F \u3082\u3046 \u6301\u3063\u3066 \u3044\u308B\u3002"
+    line2: "\u3061\u304C\u3046 \u3069\u3046\u3076\u3064\u304C \u3044\u3044\u3002"
+    line3: 
+    correctItemId: item_plush_rabbit
+    distractorIds:
+    - item_plush_bear
+    - item_book_bear
+    - item_clothes_bear
+    uniquenessNote: "\u300C\u3069\u3046\u3076\u3064\u300D\u304B\u3064\u300C\u304F\u307E\u3067\u306A\u3044\u300D\u306F1\u3064\u3060\u3051(\u672C\u30FB\u3075\u304F\u306F\u52D5\u7269\u3067\u306F\u306A\u3044)"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L006
+    lang: ja
+    templateType: B
+    line1: "\u8D64\u3044 \u8272\u306F \u3059\u304D\u3058\u3083 \u306A\u3044\u3002"
+    line2: "\u8ECA\u304C \u307B\u3057\u3044\u3067\u3059\u3002"
+    line3: 
+    correctItemId: item_car_blue
+    distractorIds:
+    - item_car_red
+    - item_bicycle_blue
+    - item_bicycle_red
+    uniquenessNote: "\u300C\u8ECA\u300D\u304B\u3064\u300C\u8D64\u304F\u306A\u3044\u300D\u306F1\u3064\u3060\u3051(\u81EA\u8EE2\u8ECA\u306F\u8ECA\u3067\u306F\u306A\u3044)"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L007
+    lang: ja
+    templateType: B
+    line1: "\u672C\u306F \u305F\u304F\u3055\u3093 \u3042\u308A\u307E\u3059\u3002"
+    line2: "\u3079\u3064\u306E \u3082\u306E\u304C \u307B\u3057\u3044\u3002"
+    line3: 
+    correctItemId: item_ball_blue
+    distractorIds:
+    - item_book_picture
+    - item_book_comic
+    - item_book_story
+    uniquenessNote: "\u672C\u3067\u306A\u3044\u3082\u306E\u306F1\u3064\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L008
+    lang: ja
+    templateType: C
+    line1: "\u8ECA\u306E \u304A\u3082\u3061\u3083\u3068 \u30C8\u30EC\u30AB\u3068"
+    line2: "\u30B2\u30FC\u30E0\u3068 \u30B2\u30FC\u30E0\u6A5F\u304C"
+    line3: "\u307B\u3057\u3044\u3067\u3059\u3002"
+    correctItemId: item_game
+    distractorIds:
+    - item_book_picture
+    - item_shoes
+    - item_ball_blue
+    uniquenessNote: "\u624B\u7D19\u306B\u51FA\u308B4\u8A9E\u306E\u3046\u3061\u30014\u629E\u306B\u542B\u307E\u308C\u308B\u306E\u306F\u300C\u30B2\u30FC\u30E0\u300D\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L009
+    lang: ja
+    templateType: C
+    line1: "\u30AF\u30EC\u30E8\u30F3\u3068 \u753B\u7528\u7D19\u3068"
+    line2: "\u306D\u3093\u571F\u3068 \u306F\u3055\u307F\u304C"
+    line3: "\u307B\u3057\u3044\u3067\u3059\u3002"
+    correctItemId: item_crayon
+    distractorIds:
+    - item_pencil
+    - item_notebook
+    - item_tricycle
+    uniquenessNote: "\u624B\u7D19\u306B\u51FA\u308B4\u8A9E\u306E\u3046\u3061\u30014\u629E\u306B\u542B\u307E\u308C\u308B\u306E\u306F\u300C\u30AF\u30EC\u30E8\u30F3\u300D\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  - id: L010
+    lang: ja
+    templateType: C
+    line1: "\u30B5\u30C3\u30AB\u30FC\u30DC\u30FC\u30EB\u3068"
+    line2: "\u306A\u308F\u3068\u3073\u3068 \u4E00\u308A\u3093\u8ECA\u3068"
+    line3: "\u307C\u3046\u3057\u304C \u307B\u3057\u3044\u3002"
+    correctItemId: item_cap_red
+    distractorIds:
+    - item_book_picture
+    - item_blocks
+    - item_kendama
+    uniquenessNote: "\u624B\u7D19\u306B\u51FA\u308B4\u8A9E\u306E\u3046\u3061\u30014\u629E\u306B\u542B\u307E\u308C\u308B\u306E\u306F\u300C\u307C\u3046\u3057\u300D\u3060\u3051"
+    reviewStatus: approved
+    addedVersion: 1.0
+  stockItems:
+  - id: item_car_red
+    nameKeyJa: item.item_car_red.ja
+    nameKeyEn: item.item_car_red.en
+    icon: {fileID: 21300000, guid: 0b37c24a09fb4d5fbf80689ab0805ea0, type: 3}
+    baseColor: {r: 1, g: 0, b: 0, a: 1}
+  - id: item_car_blue
+    nameKeyJa: item.item_car_blue.ja
+    nameKeyEn: item.item_car_blue.en
+    icon: {fileID: 21300000, guid: 9fd61144da3b47beb4825304c4719645, type: 3}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_train_red
+    nameKeyJa: item.item_train_red.ja
+    nameKeyEn: item.item_train_red.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0, b: 0, a: 1}
+  - id: item_bicycle_red
+    nameKeyJa: item.item_bicycle_red.ja
+    nameKeyEn: item.item_bicycle_red.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0, b: 0, a: 1}
+  - id: item_cap_blue
+    nameKeyJa: item.item_cap_blue.ja
+    nameKeyEn: item.item_cap_blue.en
+    icon: {fileID: 0}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_cap_red
+    nameKeyJa: item.item_cap_red.ja
+    nameKeyEn: item.item_cap_red.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0, b: 0, a: 1}
+  - id: item_gloves_blue
+    nameKeyJa: item.item_gloves_blue.ja
+    nameKeyEn: item.item_gloves_blue.en
+    icon: {fileID: 0}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_muffler_blue
+    nameKeyJa: item.item_muffler_blue.ja
+    nameKeyEn: item.item_muffler_blue.en
+    icon: {fileID: 0}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_ball_yellow
+    nameKeyJa: item.item_ball_yellow.ja
+    nameKeyEn: item.item_ball_yellow.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - id: item_ball_blue
+    nameKeyJa: item.item_ball_blue.ja
+    nameKeyEn: item.item_ball_blue.en
+    icon: {fileID: 0}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_balloon_yellow
+    nameKeyJa: item.item_balloon_yellow.ja
+    nameKeyEn: item.item_balloon_yellow.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - id: item_cap_yellow
+    nameKeyJa: item.item_cap_yellow.ja
+    nameKeyEn: item.item_cap_yellow.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  - id: item_plush_bear
+    nameKeyJa: item.item_plush_bear.ja
+    nameKeyEn: item.item_plush_bear.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_plush_rabbit
+    nameKeyJa: item.item_plush_rabbit.ja
+    nameKeyEn: item.item_plush_rabbit.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_book_bear
+    nameKeyJa: item.item_book_bear.ja
+    nameKeyEn: item.item_book_bear.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_clothes_bear
+    nameKeyJa: item.item_clothes_bear.ja
+    nameKeyEn: item.item_clothes_bear.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_bicycle_blue
+    nameKeyJa: item.item_bicycle_blue.ja
+    nameKeyEn: item.item_bicycle_blue.en
+    icon: {fileID: 0}
+    baseColor: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+  - id: item_book_picture
+    nameKeyJa: item.item_book_picture.ja
+    nameKeyEn: item.item_book_picture.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_book_comic
+    nameKeyJa: item.item_book_comic.ja
+    nameKeyEn: item.item_book_comic.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_book_story
+    nameKeyJa: item.item_book_story.ja
+    nameKeyEn: item.item_book_story.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_game
+    nameKeyJa: item.item_game.ja
+    nameKeyEn: item.item_game.en
+    icon: {fileID: 21300000, guid: 08e2303c864a4e10a824a4d9d06b6b98, type: 3}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_shoes
+    nameKeyJa: item.item_shoes.ja
+    nameKeyEn: item.item_shoes.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_crayon
+    nameKeyJa: item.item_crayon.ja
+    nameKeyEn: item.item_crayon.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_pencil
+    nameKeyJa: item.item_pencil.ja
+    nameKeyEn: item.item_pencil.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_notebook
+    nameKeyJa: item.item_notebook.ja
+    nameKeyEn: item.item_notebook.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_tricycle
+    nameKeyJa: item.item_tricycle.ja
+    nameKeyEn: item.item_tricycle.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_blocks
+    nameKeyJa: item.item_blocks.ja
+    nameKeyEn: item.item_blocks.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}
+  - id: item_kendama
+    nameKeyJa: item.item_kendama.ja
+    nameKeyEn: item.item_kendama.en
+    icon: {fileID: 0}
+    baseColor: {r: 1, g: 1, b: 1, a: 1}

@@ -1,0 +1,2145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>img{max-width:100%}</style>
+<title>サンタ業務マニュアル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --bg:#EFF2EE;
+  --surface:#FBFCFA;
+  --surface-2:#F4F7F3;
+  --ink:#161C18;
+  --ink-2:#39433C;
+  --muted:#68736B;
+  --line:#D3DAD2;
+  --line-strong:#B7C2B7;
+  --accent:#1F6B45;
+  --accent-ink:#12482E;
+  --accent-soft:#E0EDE5;
+  --warn:#A83E27;
+  --warn-soft:#F7E5DF;
+  --warn-line:#E2BCB0;
+
+  --f-display:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  --f-mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101410;--surface:#181D19;--surface-2:#1E241F;
+    --ink:#E7EDE7;--ink-2:#C2CDC3;--muted:#93A096;
+    --line:#2B332C;--line-strong:#3C463D;
+    --accent:#74CE9B;--accent-ink:#A5E4C1;--accent-soft:#1B2A21;
+    --warn:#EA8A70;--warn-soft:#2C1D18;--warn-line:#4A2E25;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101410;--surface:#181D19;--surface-2:#1E241F;
+  --ink:#E7EDE7;--ink-2:#C2CDC3;--muted:#93A096;
+  --line:#2B332C;--line-strong:#3C463D;
+  --accent:#74CE9B;--accent-ink:#A5E4C1;--accent-soft:#1B2A21;
+  --warn:#EA8A70;--warn-soft:#2C1D18;--warn-line:#4A2E25;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--f-body);font-size:15px;line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 96px}
+
+/* ---------- header ---------- */
+.masthead{border-bottom:2px solid var(--ink);padding:44px 0 18px;margin-bottom:28px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,5.4vw,44px);line-height:1.25;letter-spacing:.01em;margin:0 0 8px;text-wrap:balance}
+.subtitle{font-size:15px;color:var(--muted);margin:0 0 22px;max-width:62ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px 28px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.meta b{color:var(--ink-2);font-weight:500}
+
+/* ---------- nav ---------- */
+nav.jump{
+  position:sticky;top:0;z-index:5;
+  display:flex;flex-wrap:wrap;gap:2px;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  margin:0 0 40px;padding:8px 0;
+}
+nav.jump a{
+  font-family:var(--f-mono);font-size:11.5px;letter-spacing:.04em;
+  color:var(--muted);text-decoration:none;
+  padding:5px 10px;border-radius:3px;white-space:nowrap;
+}
+nav.jump a:hover,nav.jump a:focus-visible{background:var(--accent-soft);color:var(--accent-ink);outline:none}
+
+/* ---------- chips ---------- */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--f-mono);font-size:10.5px;font-weight:500;letter-spacing:.06em;
+  padding:2px 7px;border-radius:3px;border:1px solid transparent;
+  white-space:nowrap;vertical-align:2px;
+}
+.chip--fixed{background:var(--accent-soft);color:var(--accent-ink);border-color:var(--accent)}
+.chip--open{background:var(--warn-soft);color:var(--warn);border-color:var(--warn-line)}
+.chip--changed{background:var(--surface-2);color:var(--ink-2);border-color:var(--line-strong)}
+.chip::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;padding:14px 18px;margin-bottom:40px;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.legend div{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
+
+/* ---------- sections ---------- */
+section{margin-bottom:60px;scroll-margin-top:56px}
+h2{
+  font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.4;
+  margin:0 0 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h2 .num{font-family:var(--f-mono);font-size:12px;font-weight:500;color:var(--accent);letter-spacing:.08em;flex:none}
+h3{font-family:var(--f-display);font-weight:500;font-size:16px;margin:30px 0 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+p{margin:0 0 14px;max-width:64ch}
+.lede{color:var(--ink-2)}
+ul,ol{margin:0 0 14px;padding-left:1.3em;max-width:64ch}
+li{margin-bottom:5px}
+code{font-family:var(--f-mono);font-size:.88em;background:var(--surface-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px}
+
+/* game masthead */
+.gamehead{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:12px;margin:0 0 8px;
+}
+.gamehead .code{
+  font-family:var(--f-mono);font-size:13px;font-weight:700;letter-spacing:.08em;
+  color:var(--surface);background:var(--accent);
+  padding:3px 9px;border-radius:3px;flex:none;
+}
+.gamehead h2{border:none;padding:0;margin:0;font-size:24px}
+.gamemeta{display:flex;flex-wrap:wrap;gap:4px 24px;font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:0 0 22px}
+.gamemeta b{color:var(--ink-2);font-weight:500}
+
+/* ---------- tables ---------- */
+.scroll{overflow-x:auto;margin:0 0 16px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.7}
+th,td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+thead th{background:var(--surface-2);font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.07em;color:var(--muted);white-space:nowrap;border-bottom:1px solid var(--line-strong)}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.key{font-weight:500;color:var(--ink);white-space:nowrap}
+.ex{color:var(--ink-2)}
+.ex em{font-style:normal;background:var(--warn-soft);color:var(--warn);padding:0 3px;border-radius:2px;font-weight:500}
+.cc{font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-left:8px;font-variant-numeric:tabular-nums}
+.cc::before{content:"·"}
+.ans{color:var(--accent);font-weight:500;white-space:nowrap}
+
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--accent);background:var(--surface);padding:14px 18px;margin:0 0 18px;border-radius:0 4px 4px 0}
+.note.alert{border-left-color:var(--warn);background:var(--warn-soft)}
+.note p:last-child{margin-bottom:0}
+.note .label{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;color:var(--accent);margin:0 0 4px;display:block}
+.note.alert .label{color:var(--warn)}
+
+/* ---------- timeline ---------- */
+.tl{display:flex;flex-wrap:wrap;gap:2px;margin:0 0 8px}
+.tl-seg{flex:var(--w,1);min-width:100px;padding:10px 12px;border:1px solid var(--line);background:var(--surface)}
+.tl-seg:first-child{border-radius:4px 0 0 4px}
+.tl-seg:last-child{border-radius:0 4px 4px 0}
+.tl-seg.live{background:var(--accent-soft);border-color:var(--accent)}
+.tl-t{font-family:var(--f-mono);font-size:15px;font-weight:700;display:block;line-height:1.4;font-variant-numeric:tabular-nums}
+.tl-n{font-size:12.5px;color:var(--muted);display:block;line-height:1.5}
+.tl-seg.live .tl-t{color:var(--accent-ink)}
+
+/* ---------- mock ---------- */
+.mockrow{display:grid;grid-template-columns:minmax(0,236px) minmax(0,1fr);gap:32px;align-items:start;margin-bottom:18px}
+@media (max-width:640px){.mockrow{grid-template-columns:1fr}}
+svg.mock{width:100%;height:auto;display:block}
+.mock .frame{fill:var(--surface);stroke:var(--line-strong)}
+.mock .zone{fill:var(--surface-2);stroke:var(--line)}
+.mock .zone-a{fill:var(--accent-soft);stroke:var(--accent)}
+.mock .safe{fill:none;stroke:var(--line);stroke-dasharray:3 3}
+.mock .ad{fill:var(--warn-soft);stroke:var(--warn-line)}
+.mock .card{fill:var(--surface);stroke:var(--line-strong)}
+.mock .lbl{font-family:var(--f-mono);font-size:9px;fill:var(--muted)}
+.mock .txt{font-family:var(--f-body);font-size:10px;fill:var(--ink-2)}
+.mock .txt-s{font-family:var(--f-body);font-size:8.5px;fill:var(--muted)}
+.mock .bar{fill:var(--accent)}
+.mock .bar-bg{fill:var(--line)}
+
+.zonekey{font-size:13.5px;line-height:1.75;margin:0}
+.zonekey dt{font-family:var(--f-mono);font-size:11px;color:var(--accent);letter-spacing:.06em;margin-top:14px}
+.zonekey dt:first-child{margin-top:0}
+.zonekey dd{margin:2px 0 0;color:var(--ink-2)}
+
+/* ---------- open questions ---------- */
+.q{border:1px solid var(--line);border-radius:4px;background:var(--surface);margin:0 0 10px}
+.q summary{cursor:pointer;padding:12px 16px;list-style:none;display:flex;align-items:baseline;gap:12px;font-weight:500}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:"＋";margin-left:auto;color:var(--muted);font-family:var(--f-mono);font-size:13px;flex:none}
+.q[open] summary::after{content:"−"}
+.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.q .qid{font-family:var(--f-mono);font-size:11px;color:var(--muted);flex:none}
+.q .body{padding:12px 16px 14px;border-top:1px solid var(--line)}
+.q .body p{font-size:13.5px;margin-bottom:8px}
+.q .body p:last-child{margin-bottom:0}
+.q .rec b{color:var(--accent);font-weight:500}
+.q.resolved{border-color:var(--accent);background:var(--accent-soft)}
+.q.resolved summary{color:var(--accent-ink)}
+.q.resolved .body{border-top-color:var(--accent)}
+
+.pending{
+  border:1px dashed var(--warn-line);background:var(--warn-soft);
+  border-radius:4px;padding:18px 20px;color:var(--warn);
+  font-family:var(--f-mono);font-size:12.5px;line-height:1.9;
+}
+
+footer{border-top:1px solid var(--line);padding-top:20px;margin-top:64px;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);line-height:1.9}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">サンタのお仕事(仮) — マイクロゲーム仕様整理</p>
+  <h1>サンタ業務マニュアル</h1>
+  <p class="subtitle">1プレイ90秒で処理する4種のサンタ業務。それぞれ何が画面に出て、指で何をして、何が難しさになるのか。企画確定前の整理であり、確定版の仕様書ではない。</p>
+  <div class="meta">
+    <span><b>プラットフォーム</b> iOS / iPhone専用 / 縦画面固定</span>
+    <span><b>1プレイ</b> 90秒</span>
+    <span><b>整理日</b> 2026-09-06</span>
+  </div>
+</header>
+
+<nav class="jump">
+  <a href="#overview">全体の前提</a>
+  <a href="#m1">M1 手紙</a>
+  <a href="#m2">M2 住所</a>
+  <a href="#m3">M3 重さ</a>
+  <a href="#m4">M4 (不採用)</a>
+  <a href="#m5">M5 ラッピング</a>
+  <a href="#flow">画面と流れ</a>
+  <a href="#score">スコア</a>
+  <a href="#art">アート・音</a>
+  <a href="#questions">質問事項</a>
+  <a href="#dev">開発確認</a>
+</nav>
+
+<div class="legend">
+  <div><span class="chip chip--fixed">確定</span> ディレクター決定済み</div>
+  <div><span class="chip chip--open">未確定</span> 判断待ち・要検討</div>
+  <div><span class="chip chip--changed">変更提案</span> 素案／企画書からの変更</div>
+</div>
+
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <h2><span class="num">§0</span> 全体の前提</h2>
+
+  <h3>0-1. 確定事項 <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th><th>波及</th></tr></thead>
+      <tbody>
+        <tr><td class="key">プラットフォーム</td><td>iOS のみ / iPhone専用 / 縦画面固定</td><td>手調整するレイアウト対象を絞る</td></tr>
+        <tr><td class="key">1プレイ</td><td>90秒</td><td>企画書の120秒案より短い。出題ローテーションの再設計が必要</td></tr>
+        <tr><td class="key">ペナルティ</td><td>コンボリセットのみ(時間ロス・強制終了なし)</td><td>誤答時の演出も正解時と同じ長さに揃える</td></tr>
+        <tr><td class="key">誤答時</td><td>正解を見せない。演出は正解時と同じ 0.35秒</td><td>「なぜ間違えたか分からない」不満をどう抑えるかが課題</td></tr>
+        <tr><td class="key">広告</td><td>画面下バナーを入れる(確定)</td><td>ATT / UMP / App Privacy 対応が必要。<strong>実装の最初からバナー予約領域を確保</strong></td></tr>
+        <tr><td class="key">課金</td><td>未確定。将来入る可能性あり</td><td>設計に余地を残す</td></tr>
+        <tr><td class="key">年齢レーティング</td><td>通常カテゴリ + 4+(子ども向けAppにはしない)</td><td>演出で罪悪感を与えすぎない配慮</td></tr>
+        <tr><td class="key">言語</td><td><strong>日本語 + 英語。初回リリース(10月末)から両対応</strong></td><td>UI文言・問題データを最初から言語キー化する。<strong>M1は翻訳では成立せず、英語版を別設計する必要がある</strong>(→ §1-10)。App Store のメタデータも両言語必要</td></tr>
+        <tr><td class="key">リリース</td><td>2026年10月末 + 12月中旬にマイクロゲーム追加</td><td><strong>種目を後から追加しやすい構造が必須要件</strong></td></tr>
+        <tr><td class="key">難易度</td><td><strong>レベル制を持たない。</strong>レベル選択の仕組みもなし</td><td>難易度をシステムで段階制御せず、<strong>問題ごとの当たり外れというランダム要素</strong>で緩急を作る</td></tr>
+        <tr><td class="key">ミニゲームの構成</td><td><strong>1ミニゲーム = 3問。3問正解でクリア</strong></td><td>全種目共通。1問ごとに切り替わるのではなく、<strong>同じルールを3回続けて処理してから次の種目へ移る</strong></td></tr>
+        <tr><td class="key">基準時間</td><td><strong>全種目12秒に統一</strong>(3問ぶん)</td><td>1問あたり約4秒だが、<strong>配分は自由</strong>(§0-3)</td></tr>
+        <tr><td class="key">誤答したとき</td><td><strong>次の問題へ進む。</strong>3問正解するまで問題が供給される</td><td>下手な人は4問・5問と挑戦回数が増え、そのぶん時間を失う</td></tr>
+        <tr><td class="key">スコア</td><td><strong>正解数だけをスコアにする</strong></td><td>「3問クリア」を達成できなくても、正解したぶんは入る</td></tr>
+        <tr><td class="key">コンボ</td><td><strong>誤答したときだけリセット。時間切れで解けなかった問題は失敗としない</strong></td><td>時間切れではコンボが継続する。<strong>あくまで誤答だけが失敗</strong></td></tr>
+        <tr><td class="key">出題順</td><td><strong>連続で同じミニゲームが出ないようにし、あとはランダム</strong></td><td>制約はこれ1つだけ。全種目を必ず1回出すといった保証はしない</td></tr>
+        <tr><td class="key">クリアボーナス</td><td><strong>付けない</strong></td><td>3問揃えても追加点はなし。「クリア」は演出上の概念に留める</td></tr>
+        <tr><td class="key">プロトタイプのスコープ</td><td><strong>M1・M2は10レパートリー / M3・M5は6レパートリー</strong></td><td><strong>まずは動くこととバランス調整が優先。</strong>M1・M2は手作りデータで<strong>プールを使い切りうる</strong>ため10に増やした(→ Q0-13)。M3・M5はプロシージャル生成なので6パターンから無限に作れる</td></tr>
+        <tr><td class="key">問題プールの枯渇時</td><td><strong>先頭に戻って繰り返す</strong></td><td>M1・M2で1ミニゲーム内にプールを使い切った場合の安全網。10問あれば実際にはほぼ到達しない</td></tr>
+        <tr><td class="key">M5のスコア換算</td><td><strong>3問正解 = 1件100点</strong></td><td>コンボと同じ丸め方。M5も9問正解で300点になり<strong>他3種と完全に揃う</strong>。HUDの「しょり ◯けん」も同じ数え方</td></tr>
+        <tr><td class="key">文字表記(日本語)</td><td>教育漢字1026字まで + <strong>全行分かち書き</strong></td><td>M1の手紙、指示文、UI文言すべてに適用。<strong>英語版には別のルールが必要</strong></td></tr>
+        <tr><td class="key">学習の担保</td><td>ゲーム内で正解を教える必要はない。<strong>あとで自分で調べられる情報になっていればよい</strong></td><td>M2で国名を必ず表示する根拠。「国旗のみ表示」は不採用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>0-2. 4種の比較</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">種目</th><th>業務提示</th><th class="num">基準時間</th><th>1問とは</th><th>使う知識</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td class="key">M1 手紙</td><td>「よめ!」</td><td class="num">12秒</td><td>手紙1通</td><td>国語・読解</td><td>タップ1回</td></tr>
+        <tr><td class="key">M2 住所</td><td>「とどけろ!」</td><td class="num">12秒</td><td>荷物1個</td><td>地理(国→大陸)</td><td>地図の地域をタップ</td></tr>
+        <tr><td class="key">M3 重さ</td><td>「はかれ!」</td><td class="num">12秒</td><td>そり1台</td><td>算数(加算・組み合わせ)</td><td>複数タップ・取り消し可</td></tr>
+        <tr><td class="key">M5 ラッピング</td><td>「しわけろ!」</td><td class="num">12秒</td><td>箱1個<br><strong>3問×3ループ=最大9問</strong></td><td>色・形の識別</td><td>連続処理</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>全種目とも基準時間12秒に統一。</strong>M1・M2・M3は<strong>3問構成</strong>。<strong>M5だけ 3問 × 3ループ = 最大9問</strong>で、1問が個別には速く簡単なぶん問題数が多い。ただし<strong>コンボの獲得ペースは全種目で揃っている</strong>(1ミニゲームあたり最大3コンボ)。</p>
+  <p><strong>手作りの問題データが必要なのは M1(手紙)と M2(国)の2種だけ。</strong>M3・M5 はプロシージャル生成で無限に作れる。ただし<strong>生成器には明示的なバリデーション制約が必要</strong>(M3は2条、M5は8条)。</p>
+  <div class="note alert">
+    <span class="label">全種目で共通する、譲れない一線</span>
+    <p>プロシージャル生成の3種すべてで、バリデーションの第1条は<strong>「条件を満たす選択肢がちょうど1つ」= 正解の一意性</strong>。誤答時に正解を見せない以上、<strong>「見ても一意に決まらない」問題が1つでも混ざると、プレイヤーは何が起きたか永久に分からない。</strong>正解非提示と組み合わさって最悪の不満になる。</p>
+  </div>
+
+  <h3>0-3. 1ミニゲームの流れ(全種目共通) <span class="chip chip--fixed">確定</span></h3>
+  <div class="tl">
+    <div class="tl-seg" style="--w:0.8"><span class="tl-t">0.8s</span><span class="tl-n">業務提示<br>タイマー停止</span></div>
+    <div class="tl-seg live" style="--w:12"><span class="tl-t">12s</span><span class="tl-n">操作フェーズ / タイマー稼働<br><strong>この中で3問正解すればクリア</strong>。全種目共通</span></div>
+    <div class="tl-seg" style="--w:0.9"><span class="tl-t">0.35s</span><span class="tl-n">判定演出</span></div>
+  </div>
+  <p>1ミニゲームは <strong>0.8 + 12 + 0.35 = 13.15秒</strong>。90秒プレイなら <strong>1プレイあたり約6〜7ミニゲーム、合計20問前後</strong>になる。</p>
+
+  <div class="note">
+    <span class="label">「12秒で3問」の効き方 — 1問あたりの時間が固定ではない</span>
+    <p>制限時間は<strong>ミニゲーム全体に対して1つだけ</strong>で、1問ごとには区切られない。つまり<strong>12秒をどう配分してもよい。</strong>1問目に5秒かけて、2問目を3秒、3問目を4秒でも成立する。</p>
+    <p>これは<strong>問題ごとに必要な時間がばらつく種目に効く。</strong>M1(手紙の長さで読む時間が変わる)やM3(組み合わせが見つかるまでの試行回数が変わる)は、1問ずつ時間を切られると理不尽になりやすいが、まとめて12秒なら<strong>易しい問題で稼いだ余裕を難しい問題に回せる。</strong></p>
+    <p>結果として、<strong>「1問あたり7秒では読解ゲームとして厳しい」という懸念(§1-1)が構造的に緩和された。</strong></p>
+  </div>
+
+  <div class="note">
+    <span class="label">速く解くこと自体が報酬になる</span>
+    <p>3問正解した時点でミニゲームは終わり、<strong>残り時間を待たずに次の種目へ移る。</strong>速く解けばそのぶん<strong>90秒の中でこなせるミニゲーム数が増え、スコアが伸びる。</strong></p>
+    <p>企画書にあった「残時間ボーナス」を別途用意しなくても、<strong>この構造自体が残時間ボーナスとして機能する。</strong>プランナーが「M5では残時間ボーナスが構造的に発生しない」と指摘していた問題も、これで解消する。</p>
+  </div>
+
+  <h3>0-4. 正誤とスコアの扱い <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>結果</th><th>次にどうなるか</th><th>スコア</th><th>コンボ</th></tr></thead>
+      <tbody>
+        <tr><td class="key">正解</td><td>次の問題へ。3問目なら<strong>クリアして次の種目へ</strong></td><td class="ans">加算</td><td class="ans">+1</td></tr>
+        <tr><td class="key">誤答</td><td><strong>次の問題へ進む</strong>(同じ問題はやり直さない)。3問正解するまで問題は供給され続ける</td><td>なし</td><td><strong>リセット</strong></td></tr>
+        <tr><td class="key">時間切れ(未回答)</td><td>ミニゲーム終了</td><td>なし</td><td class="ans"><strong>継続</strong>(維持)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">「あくまで誤答だけが失敗」</span>
+    <p>時間切れで解けなかった問題は<strong>失敗として扱わない。</strong>コンボも切れない。これにより:</p>
+    <ul style="margin-top:6px">
+      <li><strong>「分からないから飛ばす」が戦略として成立する。</strong>迷った問題に時間を使い切るより、当てずっぽうで外すほうが損になる — <strong>誤答のほうが重い</strong>ので、慎重さが報われる</li>
+      <li>下手な人でも<strong>コンボが理不尽に切れない。</strong>切れるのは自分が間違えたときだけ</li>
+      <li><strong>「クリアできなかった」という状態のペナルティが実質ない。</strong>正解した数だけが積み上がる</li>
+    </ul>
+  </div>
+  <div class="note alert">
+    <span class="label">企画書からの撤回 — レベル制は持たない</span>
+    <p>企画書は「難易度が経過時間ベースで5段階に上昇し、制限時間が基準値から短縮される(Lv5で×0.62)」という設計だったが、<strong>これは撤回する。</strong>基準時間は<strong>種目ごとに固定</strong>し、プレイ中に短縮しない。</p>
+    <p>難易度は<strong>問題ごとの当たり外れ</strong>で作る(→ §0-5 原則1)。</p>
+  </div>
+
+  <h3>0-5. 全種目に適用する設計原則 <span class="chip chip--changed">変更提案</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>原則</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="key">レベル制を持たない</td><td><strong>難易度をシステムとして段階制御しない。</strong>レベル選択の仕組みも作らない。問題は難易度のばらつきを持つプールから<strong>ランダムに引く</strong>だけで、易しい問題と難しい問題が交互に来る「当たり外れ」が緩急になる。制限時間は種目ごとに固定し、プレイ中に短縮しない</td></tr>
+        <tr><td class="num">2</td><td class="key">視線の着地点を不変にする</td><td>選択肢の位置・サイズ・<strong>数</strong>を問題ごとに変えない。90秒プレイで視線の再探索は無視できないロス。<strong>原則1によりレベル連動の増減がなくなったので、この原則はより単純に守れる</strong>(常に同じ数を同じ位置に置くだけ)</td></tr>
+        <tr><td class="num">3</td><td class="key">理不尽の線引き</td><td>「もう一度見れば分かる」は良い難しさ。<strong>「見ても一意に決まらない」は理不尽</strong>。ただし「知らないものに出会う」こと自体は許容する — <strong>それは学びとして扱う</strong>(→ §1-5、§2-1)</td></tr>
+        <tr><td class="num">4</td><td class="key">文字表記は教育漢字 + 全行分かち書き</td><td>読速を確保する。ベタ書きのひらがなは読速が壊滅的に落ちる。漢字は<strong>小学校で習う範囲(教育漢字1026字)</strong>を上限とし、<strong>分かち書きは漢字の有無によらず全行に適用</strong>する。<strong>これは日本語版のルール。英語版は別途定める必要がある</strong></td></tr>
+        <tr><td class="num">5</td><td class="key">説明がいらないほど単純なルールにする</td><td><strong>種目ごとのチュートリアルを作らなくて済む水準を目指す。</strong>説明が必要になった時点で、そのルールは複雑すぎると考える。判断に迷ったら<strong>ルールを削るほうへ倒す</strong>。素案 §4「ゲーム開始直後にプレイヤーが<strong>何をすればいいか分かる</strong>こと。複雑なルール説明を必要とするミニゲームは避ける」に立ち返るもの</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>0-6. 共通の縦画面ゾーニング <span class="chip chip--open">要実機検証</span></h3>
+  <p>基準解像度 <strong>1080 × 1920</strong>、<code>CanvasScaler.match = 0</code>(横幅基準)。バナーとセーフエリアを引いた実測値。以降の各種目の画面図はすべてこのゾーニングに従う。</p>
+  <div class="mockrow" style="grid-template-columns:minmax(0,300px) minmax(0,1fr)">
+    <svg class="mock" viewBox="0 0 400 566" role="img" aria-label="共通の縦画面ゾーニング">
+      <rect class="frame" x="8" y="8" width="244" height="550" rx="22" stroke-width="1.5"/>
+      <rect x="18" y="18" width="224" height="44" fill="var(--surface-2)" stroke="var(--line)" stroke-dasharray="3 3"/>
+      <text class="lbl" x="130" y="44" text-anchor="middle">上部セーフエリア</text>
+      <rect class="zone-a" x="18" y="62" width="224" height="61"/>
+      <text class="lbl" x="130" y="97" text-anchor="middle">HUD</text>
+      <rect class="zone" x="18" y="123" width="224" height="354"/>
+      <text class="lbl" x="130" y="290" text-anchor="middle">コンテンツ領域</text>
+      <text class="txt-s" x="130" y="306" text-anchor="middle">ゾーンB(お題)+ ゾーンC(操作)</text>
+      <rect class="ad" x="18" y="477" width="224" height="44"/>
+      <text class="lbl" x="130" y="503" text-anchor="middle" fill="var(--warn)">バナー予約領域</text>
+      <rect x="18" y="521" width="224" height="27" fill="var(--surface-2)" stroke="var(--line)" stroke-dasharray="3 3"/>
+      <text class="lbl" x="130" y="538" text-anchor="middle">下部セーフエリア</text>
+
+      <text class="lbl" x="262" y="44">160px — ノッチ / Dynamic Island</text>
+      <text class="lbl" x="262" y="97">220px</text>
+      <text class="lbl" x="262" y="294">1284px</text>
+      <text class="lbl" x="262" y="503" fill="var(--warn)">160px — 非表示時も常に確保</text>
+      <text class="lbl" x="262" y="538">96px — ホームインジケータ</text>
+    </svg>
+    <dl class="zonekey">
+      <dt>換算根拠</dt>
+      <dd>上部セーフエリア 59pt ≒ 162px、下部 34pt ≒ 94px、アダプティブバナー 50pt ≒ 138px(安全側に160px確保)。1080px ÷ 393pt = 2.75px/pt。<strong>実機で要検証。</strong></dd>
+      <dt>HUD の中身(220px)</dt>
+      <dd>のこり時間バー(1000×36、緑→黄→赤に変化、残り20%で点滅) / 処理件数「しょり 12けん」左寄せ / コンボ「7れんぞく」右寄せ・<strong>コンボ3以上でのみ表示</strong> 。<strong>Lv表示は置かない</strong>(レベル制を持たないため)。</dd>
+      <dt>業務提示オーバーレイ</dt>
+      <dd>コンテンツ領域の中央に動詞1語を文字180pxで重ねる。0.15秒スケールイン → 0.35秒静止 → 0.1秒フェードアウト。<strong>この間、問題内容(国旗カード・箱)はすでに表示されている</strong>ので読み始められる。</dd>
+      <dt>バナー予約領域の扱い</dt>
+      <dd>広告が非表示のときも領域は常に確保する。<strong>レイアウトを動かさないため。</strong></dd>
+    </dl>
+  </div>
+
+  <div class="note alert">
+    <span class="label">機種差でコンテンツがバナーと被らないための方針</span>
+    <p>上の数値は<strong>設計上の目安であって、固定ピクセルで実装してはいけない。</strong>iPhone は機種によってセーフエリアもアダプティブバナーの実高さも変わる(ノッチ機 / Dynamic Island 機 / ホームボタン機 / 画面比 19.5:9 と 19.3:9 など)。固定値で組むと、必ずどれかの機種で被る。</p>
+    <p><strong>実装の原則:</strong></p>
+    <ul style="margin-top:6px">
+      <li><strong>下端の予約高さは実行時に計算する。</strong>「セーフエリア下端の実測値 + バナーの実測高さ」を起動時とセーフエリア変化時に取得し、その値をレイアウトへ反映する。設計値をハードコードしない</li>
+      <li><strong>コンテンツ領域は上下ストレッチにする。</strong>HUD は上端基準、バナー予約とタップ対象は下端基準にアンカーし、<strong>余った縦幅はすべてコンテンツ領域が吸収する</strong>。これで縦に長い端末でも他の要素が崩れない</li>
+      <li><strong>バナーは「読み込めたら表示」ではなく「領域は常に確保、中身だけ差し替え」</strong>。広告の読み込み成否でレイアウトが動くと、タップ位置がずれて誤タップの原因になる</li>
+      <li><strong>下端に最小マージンを設ける。</strong>バナー予約領域の上に固定の余白(40px程度)を置き、計算誤差が出ても直接は接しないようにする</li>
+      <li><strong>検証は最小・最大の2端末で行う。</strong>セーフエリアが最も小さい機種と最も大きい機種の両方で、タップ対象がバナーに被らないことを確認する</li>
+    </ul>
+    <p style="margin-top:8px">なお、2つの壁打ちで下端の見積もりが 256px と 280px に割れている(Q0-2)。<strong>実行時取得にすればこの食い違い自体が問題でなくなる</strong>が、設計時のレイアウト確保量としてはどちらかに寄せておく必要がある。</p>
+  </div>
+</section>
+
+<!-- ============ M1 ============ -->
+<section id="m1">
+  <div class="gamehead">
+    <span class="code">M1</span>
+    <h2>手紙を読んでしわけろ</h2>
+  </div>
+  <div class="gamemeta">
+    <span><b>業務提示</b> 「よめ!」</span>
+    <span><b>基準時間</b> 12秒(3問)</span>
+    <span><b>使う知識</b> 国語・読解</span>
+    <span><b>操作</b> タップ1回で確定・取り消しなし</span>
+  </div>
+  <p class="lede">子どもからの手紙を読み、条件に合うプレゼントを選ぶ。4種の中で唯一「読む」ゲーム。</p>
+
+  <h3>1-1. この種目が抱える構造的な弱点</h3>
+  <div class="note alert">
+    <span class="label">未解決の設計課題</span>
+    <p><strong>M1だけ操作密度が極端に低い。</strong>1通あたりタップは1回で、大半が「読んでいる=手が止まっている」時間になる。他3種はほぼ手が動き続けるので、90秒という短い枠ではこの「止まり」がテンポを壊しかねない。</p>
+    <p>プランナーは「読解ゲームで焦らせるのは、難しくしているのではなく<strong>理不尽にしているだけ</strong>」として、読む間はタイマーを停止する2フェーズ制を推奨した。ディレクター判断で<strong>単一フェーズを採用</strong>。</p>
+    <p><strong>対策として3つが打たれている。</strong>① 文字数上限を企画書の45文字から<strong>35文字へ10文字ぶん締めた</strong>(§1-6)② 漢字の範囲を教育漢字まで広げ、かなを減らして<strong>読速を上げた</strong>(§1-6)③ <strong>「12秒で3問」構造により、1問あたりの時間が固定でなくなった</strong>(§0-3)。</p>
+    <p><strong>③が最も効いている。</strong>当初は「1問7秒」で区切られていたため、長めの手紙に当たると即座に理不尽だった。<strong>12秒をまとめて配分できるようになったことで、短い手紙で稼いだ余裕を長い手紙に回せる。</strong>平均で1問4秒だが、読解に5〜6秒かけられる問題があってよい。</p>
+    <p>加えて、<strong>時間切れがコンボを切らない</strong>(§0-4)ため、読み切れずに終わっても罰がない。<strong>この種目にとって最も重要な緩和</strong>で、「読むのが遅いと損をする」設計ではなくなった。</p>
+  </div>
+
+  <h3>1-2. 画面構成 <span class="chip chip--open">未確定</span></h3>
+  <div class="mockrow">
+    <svg class="mock" viewBox="0 0 260 566" role="img" aria-label="M1の縦画面レイアウト図">
+      <rect class="frame" x="8" y="8" width="244" height="550" rx="22" stroke-width="1.5"/>
+      <rect class="safe" x="18" y="18" width="224" height="530" rx="14"/>
+      <rect class="zone-a" x="26" y="32" width="208" height="46" rx="5"/>
+      <text class="lbl" x="34" y="45">A / HUD</text>
+      <rect class="bar-bg" x="34" y="52" width="192" height="6" rx="3"/>
+      <rect class="bar" x="34" y="52" width="128" height="6" rx="3"/>
+      <text class="txt-s" x="34" y="72">しょり 12けん</text>
+      <text class="txt-s" x="170" y="72">7コンボ</text>
+      <rect class="zone" x="26" y="92" width="208" height="164" rx="5"/>
+      <text class="lbl" x="34" y="105">B / 手紙(本文のみ)</text>
+      <text class="txt" x="34" y="140">きょうりゅうが 大好きです。</text>
+      <text class="txt" x="34" y="164">赤い きょうりゅうの</text>
+      <text class="txt" x="34" y="188">おもちゃが ほしい。</text>
+      <text class="txt-s" x="34" y="228">3行 / 1行14文字 / 合計35文字まで</text>
+      <text class="txt-s" x="34" y="243">便箋テクスチャで実物らしく見せる</text>
+      <rect class="zone" x="26" y="268" width="208" height="182" rx="5"/>
+      <text class="lbl" x="34" y="281">C / 在庫 2×2(画像のみ)</text>
+      <rect class="card" x="36" y="290" width="92" height="75" rx="4"/>
+      <text class="txt-s" x="82" y="332" text-anchor="middle">赤い きょうりゅう</text>
+      <rect class="card" x="134" y="290" width="92" height="75" rx="4"/>
+      <text class="txt-s" x="180" y="332" text-anchor="middle">青い きょうりゅう</text>
+      <rect class="card" x="36" y="373" width="92" height="75" rx="4"/>
+      <text class="txt-s" x="82" y="415" text-anchor="middle">赤い 車</text>
+      <rect class="card" x="134" y="373" width="92" height="75" rx="4"/>
+      <text class="txt-s" x="180" y="415" text-anchor="middle">きょうりゅうの 本</text>
+      <text class="lbl" x="130" y="462" text-anchor="middle">※枠内の文字は図の説明。実機では画像のみ</text>
+      <rect class="ad" x="26" y="462" width="208" height="50" rx="4"/>
+      <text class="lbl" x="130" y="491" text-anchor="middle" fill="var(--warn)">バナー予約領域</text>
+      <text class="lbl" x="130" y="536" text-anchor="middle">セーフエリア</text>
+    </svg>
+    <dl class="zonekey">
+      <dt>A / HUD</dt>
+      <dd>のこり時間バー、処理件数、コンボ数。件数は「しょりした ちゅうもん」として業務の言葉で見せる。</dd>
+      <dt>B / 手紙</dt>
+      <dd><strong>本文のみ。</strong>差出人の顔アイコンと名前は<strong>置かない</strong>(読む要素を増やさない)。本文は最大3行。便箋テクスチャで実物らしく見せる方針(具体的なレイアウトはディレクターが用意)。</dd>
+      <dt>C / 在庫</dt>
+      <dd>2列×2行の<strong>4枚固定</strong>。位置・サイズ・枚数は問題によって変えない。<strong>各カードは画像のみ。名前テキストは表示しない</strong> — 絵だけで何かが分かるイラストにすることで担保する(→ §1-6)。名前は<strong>データとしては保持してよい</strong>(正誤判定・保守・英語版で使う)。</dd>
+      <dt>バナー予約領域</dt>
+      <dd>画面下端。広告は確定なので実装の最初から領域を確保する(後から足すと全画面が崩れる)。</dd>
+    </dl>
+  </div>
+
+  <h3>1-3. 流れ <span class="chip chip--fixed">確定</span></h3>
+  <div class="tl">
+    <div class="tl-seg" style="--w:0.8"><span class="tl-t">0.8s</span><span class="tl-n">業務提示「よめ!」<br>タイマー停止</span></div>
+    <div class="tl-seg live" style="--w:12"><span class="tl-t">12s</span><span class="tl-n">手紙+在庫を同時表示 / タイマー稼働<br><strong>手紙3通ぶんを正解すればクリア</strong>。読む → 在庫を見る → タップ1回で確定</span></div>
+    <div class="tl-seg" style="--w:0.9"><span class="tl-t">0.35s</span><span class="tl-n">判定演出</span></div>
+  </div>
+  <p>タップは<strong>1回で確定・取り消しなし</strong>(テンポ優先)。誤答したら<strong>次の手紙へ進む</strong>(同じ手紙はやり直さない)。3通正解するまで手紙が供給される。</p>
+  <p><strong>時間切れは不正解として扱わない</strong>(§0-4)。読み切れずに12秒が終わっても、コンボは切れず、正解したぶんのスコアは残る。</p>
+
+  <h3>1-4. 出題文の型カタログ <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">この3型がM1の設計のすべて</span>
+    <p><strong>レベル制を持たない</strong>(§0-5 原則1)ため、<strong>問題のレベル差はこの型カタログで作る。</strong>3つの型がそれぞれ違う手応えを持ち、プレイ中はここからランダムに引く。易しい問題と難しい問題が交互に来る「当たり外れ」が緩急になる。</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">型</th><th>種類</th><th>例文</th><th>4択の例</th><th>正解</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="num">A</td><td class="key">直接指定</td>
+          <td class="ex">赤い 車が ほしいです。<span class="cc">12</span></td>
+          <td class="ex" style="font-size:12.5px">赤い車 / 青い車 / 赤い電車 / 赤いバス</td>
+          <td class="ans">赤い車</td>
+        </tr>
+        <tr>
+          <td class="num">B</td><td class="key">否定・除外</td>
+          <td class="ex">くまは <em>もう 持っている</em>。<span class="cc">13</span><br>ちがう どうぶつが いい。<span class="cc">13</span></td>
+          <td class="ex" style="font-size:12.5px">くま / うさぎ / くまの本 / くまのふく</td>
+          <td class="ans">うさぎ</td>
+        </tr>
+        <tr>
+          <td class="num">C</td><td class="key">大量</td>
+          <td class="ex">車の おもちゃと トレカと<span class="cc">14</span><br>ゲームと ゲーム機が<span class="cc">10</span><br>欲しいです。<span class="cc">6</span></td>
+          <td class="ex" style="font-size:12.5px">図かん / くつ / ボール / <strong>ゲーム</strong></td>
+          <td class="ans">ゲーム</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">型C「大量」の絶対条件</h4>
+  <div class="note alert">
+    <span class="label">4択の中に、ほしいものは必ず1つだけ</span>
+    <p>手紙にはほしいものがたくさん書かれているが、<strong>4択のうち該当するのは1つだけ</strong>にする。<strong>ほしいものが2つ選択肢に入っている状況を作ってはいけない</strong>(正解が一意でなくなる)。</p>
+    <p>上の例では、手紙に4つ(車のおもちゃ / トレカ / ゲーム / ゲーム機)書かれているが、選択肢に入っているのは<strong>ゲームだけ</strong>。図かん・くつ・ボールは手紙に一切出てこない。</p>
+  </div>
+  <p><strong>この型の面白さ</strong> — 情報量が多いのに、やることは「選択肢の4つが手紙に出てきたかどうか」を照合するだけ。<strong>全部を理解する必要はなく、拾えばいい</strong>という気づきが起きる。手紙を頭から丁寧に読むと間に合わず、選択肢側から照合すると速い。<strong>読み方の戦略が生まれる</strong>のがA・Bとの違い。</p>
+  <p><strong>難しさの調整幅</strong>(型の中でのばらつき) — 手紙に書くほしいものの数(3〜5個)/ 選択肢と手紙の言葉の一致度(「ゲーム」がそのまま出るか、「あそぶ きかい」のように言い換えられているか)/ 手紙に出てくるが選択肢にないものの紛らわしさ。</p>
+
+  <h3>1-5. 理不尽にしないためのルール <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>理不尽パターン</th><th>対策</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>正解が知識に依存する</td><td><strong>名前を併記しなくても判断できるイラストにする。</strong>絵の明瞭さで担保し、テキストは載せない。それでも分からないものに出会ったら、<strong>それは学びとして扱う</strong>(ディレクター判断)</td></tr>
+        <tr><td class="num">2</td><td>正解が複数ありうる</td><td>正解は必ず一意。CSVに「なぜ一意か」を書く列を設け、<strong>全件を人間がレビュー</strong></td></tr>
+        <tr><td class="num">3</td><td>読み落としが避けられない文量</td><td><strong>3行 / 1行14文字 / 合計35文字を絶対上限とする。</strong>超える案は不採用(→ §1-6)</td></tr>
+        <tr><td class="num">4</td><td>決定的な条件が最終行にある</td><td>重要条件は前半に置く。例外は T4・T9 のみで Lv3以降限定</td></tr>
+        <tr><td class="num">5</td><td>絵で判別できない色差</td><td>使用色は<strong>明確に違う6色</strong>に限定</td></tr>
+        <tr><td class="num">6</td><td>文字が読みにくい</td><td>教育漢字1026字まで + <strong>全行分かち書き</strong></td></tr>
+        <tr><td class="num">7</td><td>レイアウトが問題ごとに変わる</td><td>フォーマットは常に固定</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1-6. 文字表記と文字数上限 <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">ディレクターが示した基準の文面</span>
+    <p style="font-family:var(--f-display);font-size:17px;line-height:1.9;margin:6px 0 10px">きょうりゅうが 大好きです。<br>赤い きょうりゅうの<br>おもちゃが ほしい。</p>
+    <p>この分量が「<strong>1問7.0秒</strong>の枠でちょうどよい」と判断された。<strong>これを上限の基準とする。</strong>ただし現在は12秒で3問(平均4秒/問)になっているため、<strong>この基準のままでは3問を解き切る時間が足りない</strong>(→ Q0-11)。</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th></tr></thead>
+      <tbody>
+        <tr><td class="key">行数</td><td><strong>最大3行</strong></td></tr>
+        <tr><td class="key">1行の文字数</td><td><strong>最大14文字</strong>(全角。分かち書きのスペースを含む)</td></tr>
+        <tr><td class="key">合計文字数(上限)</td><td><strong>最大35文字</strong>(基準の文面は34文字)</td></tr>
+        <tr><td class="key">合計文字数(平均)</td><td><strong>20〜23文字を目安にする</strong>。<strong>毎回35文字にしない</strong>のが要点(→ 下記)</td></tr>
+        <tr><td class="key">漢字の範囲</td><td><strong>小学校で習う漢字(教育漢字1026字)まで</strong></td></tr>
+        <tr><td class="key">分かち書き</td><td><strong>全行に一律で適用する。</strong>漢字が入っている行も例外にしない</td></tr>
+        <tr><td class="key">カタカナ</td><td>通常どおり使う(「クレヨン」「ロボット」は全ひらがなより逆に読みやすい)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note alert">
+    <span class="label">上限ではなく平均を管理する <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p>35文字は「<strong>1問7.0秒</strong>の枠でちょうどよい」分量。いまは12秒で3問なので、<strong>3問とも35文字だと21秒相当が必要で足りない。</strong></p>
+    <p><strong>解決策: 上限35文字は維持したまま、短い手紙を混ぜて平均を20〜23文字に抑える。</strong>12秒は3問で共有するため、<strong>短い手紙で稼いだ余裕を長い手紙に回せる。</strong>「毎回35文字」にしないことが要点。</p>
+    <p><strong>現在の3型カタログは、すでにこの平均を満たしている:</strong></p>
+    <div class="scroll"><table>
+      <thead><tr><th class="num">型</th><th>種類</th><th class="num">例文の文字数</th></tr></thead>
+      <tbody>
+        <tr><td class="num">A</td><td class="key">直接指定</td><td class="num">12</td></tr>
+        <tr><td class="num">B</td><td class="key">否定・除外</td><td class="num">26</td></tr>
+        <tr><td class="num">C</td><td class="key">大量</td><td class="num">30</td></tr>
+        <tr><td class="num">—</td><td class="key"><strong>平均</strong></td><td class="num"><strong>約23</strong></td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>型Aが短いことが効いている。</strong>3型を均等に出せば平均は自然に23文字前後に収まる。<strong>型Aの比率を上げれば、さらに余裕が生まれる。</strong></p>
+  </div>
+  <p><strong>企画書からの変更</strong> — 企画書の「3行 × 全角15文字(最大45文字)」から10文字ぶん締めている。企画書の数字は<strong>読む時間を分離した2フェーズ制を前提</strong>に置かれたものだった。</p>
+  <p><strong>漢字の範囲を教育漢字まで広げたことの効果:</strong> かなが減って語の切れ目が視覚的に明確になり、<strong>大人の読速が上がる</strong>。7.0秒単一フェーズという厳しい条件を、表記側から支える判断。当初案(小1〜2の240字)より問題文の自然さも増す。線引きは公開されているリストと照合できるので、問題データ作成時のチェックも機械的に行える。</p>
+  <div class="note alert">
+    <span class="label">フォントは未確定 — ディレクターが決める</span>
+    <p>フォントの選定は<strong>ディレクターが行うため、ここでは確定させない。</strong>プランナーからは「可読性の高い丸ゴシック体を推奨、手書き風は読速が落ちるので避ける」という意見が出ているが、<strong>あくまで参考</strong>。</p>
+    <p>決定時に確認が必要な事項だけ残す: <strong>商用利用・アプリ組み込みが許諾されているか</strong>を必ず確認し、必要ならクレジット画面に記載する。<strong>英語版で使う欧文グリフが揃っているか</strong>も同時に確認する。</p>
+  </div>
+
+  <h3>1-7. 演出 <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>段階</th><th>正解</th><th>不正解</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="key">① 選んだ演出</td>
+          <td colspan="2" style="background:var(--accent-soft)"><strong>正解・不正解で共通。</strong>押下したことが分かる演出だけを出す(押したカードが沈む・光る等)。<strong>この時点では正誤を示さない</strong></td>
+        </tr>
+        <tr>
+          <td class="key">② 判定演出</td>
+          <td colspan="2"><strong>要検討。</strong>ただし次の2つは確定: <strong>SEを入れる</strong> / <strong>画面上でも正誤が分かる演出を入れる</strong>(音が出せない環境でも判別できる必要があるため)。<strong>正解そのものは提示しない</strong>(§0-1)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">①を共通にする意図</span>
+    <p>タップに対する応答(押せたという手応え)と、正誤の判定は<strong>別のもの</strong>。これを分けておくと、押した瞬間は必ず同じ反応が返るので<strong>操作の手触りが安定する</strong>。判定はそのあとに続く。</p>
+  </div>
+  <div class="note">
+    <span class="label">4+ アプリとしての配慮</span>
+    <p>②の演出を詰めるときの制約として: 失敗時に<strong>罪悪感を与えすぎない</strong>。子どもを泣かせるような表現はネガティブ体験になり、レビューでも指摘されやすい。</p>
+  </div>
+
+  <h3>1-8. 「サンタ業務」感 <span class="chip chip--open">未確定</span></h3>
+  <p>プランナーは「M1は構造がクイズの4択そのものに見え、素案 §7 が最も避けたかった『勉強問題を解かされている感じ』に一番近い」として、大がかりな補正案(受注票・出荷演出など)を出していた。<strong>これに対するディレクターの判断:</strong></p>
+  <div class="note">
+    <span class="label">ディレクターの判断(2026-09-06)</span>
+    <p>「<strong>クイズに見えることはよいと思う。分かりやすさも大事。</strong>」</p>
+  </div>
+  <p>プランナーの懸念は却下。<strong>クイズ的な明快さを積極的に肯定する</strong>方針とし、業務感の演出で分かりにくくしない。採用するのは以下の2点のみ。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>採用</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">呼称の変更</td><td>「候補カード」→ <strong>「在庫」</strong>。倉庫から出すという文脈が一語で付き、分かりやすさは落ちない</td></tr>
+        <tr><td class="key">手紙を実物らしく</td><td><strong>方針として採用。</strong>便箋の質感で「子どもから届いた手紙」に見せる。<strong>ただし具体的なレイアウト・素材はディレクターが用意するため、ここでは指定しない</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>不採用</strong> — 手紙を「受注票」と呼ぶ / 選択を「しゅっか」と呼ぶ / 選択後に出荷演出を入れる。いずれも分かりやすさを損なう方向のため。</p>
+
+  <h3>1-9. 英語版の設計課題 <span class="chip chip--open">未着手</span></h3>
+  <div class="note alert">
+    <span class="label">M1は翻訳では成立しない</span>
+    <p>英語対応が初回リリースから入ることになったが、<strong>M1は日本語版を翻訳するだけでは成立しない。</strong>読解ゲームの難易度は言語構造に依存するため。</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>論点</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">文字数上限</td><td>「3行 / 1行14文字 / 合計35文字」は<strong>全角前提の数字で、英語には適用できない</strong>。英語版の上限(語数か文字数か、1行に何語か)を別途決める必要がある</td></tr>
+        <tr><td class="key">読解レベル</td><td>「教育漢字1026字まで」に相当する<strong>英語側の語彙レベル基準</strong>が必要(学年別語彙リスト等)</td></tr>
+        <tr><td class="key">分かち書き</td><td>英語は元々分かち書きなので、この原則は日本語版固有</td></tr>
+        <tr><td class="key">型Cの成立</td><td>「大量」は<strong>言語によって読む速度が変わる</strong>。日本語で4個並べられる情報量が、英語で同じ秒数に収まるとは限らない</td></tr>
+        <tr><td class="key">問題データ</td><td>48問を<strong>2言語ぶん</strong>用意する。同じ内容の対訳にするのか、言語ごとに別の問題にするのかを決める必要がある</td></tr>
+        <tr><td class="key">在庫イラスト</td><td>名前テキストを載せない方針(§1-5)は<strong>英語版にとって有利</strong> — 翻訳が不要になる。イラストの明瞭さで両言語をカバーできる</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>10月末リリースに間に合わせる必要があるため、この検討は早い段階で回す必要がある。</strong>他4種(M2〜M5)は言語依存が小さく、UI文言と国名の翻訳で足りる見込み。<strong>言語対応の負荷はM1に集中する。</strong></p>
+</section>
+
+<!-- ============ M2 ============ -->
+<section id="m2">
+  <div class="gamehead">
+    <span class="code">M2</span>
+    <h2>住所でしわけろ</h2>
+  </div>
+  <div class="gamemeta">
+    <span><b>業務提示</b> 「とどけろ!」</span>
+    <span><b>基準時間</b> 12秒(3問)</span>
+    <span><b>使う知識</b> 地理(国 → 大陸)</span>
+    <span><b>操作</b> 大陸ボックスをタップ</span>
+  </div>
+  <p class="lede">「フランス行きの荷物」を見て、ヨーロッパ便の口へ入れる。4種で最速、そして<strong>素案の思想が最もよく成立している種目</strong>。</p>
+
+  <h3>2-1. 学習をどこで担保するか <span class="chip chip--fixed">確定</span></h3>
+  <p>プランナーは「正解を見せない決定によりM2は最も打撃を受ける(知らない国を外しても学習できず、素案 §12 の『繰り返すほど知識が身につく』が成立しない)」と指摘し、解決案として「不正解時にカードを正解の口へ飛ばす」を提案していた。<strong>これに対するディレクターの判断:</strong></p>
+  <div class="note">
+    <span class="label">ディレクターの判断(2026-09-06)</span>
+    <p>「何が正解か分からなければ、<strong>あとで自分で調べられるような内容にすればよい。</strong>国名は調べれば分かるし、今の時代 画像検索もあるからどうとでも調べられる」</p>
+  </div>
+  <p><strong>学習はゲーム内で完結させる必要がない</strong>、という基準が示された。ここから2つが決まる:</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>帰結</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">「正解の口へ飛ばす」案は不採用</td><td>学習をゲーム内で担保する必要がなくなり、この案の根拠が消えた。<strong>不正解時は押した口が赤く沈むだけで、カードは正解の口へ飛ばさない。</strong>「正解を見せない」を文字どおり実装する</td></tr>
+        <tr><td class="key">国名は必ず表示する</td><td><strong>あとで調べられることが要件になった以上、調べる取っかかりを画面に残す必要がある。</strong>「国旗のみ表示」で難易度を上げる案はこれで確定的に不採用(§2-6)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>この判断は<strong>問題データの選定基準にも効く</strong> — 出題する国は「調べれば必ず一つの答えが出る」ものに限られる。§2-4 の除外リスト(大陸帰属に争いがある国を外す)は、この基準とも整合している。</p>
+
+  <h3>2-2. チュートリアルでの扱い <span class="chip chip--fixed">確定</span></h3>
+  <p>プランナーは「M2を掴み役として設計すべき(1問目は必ずM2、国は必ず日本)」と提案していたが、<strong>掴み役としての設計は不要</strong>とする判断。1問目を固定せず、他4種と同じくランダムに出す。</p>
+  <div class="note">
+    <span class="label">代わりに決まったこと</span>
+    <p><strong>チュートリアルを実装する。</strong>M2は<strong>そのチュートリアルに入れるミニゲームの候補</strong>。ルールがタップ1回で完結し最も説明しやすいため。</p>
+    <p>チュートリアルの中身(何種目を扱うか、いつ出すか、スキップできるか等)は<strong>未検討</strong>。</p>
+  </div>
+
+  <h3>2-3. 画面構成 <span class="chip chip--changed">変更提案</span></h3>
+  <p>プランナーの「2列×3行のボックス」案から、<strong>世界地図をタップする方式</strong>へ変更する。</p>
+  <div class="mockrow">
+    <svg class="mock" viewBox="0 0 260 566" role="img" aria-label="M2の縦画面レイアウト図(地図方式)">
+      <rect class="frame" x="8" y="8" width="244" height="550" rx="22" stroke-width="1.5"/>
+      <rect class="safe" x="18" y="18" width="224" height="530" rx="14"/>
+      <rect class="zone-a" x="18" y="62" width="224" height="61" rx="4"/>
+      <rect class="bar-bg" x="26" y="72" width="208" height="7" rx="3.5"/>
+      <rect class="bar" x="26" y="72" width="142" height="7" rx="3.5"/>
+      <text class="txt-s" x="26" y="98">しょり 12けん</text>
+      <text class="txt-s" x="234" y="98" text-anchor="end">7れんぞく</text>
+
+      <!-- 荷物 -->
+      <rect class="card" x="76" y="130" width="108" height="76" rx="6"/>
+      <line x1="76" y1="168" x2="184" y2="168" stroke="var(--line-strong)" stroke-dasharray="2 2"/>
+      <line x1="130" y1="130" x2="130" y2="206" stroke="var(--line-strong)" stroke-dasharray="2 2"/>
+      <rect x="88" y="146" width="84" height="34" rx="3" fill="var(--surface-2)" stroke="var(--line-strong)"/>
+      <rect x="93" y="151" width="22" height="15" rx="1" fill="#0072B2" fill-opacity="0.5" stroke="#0072B2"/>
+      <text class="txt-s" x="122" y="163">フランス</text>
+      <text class="lbl" x="130" y="196" text-anchor="middle">ラベル付きの荷物</text>
+      <text class="lbl" x="130" y="219" text-anchor="middle">包装は毎回おなじ絵。ラベルだけ変わる</text>
+
+      <!-- 地図 -->
+      <rect class="zone" x="26" y="228" width="208" height="232" rx="5"/>
+      <text class="lbl" x="32" y="241">C / 世界地図(地域をタップ)</text>
+      <g>
+        <ellipse cx="62" cy="285" rx="29" ry="21" fill="#009E73" fill-opacity="0.18" stroke="#009E73"/>
+        <text class="txt-s" x="62" y="284" text-anchor="middle">北アメリカ</text>
+        <text class="lbl" x="62" y="297" text-anchor="middle">1</text>
+
+        <ellipse cx="133" cy="272" rx="19" ry="14" fill="#0072B2" fill-opacity="0.18" stroke="#0072B2"/>
+        <text class="txt-s" x="133" y="272" text-anchor="middle">ヨーロッパ</text>
+        <text class="lbl" x="133" y="283" text-anchor="middle">3</text>
+
+        <ellipse cx="192" cy="288" rx="34" ry="23" fill="#D55E00" fill-opacity="0.18" stroke="#D55E00"/>
+        <text class="txt-s" x="192" y="287" text-anchor="middle">アジア</text>
+        <text class="lbl" x="192" y="300" text-anchor="middle">5</text>
+
+        <ellipse cx="133" cy="345" rx="23" ry="27" fill="#F0E442" fill-opacity="0.28" stroke="#C7BC2E"/>
+        <text class="txt-s" x="133" y="344" text-anchor="middle">アフリカ</text>
+        <text class="lbl" x="133" y="357" text-anchor="middle">2</text>
+
+        <ellipse cx="76" cy="374" rx="20" ry="26" fill="#CC79A7" fill-opacity="0.18" stroke="#CC79A7"/>
+        <text class="txt-s" x="76" y="371" text-anchor="middle">南アメリカ</text>
+        <text class="lbl" x="76" y="384" text-anchor="middle">1</text>
+
+        <ellipse cx="199" cy="399" rx="22" ry="16" fill="#56B4E9" fill-opacity="0.22" stroke="#3E92C4"/>
+        <text class="txt-s" x="199" y="398" text-anchor="middle">オセアニア</text>
+        <text class="lbl" x="199" y="410" text-anchor="middle">0</text>
+      </g>
+      <text class="lbl" x="130" y="443" text-anchor="middle">※形は模式。実際の地図はディレクターが用意</text>
+      <text class="lbl" x="130" y="454" text-anchor="middle">州の区分線あり / 国境線・国名はなし</text>
+
+      <rect class="ad" x="18" y="477" width="224" height="44" rx="4"/>
+      <text class="lbl" x="130" y="503" text-anchor="middle" fill="var(--warn)">バナー予約領域</text>
+    </svg>
+    <dl class="zonekey">
+      <dt>荷物(お題)</dt>
+      <dd><strong>プレゼント包装のイラストは毎回同じ</strong>。そこに<strong>国旗と国名のラベルが貼り付けられている</strong>という見せ方にする。変わるのはラベルだけ。<strong>「荷物に宛先ラベルが貼ってある」という物流の実物感</strong>が出て、素材も1点で済む。</dd>
+      <dt>世界地図(操作)</dt>
+      <dd>6つの地域をタップして仕分ける。ボックスを並べるより<strong>地理としての手応えが出て、位置を覚える学習が働く</strong>。地域ごとの固定色は維持する。<strong>州の区分線を描き、国境線と国名は描かない。</strong></dd>
+      <dt>地図の素材</dt>
+      <dd><strong>タップしやすいように簡略化した世界地図をディレクターが用意する。</strong>上図の楕円は配置を示す模式で、実際の形ではない。縦画面に世界地図をどう収めるかという問題は、素材側で解決される。<strong>ただし「6地域を別ファイルに分ける」「小さい地域を大きめにデフォルメする」の2条件が付く</strong>(下記)。</dd>
+      <dt>当たり判定</dt>
+      <dd><strong>各地域の輪郭の内側のみ。</strong>輪郭の外(海・区分線の上)をタップしても無反応で、不正解にはしない。</dd>
+      <dt>累積カウンタ</dt>
+      <dd>プランナー案の「各口に積んだ数を出す」を、<strong>地図の各地域に数値を累積する</strong>形で実現する。プレイ終了時、地図の上に<strong>「今日どこへ何個届けたか」という業務の証跡</strong>が残る。世界地図の上に数字が乗るぶん、ボックス案より絵として強い。</dd>
+    </dl>
+  </div>
+
+  <div class="note">
+    <span class="label">地図に描く線 <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p><strong>国境線は描かない。州(大陸)の区分線は描く。</strong></p>
+    <p><strong>州の区分線は仕様上の必須要素。</strong>正誤判定の単位が州である以上、どこからどこまでが1つの州なのかが見えないとプレイヤーは押しようがない。<strong>州が当たっていれば正解</strong>というルールを、線がそのまま可視化する。</p>
+    <p>一方で<strong>国境線は引かない。</strong>国境線を引くと係争地域の帰属を地図上で表明することになり、特定国での配信停止・削除要求の直接的な原因になりうる。<strong>地図上には国名も入れない。</strong>州の区分線は国境線とは性質が違い、教科書の区分に沿って引く限りリスクはごく小さい。</p>
+  </div>
+  <div class="note alert">
+    <span class="label">州の区分線を引くときの注意</span>
+    <p>区分線が通る場所は、そのまま<strong>6州区分の解釈が割れる場所</strong>と一致する。ヨーロッパ/アジア(ウラル山脈)、アジア/アフリカ(スエズ)、北アメリカ/南アメリカ(パナマ地峡)、アジア/オセアニア(インドネシア周辺)。</p>
+    <p>ただし本作では<strong>これらの境界にまたがる国(ロシア・トルコ・エジプト・カザフスタン等)をすべて出題から除外している</strong>ため(§2-4)、線の引き方が出題の正誤に影響することはない。<strong>教科書の区分に沿って引けば足りる。</strong></p>
+  </div>
+  <div class="note">
+    <span class="label">タップの当たり判定 <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p><strong>各地域の輪郭の内側だけがタップできる。</strong>輪郭とは別に見えない領域を重ねる方式は採用しない。<strong>見た目と判定が完全に一致する</strong>ので、「押したのに反応しない」「押していないのに反応した」が起きない。</p>
+    <p><strong>輪郭の外(海・州の区分線の上)をタップしても何も起きない。</strong>不正解として判定せず、無反応とする。</p>
+    <p><strong>無反応にする理由:</strong> ① 外した人は押し直すぶん時間を失うので、それが自然なペナルティとして機能する。誤答扱いにする必要はない。② <strong>「輪郭の内側を押すものだ」ということが、反応がないこと自体から伝わる。</strong>次に同じミニゲームが来たときの押し方の学びになる(ディレクター判断)。</p>
+    <p>この設計は<strong>§2-1 の「あとで自分で調べられればよい」という基準とも一貫している</strong> — 明示的に教えるのではなく、プレイヤーが自分で気づく余地を残す。</p>
+  </div>
+  <div class="note alert">
+    <span class="label">地図素材に付く条件 — 作成前に確認してください</span>
+    <p>輪郭内タップを採用したことで、<strong>地図素材の作り方に2つの条件が付きます。</strong></p>
+    <p><strong>① 6地域をそれぞれ別の画像として書き出す。</strong>1枚のフラットな世界地図画像では、地域ごとの当たり判定・色の出し分け・カウンタ表示ができない。<strong>アジア / ヨーロッパ / アフリカ / 北アメリカ / 南アメリカ / オセアニア を別レイヤー・別ファイルに分ける</strong>必要がある。州の区分線は、隣り合う地域の輪郭が接することで自然に見えるか、線だけを別レイヤーにする。</p>
+    <p><strong>② 小さい地域を実際の面積比より大きくデフォルメする。</strong>当たり判定が輪郭そのものになるため、<strong>輪郭の大きさがそのまま押しやすさになる。</strong>実際の面積比で描くと<strong>ヨーロッパとオセアニアがApple推奨の44×44ptを下回る</strong>おそれがある。この2つは特に大きめに描いてください。</p>
+  </div>
+  <p><strong>固定色は維持する</strong>(アジア=朱、ヨーロッパ=濃青、アフリカ=黄、北アメリカ=緑、南アメリカ=赤紫、オセアニア=空色)。色覚多様性への対応として<strong>地域名テキストを地図上に併記</strong>し、色が識別できなくても解けるようにする。配色の詳細は追って整理。</p>
+
+  <h3>2-4. 大陸区分の典拠と国リスト <span class="chip chip--changed">変更提案</span></h3>
+  <div class="note">
+    <span class="label">典拠 <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p><strong>日本の小学校社会科(学習指導要領)の6州区分</strong>= アジア州 / ヨーロッパ州 / アフリカ州 / 北アメリカ州 / 南アメリカ州 / オセアニア州 を採用する。<strong>これで「中央アメリカ」「カリブ海諸国」の扱いという論点が自動的に解決する</strong>(6州区分に中央アメリカは存在せず、北アメリカ州の一部)。</p>
+    <p><strong>あそびかた画面への明記はしない</strong>(ディレクター判断)。区分そのものが一般的で、断り書きがなくても通用するため。</p>
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">この区分は他国でも通用するか <span class="chip chip--fixed">確認済み</span></h4>
+  <p>英語版を初回リリースから出すため、区分が英語圏でも通用するかを確認した。<strong>おおむね一致するが完全に同じではない。</strong>世界には主に3つのモデルがある。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>モデル</th><th>内容</th><th>主な地域</th><th>本作への影響</th></tr></thead>
+      <tbody>
+        <tr><td class="key">7大陸</td><td>日本の6州 + <strong>南極</strong></td><td>米・英・豪・インドなど<strong>英語圏の標準</strong></td><td class="ans"><strong>影響なし</strong> — 南極は出題しない(子どもがいないのでサンタ業務として自然に除外できる)</td></tr>
+        <tr><td class="key">6大陸(日本式)</td><td>南極を含めない</td><td>日本・中国など</td><td class="ans">本作が採用するもの</td></tr>
+        <tr><td class="key">6大陸(米州が1つ)</td><td>北米と南米を<strong>「アメリカ大陸」として1つ</strong>に数える</td><td>ラテンアメリカ・スペイン・ギリシャなど</td><td><strong>日英配信なら影響しない。</strong>スペイン語・ポルトガル語に対応するときのみ再検討</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>結論: 6州区分のままで英語版も問題ない。</strong>英語圏との実質的な差は南極の有無だけで、その南極を出題しないため差が表面化しない。北米と南米を分ける点は日本と英語圏で一致している。</p>
+  <div class="note">
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">A. 採用してよい国</h4>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>大陸</th><th>候補(★ = Lv1〜2向け)</th></tr></thead>
+      <tbody>
+        <tr><td class="key">アジア州</td><td>★日本、★韓国、★中国、★インド、★タイ、ベトナム、フィリピン、モンゴル、マレーシア、シンガポール、ネパール、スリランカ、ラオス、カンボジア、サウジアラビア</td></tr>
+        <tr><td class="key">ヨーロッパ州</td><td>★フランス、★ドイツ、★イタリア、★イギリス、★スペイン、オランダ、スイス、スウェーデン、ノルウェー、フィンランド、ポーランド、ポルトガル、ギリシャ、オーストリア、ベルギー、デンマーク、アイルランド</td></tr>
+        <tr><td class="key">アフリカ州</td><td>★南アフリカ、★ケニア、モロッコ、ナイジェリア、エチオピア、ガーナ、タンザニア、セネガル、チュニジア、アルジェリア、カメルーン</td></tr>
+        <tr><td class="key">北アメリカ州</td><td>★アメリカ、★カナダ、★メキシコ、キューバ、ジャマイカ、コスタリカ、パナマ、グアテマラ</td></tr>
+        <tr><td class="key">南アメリカ州</td><td>★ブラジル、★アルゼンチン、チリ、ペルー、コロンビア、ボリビア、エクアドル、ウルグアイ、パラグアイ</td></tr>
+        <tr><td class="key">オセアニア州</td><td>★オーストラリア、★ニュージーランド、フィジー、パラオ、トンガ、サモア、ツバル</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">B. 保留する国 — 判断が必要</h4>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>国</th><th>論点</th><th>推奨</th></tr></thead>
+      <tbody>
+        <tr><td class="key">インドネシア</td><td>アジア / オセアニアの境界議論</td><td><strong>採用可</strong>(教科書はアジア州)。典拠を明示している以上、問題ない</td></tr>
+        <tr><td class="key">パプアニューギニア</td><td>同上</td><td>保留。オセアニアが足りない場合のみ採用</td></tr>
+        <tr><td class="key">パナマ</td><td>北米 / 南米の境界(パナマ地峡)</td><td><strong>採用可</strong>(教科書は北アメリカ州)。<strong>Lv4の紛らわしい国として最適</strong></td></tr>
+        <tr><td class="key">キューバ・ジャマイカ等</td><td>「中央アメリカ」として別扱いされることがある</td><td><strong>採用可</strong>(教科書は北アメリカ州)</td></tr>
+        <tr><td class="key">メキシコ</td><td>「中南米・ラテンアメリカ」として南米と混同されやすい</td><td><strong>採用推奨。Lv3の目玉問題</strong></td></tr>
+        <tr><td class="key">ミャンマー</td><td>国内情勢、国名表記(ビルマ)の議論</td><td>保留</td></tr>
+        <tr><td class="key">イラン / イラク / シリア / アフガニスタン</td><td>政治的緊張、国旗の変更履歴</td><td>保留(実質除外を推奨)</td></tr>
+        <tr><td class="key">セルビア等の旧ユーゴ諸国</td><td>近年の紛争</td><td>保留(実質除外を推奨)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">C. 扱わない国・地域 — 除外</h4>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>分類</th><th>国・地域</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td class="key">主権・承認の争い</td><td><strong>台湾</strong></td><td>中国本土からの削除要求リスクが最大</td></tr>
+        <tr><td class="key">同上</td><td><strong>パレスチナ / イスラエル</strong></td><td>双方向のセンシティビティ</td></tr>
+        <tr><td class="key">同上</td><td>コソボ、北キプロス、南オセチア、アブハジア、沿ドニエストル、ソマリランド</td><td>未承認</td></tr>
+        <tr><td class="key">領土問題</td><td><strong>ロシア、ウクライナ</strong></td><td>進行中の領土問題。ロシアは2州にまたがる二重リスク</td></tr>
+        <tr><td class="key">同上</td><td>西サハラ</td><td>領有権争い</td></tr>
+        <tr><td class="key">国旗の規制</td><td><strong>北朝鮮</strong></td><td>国旗表示が一部地域で規制対象になりうる</td></tr>
+        <tr><td class="key">2州にまたがる</td><td><strong>トルコ、エジプト、カザフスタン</strong></td><td><strong>正解が一意に定まらない → 理不尽</strong></td></tr>
+        <tr><td class="key">同上</td><td>ジョージア、アルメニア、アゼルバイジャン</td><td>コーカサスの区分が資料により揺れる + 領土問題</td></tr>
+        <tr><td class="key">同上</td><td><strong>キプロス</strong></td><td>地理的にアジア、政治的にヨーロッパ。かつ南北分断</td></tr>
+        <tr><td class="key">「国」でない</td><td>香港、マカオ、グリーンランド、英仏等の海外領土</td><td>国ではない</td></tr>
+        <tr><td class="key">知名度が不安定</td><td>バチカン、モナコ、サンマリノ、リヒテンシュタイン等</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">除外リストは承認済み <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p><strong>上記Cの国・地域は、問題データから削除する</strong>(2026-09-06 決定)。Bの保留国も、判断が必要なものは同様に外す。</p>
+    <p>企画書 §5.2 が「難しい」の例として挙げていた<strong>エジプト・トルコも除外対象</strong>。2州にまたがり正解が一意に定まらないため。代わりに <strong>メキシコ・モロッコ・ニュージーランド・パナマ・サウジアラビア</strong> を「紛らわしい国」として使う。</p>
+  </div>
+  <div class="note">
+    <span class="label">国旗素材とプロトタイプの進め方 <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p><strong>国旗はディレクターが用意する。</strong>flag-icons 等の外部リポジトリからの調達は行わない。</p>
+    <p><strong>プロトタイプ作成時は、国旗の画像枠だけを用意しておく</strong>(実際の画像は後から差し込む)。これにより、素材の調達を待たずに実装と動作確認を進められる。</p>
+    <p>なお §2-4 の「国旗表示の注意点」(比率を原典どおりに / 国章ありの正式版 / 装飾を付けない)は、<strong>ディレクターが素材を作る際の確認事項として引き続き有効。</strong></p>
+  </div>
+
+  <h4 style="font-family:var(--f-display);font-size:14px;margin:22px 0 8px">プロトタイプでの問題数 <span class="chip chip--fixed">確定</span></h4>
+  <p><strong>6か国。</strong>初期42か国という案は後回しにし、<strong>まずは動くこととバランス調整を優先する</strong>(全種目共通の方針 → §0-1)。6大陸それぞれから1か国ずつ選ぶと、<strong>全地域が最低1回は使われる</strong>ので動作確認にも都合がよい。</p>
+
+  <h3>2-5. 難易度 <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">難易度を設計しない</span>
+    <p><strong>国の認知度は人によって違うので、それだけで難易度のばらつきは再現できている。</strong>プランナーが出したLv1〜4の段階設計(知名度でLv分け・制限時間の短縮・Lv4のみ連続2個)は<strong>すべて不要</strong>。</p>
+  </div>
+  <p>M2は4種の中で<strong>レベル制の廃止(§0-5 原則1)と最も相性が良い種目</strong>。同じ「フランス」という問題でも、知っている人には一瞬、知らない人には難問になる。<strong>難易度が出題側ではなくプレイヤー側にある</strong>ため、システムで段階制御する必要が元々ない。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th></tr></thead>
+      <tbody>
+        <tr><td class="key">制限時間</td><td><strong>12秒で固定(3問)。</strong>プレイ中に短縮しない</td></tr>
+        <tr><td class="key">地域の数</td><td><strong>常に6地域。</strong>問題によって変えない(設計原則2)</td></tr>
+        <tr><td class="key">出題</td><td>採用リスト(§2-4)から<strong>ランダムに引く</strong>。有名な国も紛らわしい国も同じプールに混ぜる</td></tr>
+        <tr><td class="key">「国旗のみ表示」</td><td><strong>不採用</strong>(§2-1)。国名は必ず表示する</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ただし<strong>出題の重み付けだけは残す</strong> — オセアニアは除外適用後の候補が少ないため、オーストラリアとニュージーランドを高頻度で出し、<strong>「オセアニアの地域が一度も使われない」事態を防ぐ</strong>(§2-4)。これは難易度調整ではなく、地図上のすべての地域が使われることを担保するための措置。</p>
+
+  <h3>2-6. 演出 <span class="chip chip--open">未確定</span></h3>
+  <p>地図方式に合わせた案。M1と同じく<strong>①選んだ演出は正解・不正解で共通、②判定演出はそのあと</strong>という2段構成にする(§1-7)。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>段階</th><th class="num">時刻</th><th>動き</th></tr></thead>
+      <tbody>
+        <tr><td class="key" rowspan="2">① 選んだ演出<br>(共通)</td><td class="num">0.00s</td><td>地図の地域をタップ</td></tr>
+        <tr><td class="num">0.00–0.05s</td><td><strong>押した地域が明るくフラッシュして少し沈む。</strong>この時点では正誤を示さない</td></tr>
+        <tr><td class="key" rowspan="3">② 判定演出</td><td class="num">0.05–0.25s</td><td><strong>正解時のみ:</strong> 荷物が押した地域へ飛ぶ。一度上に跳ねてから落ちる放物線 + 回転 + 縮小</td></tr>
+        <tr><td class="num">0.20–0.30s</td><td><strong>正解時:</strong> 地域が受け止めて光る → <strong>その地域の累積数が +1 され、数字が跳ねる</strong> + 星のパーティクル<br><strong>不正解時:</strong> 押した地域が赤く沈む。荷物は飛ばさず消える。<strong>正解の地域は一切示さない</strong></td></tr>
+        <tr><td class="num">0.25–0.35s</td><td>正解: コンボ数表示 / 不正解: コンボリセット表示</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>SEは「ポンッ」(押した瞬間・共通)→ 正誤で分かれる音。<strong>音が出せない環境でも正誤が分かる必要がある</strong>ため、画面表現だけで判別できるようにする(§1-7の制約)。</p>
+  <div class="note">
+    <span class="label">「仕分けている実感」は累積カウンタが担う</span>
+    <p>ボックス案では「フタが開いて飲み込む」動作が実感の要だったが、<strong>地図方式ではその代わりに累積カウンタが効く。</strong>プレイが進むほど地図の各地に数字が増えていき、終了時に<strong>「今日どこへ何個届けたか」が世界地図の上に残る。</strong>演出時間はゼロで、単発のクイズとの違いを最も強く作る。</p>
+  </div>
+  <p><strong>補助施策(時間コストゼロ)</strong> — 誤答した国を、同じプレイの中で<strong>5問以上あけてもう一度出す</strong>。正解を教えなくても「さっきのやつだ」と意識が向き、プレイ後に調べる動機になる。ただし<strong>1種目あたり最大3問</strong>という上限があるため、実質は再出題の枠が1回ぶんしかない点に注意。</p>
+</section>
+
+<!-- ============ M3 ============ -->
+<section id="m3">
+  <div class="gamehead">
+    <span class="code">M3</span>
+    <h2>重さでしわけろ</h2>
+  </div>
+  <div class="gamemeta">
+    <span><b>業務提示</b> 「はかれ!」</span>
+    <span><b>基準時間</b> 12秒(そり3台)</span>
+    <span><b>使う知識</b> 算数(加算・組み合わせ)</span>
+    <span><b>操作</b> 箱をタップ(複数選択・取り消し可)</span>
+  </div>
+  <p class="lede">そりに書かれた数値ちょうどになる荷物の組み合わせを見つけて積む。<strong>「合計が7になる数の組み合わせを探す」</strong>というルール。</p>
+
+  <h3>3-1. ルール <span class="chip chip--changed">変更提案</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th></tr></thead>
+      <tbody>
+        <tr><td class="key">お題</td><td>そりに<strong>目標の数値</strong>が示される(例: <strong>7</strong>)</td></tr>
+        <tr><td class="key">選択肢</td><td><strong>数値の書かれた荷物の箱が6個</strong>。常に6個で、問題によって数を変えない</td></tr>
+        <tr><td class="key">操作</td><td><strong>複数選択。タップで選び、もう一度タップで取り消せる</strong></td></tr>
+        <tr><td class="key">正解</td><td>選んだ箱の<strong>合計が目標値ちょうど</strong>になったら成立。<strong>確定ボタンは不要</strong>(合計が一致した瞬間に判定)</td></tr>
+        <tr><td class="key">正解後</td><td><strong>そりが右へ抜け、左から次のそりが入ってくる</strong>。1回のM3で<strong>そり3台</strong>をさばく</td></tr>
+        <tr><td class="key">基準時間</td><td><strong>12秒</strong>(そり3台ぶん)</td></tr>
+        <tr><td class="key">単位</td><td><strong>なし。数値だけを表示する</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">単位をなくしたことの効果</span>
+    <p>ディレクター判断で<strong>kg / g といった単位表記を廃止し、数値だけの表現にする。</strong>国によって使う単位が違う(kg / ポンド)ため。</p>
+    <p><strong>これは英語版に直接効く。</strong>ポンド併記や単位の出し分けが不要になり、<strong>M3は数字だけなので翻訳が実質ゼロ</strong>になる。副次的に、企画書にあった「g と kg の混在」という難易度手段は消えるが、代わりに<strong>「組み合わせを探す」という別の面白さ</strong>が中心になる。</p>
+  </div>
+  <div class="note alert">
+    <span class="label">企画書からの変更 — 複数選択が復活</span>
+    <p>プランナーは「6秒で複数選択は成立しない(自動判定は誤タップが即失敗で理不尽、確定ボタンは6秒に収まらない)」として単一選択を推奨していたが、<strong>ディレクター判断で複数選択を採用。</strong>プランナーの懸念は次の2点で解消されている:</p>
+    <ul style="margin-top:6px">
+      <li><strong>取り消し可にした</strong> — 誤タップが即失敗にならない</li>
+      <li><strong>基準時間を6秒から12秒へ拡大した</strong> — 試行錯誤する時間がある</li>
+    </ul>
+    <p style="margin-top:8px">あわせて、プランナーが出した代案(箱1個の中に「2kg + 2.5kg」を入れて単一選択のまま合計を扱う案)は<strong>不要になったため撤回</strong>。</p>
+  </div>
+
+  <h3>3-2. 失敗の扱い <span class="chip chip--fixed">確定</span></h3>
+  <p>取り消し可にしたことで、<strong>他4種とは失敗の意味が変わる。</strong>選びすぎても戻せるため、一度の誤りが即座に終わりにならない。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>事象</th><th>扱い</th><th>演出</th></tr></thead>
+      <tbody>
+        <tr><td class="key">合計が目標値を超えた</td><td><strong>失敗判定。ただしやり直せる。<span class="ans">コンボは切らない</span></strong></td><td><strong>トナカイの表情が悲しくなる。</strong>他種目の失敗演出とは異なり、ゲームは止まらない。<strong>やり直せる仕様なので、失敗したかどうかをトナカイの表情で分かるようにする</strong></td></tr>
+        <tr><td class="key">合計が目標値ちょうど</td><td>成立</td><td>そりが右へ抜け、左から次のそりが入る</td></tr>
+        <tr><td class="key">12秒で3台さばけなかった</td><td><strong>失敗ではない</strong>(§0-4)。さばけた台数ぶんのスコアが入り、<strong>コンボも継続する</strong></td><td>他4種と同じ判定演出(0.35秒)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">トナカイの表情が担う役割</span>
+    <p>M3は<strong>失敗しても続けられる唯一の種目</strong>になる。そのため「いま失敗した」ことを伝える手段が別途必要で、それを<strong>トナカイの表情</strong>が担う。画面を止めずに状態だけを伝えられるので、テンポを落とさずに済む。</p>
+    <p><strong>オーバーしてもコンボは切らない</strong>(2026-09-06 決定)。やり直せる以上、他種目の「誤答」とは性質が違うため。<strong>M3ではコンボが切れる場面が実質なくなる</strong> — 積みすぎても戻せて、時間切れも罰されない。数値上のペナルティは課さず、<strong>トナカイの表情だけが失敗を伝える。</strong></p>
+  </div>
+
+  <h3>3-3. 画面構成 <span class="chip chip--changed">変更提案</span></h3>
+  <div class="mockrow">
+    <svg class="mock" viewBox="0 0 260 566" role="img" aria-label="M3の縦画面レイアウト図">
+      <rect class="frame" x="8" y="8" width="244" height="550" rx="22" stroke-width="1.5"/>
+      <rect class="safe" x="18" y="18" width="224" height="530" rx="14"/>
+      <rect class="zone-a" x="18" y="62" width="224" height="61" rx="4"/>
+      <rect class="bar-bg" x="26" y="72" width="208" height="7" rx="3.5"/>
+      <rect class="bar" x="26" y="72" width="120" height="7" rx="3.5"/>
+      <text class="txt-s" x="26" y="98">しょり 9けん</text>
+      <text class="txt-s" x="234" y="98" text-anchor="end">4れんぞく</text>
+      <text class="lbl" x="130" y="114" text-anchor="middle">そり 2 / 3</text>
+
+      <!-- そり -->
+      <rect class="zone" x="26" y="128" width="208" height="100" rx="5"/>
+      <text class="lbl" x="32" y="140">そりとトナカイ(左 → 右へスライド)</text>
+      <path d="M 40 200 L 52 186 L 62 200 Z" fill="var(--line-strong)"/>
+      <text class="txt-s" x="52" y="212" text-anchor="middle">トナカイ</text>
+      <rect x="84" y="170" width="120" height="34" rx="4" fill="var(--surface)" stroke="var(--line-strong)"/>
+      <text class="txt" x="144" y="192" text-anchor="middle" style="font-size:16px;font-weight:700">7</text>
+      <text class="txt-s" x="144" y="216" text-anchor="middle">目標の数値(単位なし)</text>
+      <path d="M 214 168 l 8 6 l -8 6" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+
+      <!-- 積載メーター -->
+      <rect class="bar-bg" x="26" y="240" width="208" height="16" rx="3"/>
+      <rect class="bar" x="26" y="240" width="118" height="16" rx="3"/>
+      <line x1="164" y1="235" x2="164" y2="261" stroke="var(--warn)" stroke-width="2.5"/>
+      <text class="lbl" x="170" y="253" fill="var(--warn)">7</text>
+      <text class="lbl" x="26" y="271">いま 5(2 + 3 をえらんでいる)</text>
+
+      <!-- 箱 3列×2行 -->
+      <g>
+        <rect x="26" y="284" width="66" height="82" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+        <text class="txt" x="59" y="322" text-anchor="middle" style="font-size:15px;font-weight:700">2</text>
+        <text class="lbl" x="59" y="340" text-anchor="middle">えらんだ</text>
+
+        <rect class="card" x="97" y="284" width="66" height="82" rx="5"/>
+        <text class="txt" x="130" y="322" text-anchor="middle" style="font-size:15px;font-weight:700">5</text>
+
+        <rect class="card" x="168" y="284" width="66" height="82" rx="5"/>
+        <text class="txt" x="201" y="322" text-anchor="middle" style="font-size:15px;font-weight:700">4</text>
+
+        <rect x="26" y="373" width="66" height="82" rx="5" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/>
+        <text class="txt" x="59" y="411" text-anchor="middle" style="font-size:15px;font-weight:700">3</text>
+        <text class="lbl" x="59" y="429" text-anchor="middle">えらんだ</text>
+
+        <rect class="card" x="97" y="373" width="66" height="82" rx="5"/>
+        <text class="txt" x="130" y="411" text-anchor="middle" style="font-size:15px;font-weight:700">1</text>
+
+        <rect class="card" x="168" y="373" width="66" height="82" rx="5"/>
+        <text class="txt" x="201" y="411" text-anchor="middle" style="font-size:15px;font-weight:700">6</text>
+      </g>
+      <text class="lbl" x="130" y="466" text-anchor="middle">箱の絵に数値を直接書く(荷札は使わない)</text>
+
+      <rect class="ad" x="18" y="477" width="224" height="44" rx="4"/>
+      <text class="lbl" x="130" y="503" text-anchor="middle" fill="var(--warn)">バナー予約領域</text>
+    </svg>
+    <dl class="zonekey">
+      <dt>そりとトナカイ</dt>
+      <dd>そりに<strong>目標の数値</strong>を大きく表示。正解すると<strong>そりとトナカイが右へスライドして抜け、左から次のそりとトナカイが入ってくる。</strong>1回で3台。</dd>
+      <dt>積載メーター</dt>
+      <dd>いま選んでいる箱の合計を示す。<strong>目標値の位置に赤い縦線</strong>。数値が読めなくても<strong>「あとどれくらい足りないか」が直感で分かる。</strong></dd>
+      <dt>荷物の箱</dt>
+      <dd><strong>常に6個(3列×2行)。</strong>問題によって数を変えない(設計原則2)。<strong>箱の絵に数値を直接書き込む</strong>ことでスペースを確保する(プランナー案の「荷札(タグ)を貼る」方式は不採用)。</dd>
+      <dt>選択状態</dt>
+      <dd>選んだ箱はハイライトされる。<strong>もう一度タップで取り消せる。</strong>確定ボタンは置かない。</dd>
+    </dl>
+  </div>
+
+  <h3>3-4. 難易度 <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">難易度を設計しない</span>
+    <p>M2と同じく<strong>難易度の段階設計は不要。</strong>「人や、組み合わせの試行の噛み合わなさ次第で解けない場合が生じるため、ルールだけで難易度のばらつきは再現できる」というディレクター判断。</p>
+  </div>
+  <p>M3の難しさは<strong>組み合わせ探索の運と勘</strong>から自然に生まれる。同じ「合計7」でも、最初に選んだ箱がたまたま解に含まれていれば一瞬で終わり、外していれば取り消してやり直すことになる。<strong>プレイヤーの試行順序という制御できない要素が、そのまま難易度のばらつきになる。</strong></p>
+  <p>プランナーが出したLv1〜4の段階設計(整数のみ → 小数 → 単位混在 → 中身2個の合計)は<strong>すべて不要</strong>。単位をなくした時点で「単位換算」という軸自体も消えている。</p>
+
+  <h3>3-5. 問題の自動生成 <span class="chip chip--fixed">確定</span></h3>
+  <p><strong>手作りの問題データは不要。</strong>数値の変更と正解の組み合わせのレパートリーがあれば生成できる。<strong>単位がなくなったことで、生成もバリデーションも大幅に単純になった。</strong></p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>バリデーション</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><strong>目標値ちょうどになる組み合わせが、6個の箱の中にちょうど1通りだけ存在する</strong></td><td><strong>正解の一意性。</strong>複数の解があると「合っているのに違う組み合わせで正解になった」という不明瞭さが出る</td></tr>
+        <tr><td class="num">2</td><td><strong>同じ数値の箱が2つ以上存在しない</strong></td><td>見分けがつかない箱があると混乱する。また、同じ数値が2つあると解が複数になりやすい</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">プランナー案の8条件から2条件へ</span>
+    <p>プランナーは8項目のバリデーションを挙げていたが、<strong>そのうち6項目は単位・小数に関するものだった</strong>(g は100の倍数のみ / 同じ実重量をgとkgで両方出さない / 小数は第1位まで / 上限値は整数kgのみ 等)。<strong>単位をなくした時点で、これらの条件はすべて不要になった。</strong></p>
+    <p>残るのは<strong>正解の一意性</strong>と<strong>数値の重複禁止</strong>の2つだけ。これはディレクターの見立てどおり。</p>
+  </div>
+  <p><strong>実装上の注意</strong> — 条件1は組み合わせの数え上げになる。6個の箱に対して部分集合は63通りなので、<strong>全通り試して合計が目標値になるものが1つだけかを確認すれば足りる</strong>(計算量は問題にならない)。→ 開発確認 #14</p>
+
+  <h3>3-6. 演出と「サンタ業務」感 <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>案</th><th>採否</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">積載メーターで視覚化</td><td class="ans">採用</td><td>目標値の位置に赤い縦線。<strong>数値が読めなくても「あとどれくらいか」が直感で分かる。</strong>これがあると「計算問題」ではなく「積載判断」に見える</td></tr>
+        <tr><td class="key">そりの移動</td><td class="ans">採用(拡張)</td><td>プランナー案の「そりが少し沈む」ではなく、<strong>そりとトナカイが右へスライドして抜け、左から次のそりとトナカイが入ってくる。</strong>1台さばいたことが一目で分かる</td></tr>
+        <tr><td class="key">トナカイの反応</td><td class="ans">採用</td><td>目標値を超えたときに<strong>表情が悲しくなる</strong>。やり直せる仕様なので、失敗したかどうかをこれで示す(§3-2)</td></tr>
+        <tr><td class="key">数字を荷札に載せる</td><td>不採用</td><td><strong>箱の絵に数値を直接書く</strong>方式に変更。スペースを確保するため</td></tr>
+        <tr><td class="key">文言の業務化</td><td>不採用</td><td>「つみこみ かんりょう」等の文言は<strong>削除</strong>。<strong>イラストの移動で正解感が分かるため、文言は不要</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">そりのスライドが文言を代替する</span>
+    <p>「そりが右へ抜けて次が入ってくる」という動きは、<strong>それ自体が「1台さばいた」という報告</strong>になっている。文言で「つみこみ かんりょう」と書くより、<strong>物が動くほうが速く伝わり、言語にも依存しない。</strong>英語版で翻訳が要らなくなる利点もある。</p>
+  </div>
+  <p><strong>誤答時の演出について</strong> — M3には他4種のような「不正解」が存在しない(取り消せるため)。マイクロゲーム単位の失敗は<strong>「12秒で3台さばけなかった」場合のみ</strong>で、そのときは他4種と同じ0.35秒の判定演出になる。</p>
+
+  <h3>3-7. 未決の論点 <span class="chip chip--open">未確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>論点</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">オーバー判定の扱い</td><td>目標値を超えたとき、それを<strong>「誤答」としてコンボリセットの対象にするか</strong>。§0-4 は「誤答だけが失敗」と定めているが、M3のオーバーは<strong>やり直せるので他4種の誤答とは性質が違う</strong>。トナカイの表情で示すだけで数値上のペナルティは課さない、という選択もありうる。<strong>ここは判断が必要</strong></td></tr>
+        <tr><td class="key">目標値と箱の数値の範囲</td><td>目標値はいくつからいくつか。箱の数値は1桁か2桁か。<strong>12秒で3台さばくペース</strong>から逆算して決める必要がある</td></tr>
+        <tr><td class="key">3台の難易度をそろえるか</td><td>1台目を易しく、3台目を難しくするのか、3台とも同じプールから引くのか</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ M4 不採用 ============ -->
+<section id="m4">
+  <div class="gamehead" style="border-bottom-color:var(--line-strong)">
+    <span class="code" style="background:var(--muted)">M4</span>
+    <h2 style="color:var(--muted)">プレゼントを数えろ — 不採用</h2>
+  </div>
+  <div class="note alert">
+    <span class="label">この種目は作らない(2026-09-06 決定)</span>
+    <p>素案 5.4 の「プレゼントを数えろ」は<strong>MVPから外す。</strong>MVPは<strong>M1・M2・M3・M5 の4種</strong>になる。</p>
+  </div>
+  <p><strong>不採用の理由</strong> — プランナーの分析により、M4は<strong>「難易度を健全に上げる軸」を構造的にほとんど持たない</strong>ことが判明した。企画書が挙げていた難易度手段(複合条件・重なり・動き・近い色)は<strong>すべて理不尽側に落ちる</strong>。</p>
+  <ul>
+    <li><strong>複合条件</strong>(「赤くてリボンがない」)は視覚探索を並列から直列に落とし、22個 × 0.25秒 = <strong>5.5秒が探索だけで消える</strong></li>
+    <li><strong>重なり</strong>は隠れた個体を原理的に数えられない</li>
+    <li><strong>動き</strong>は数えた個体を見失う</li>
+    <li><strong>個数を増やす</strong>のは情報量が増え、時間が線形に伸びる</li>
+  </ul>
+  <p>加えて<strong>計数速度は成人でほぼ生理的な定数</strong>で練習しても速くならないため、上達を実感しにくい種目でもあった。</p>
+
+  <h3>他の種目へ引き継ぐこと</h3>
+  <p>M4の検討で出た知見のうち、<strong>M5と12月の新種目に引き継ぐもの</strong>を記録しておく。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>引き継ぐ内容</th><th>引き継ぎ先</th></tr></thead>
+      <tbody>
+        <tr><td class="key">包み紙の模様(水玉 / ストライプ / 星 / 無地 / チェック)</td><td><strong>M5</strong>。元々は色覚対策としてM4で導入し、M5の分類軸に流用する計画だった。<strong>M4がなくなってもM5には必要</strong>なので、M5側で用意する</td></tr>
+        <tr><td class="key">プレゼント箱のスプライト</td><td><strong>M5</strong>。M4と共有する前提だったので、<strong>M5が単独で用意する</strong>ことになる</td></tr>
+        <tr><td class="key">赤 × 緑を同時に使わない</td><td><strong>全種目</strong>。最も一般的な色覚特性(P型・D型)を持つ人にとって識別できない。妨害色は 赤/青/黄/白/紫 で運用する</td></tr>
+        <tr><td class="key">ジッター付きグリッド配置</td><td><strong>12月の新種目</strong>。複数のオブジェクトを重なりなく散らして置く必要が出たときに使える(セル分割 → 重複なくスロット抽選 → セル中心±25%のオフセット)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4種になったことの影響</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>影響</th></tr></thead>
+      <tbody>
+        <tr><td class="key">1プレイの構成</td><td>90秒で約6〜7ミニゲーム。そこに<strong>4種を割り当てる</strong>ので、1プレイで<strong>各種目が1〜2回</strong>出る計算。5種のときより収まりが良い</td></tr>
+        <tr><td class="key">「毎回違う」感</td><td><strong>薄れるリスクがある。</strong>4種だと同じ種目が2回出る確率が上がる。12月アップデートで種目を追加する計画があるので、そこで補う</td></tr>
+        <tr><td class="key">出題順の制約</td><td>「M1とM4を連続させない」という制約は<strong>不要になった</strong>(静的な種目がM1だけになったため)</td></tr>
+        <tr><td class="key">アート素材</td><td><strong>約15点ぶん減る。</strong>ただしM5がM4と共有する予定だった箱と模様を単独で持つため、実質の削減はそれより小さい</td></tr>
+        <tr><td class="key">教育要素</td><td>「数の認識・集計」という軸が<strong>MVPから消える</strong>。算数はM3(加算・組み合わせ)が担う</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ M5 ============ -->
+<section id="m5">
+  <div class="gamehead">
+    <span class="code">M5</span>
+    <h2>ラッピングしわけ</h2>
+  </div>
+  <div class="gamemeta">
+    <span><b>業務提示</b> 「しわけろ!」</span>
+    <span><b>基準時間</b> 12秒</span>
+    <span><b>構成</b> 3問 × 3ループ = 最大9問</span>
+    <span><b>使う知識</b> 色・形の識別</span>
+    <span><b>操作</b> シュートをタップ(連続処理)</span>
+  </div>
+  <p class="lede">ベルトコンベアで流れてくるラッピング済みの箱を、下部の3口へ次々と仕分ける。ゴミが混ざっているので、それはスキップ口へ。<strong>4種で唯一「常に手が動く」種目。</strong></p>
+
+  <h3>5-1. この種目の固有価値 — 先読み</h3>
+  <div class="note">
+    <span class="label">M5だけが持つスキル上限</span>
+    <p>企画書は「リズムに緩急がつく」としているが、それだけなら制限時間の長短でも作れる。<strong>M5は4種の中で唯一「先読み(look-ahead)」というスキルを持てる種目。</strong>ベルトに次の2〜3個が見えているので、上級者は<strong>いま指を動かしながら、目は次の箱を見て判断を済ませている</strong>。初心者は1個ずつ「見る→決める→押す」を直列に行う。この差は歴然としており、<strong>練習すれば必ず速くなり、しかも本人がその上達を自覚できる。</strong></p>
+    <p>M1(読解速度)・M2(知識の想起)・M3(暗算)はいずれも既存能力の測定に近く、<strong>プレイ中に上達を実感しにくい。M5だけが「ゲームとしての上達」を提供する。</strong></p>
+  </div>
+  <p><strong>ベルトに次の箱が見えていることは設計上の必須要件。</strong>ここを削るとM5はただの「遅いM2」に堕ちる。</p>
+
+  <h3>5-2. 構成とコンボ <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">M5だけ「1問」の粒度が違う</span>
+    <p>他3種は「12秒 / 3問」だが、<strong>M5は 3問 × 3ループ = 最大9問</strong>。1問 = 箱1個。<strong>12秒で9個なら1個あたり約1.33秒</strong>で、元の設計(1個約1秒)に近いペースが保たれ、<strong>先読みが成立する。</strong></p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th></tr></thead>
+      <tbody>
+        <tr><td class="key">構成</td><td><strong>3問 × 3ループ = 最大9問</strong></td></tr>
+        <tr><td class="key">コンボ</td><td><strong>3問連続で当たったら1コンボ。</strong>最大9問正解で<strong>3コンボ</strong></td></tr>
+        <tr><td class="key">基準時間</td><td>12秒(他3種と同じ)</td></tr>
+        <tr><td class="key">1問の単位</td><td>箱1個</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">コンボの獲得ペースが全種目で揃う</span>
+    <p>他3種は「3問正解 = 3コンボ」、M5は「9問正解 = 3コンボ」。<strong>1ミニゲームあたり最大3コンボという上限が全種目で一致する。</strong>M5の1問は個別には速く簡単なので、3問まとめて1コンボにすることで<strong>種目間の重みが釣り合う。</strong></p>
+    <p>これにより「M5を引くとコンボが稼ぎやすい / 稼ぎにくい」という偏りが生まれない。プランナーが懸念していた「M5がコンボの処刑場になる」も「コンボ農場になる」も、どちらも回避されている。</p>
+  </div>
+  <p><strong>誤答したときの扱い</strong> — そのループの3問連続が途切れるためコンボは獲得できず、加えて全体ルール(§0-4)により<strong>コンボはリセットされる</strong>。次のループは仕切り直しになる。</p>
+
+  <h3>5-3. 一貫性は「構造」ではなく「操作」で守る</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>一貫性の層</th><th>M5はどうか</th><th>判断</th></tr></thead>
+      <tbody>
+        <tr><td class="key">操作(何を指で行うか)</td><td>フリックを入れると壊れる</td><td><strong>壊してはいけない。</strong>タップで作る</td></tr>
+        <tr><td class="key">視線(どこを見てどこを押すか)</td><td>画面下部にタップ対象、上部に情報 → 他3種と同じ</td><td>維持できる</td></tr>
+        <tr><td class="key">コンボの重み</td><td>3問で1コンボに丸める</td><td><strong>これで他3種と揃う</strong>(§5-2)</td></tr>
+        <tr><td class="key">構造(1問1答か、連続処理か)</td><td>唯一違う</td><td><strong>壊してよい。</strong>ワリオウェア型は「毎回違う」が前提</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5-4. 画面構成 <span class="chip chip--changed">変更提案</span></h3>
+  <div class="mockrow">
+    <svg class="mock" viewBox="0 0 260 566" role="img" aria-label="M5の縦画面レイアウト図">
+      <rect class="frame" x="8" y="8" width="244" height="550" rx="22" stroke-width="1.5"/>
+      <rect class="safe" x="18" y="18" width="224" height="530" rx="14"/>
+      <rect class="zone-a" x="18" y="62" width="224" height="61" rx="4"/>
+      <rect class="bar-bg" x="26" y="72" width="208" height="7" rx="3.5"/>
+      <rect class="bar" x="26" y="72" width="112" height="7" rx="3.5"/>
+      <text class="txt-s" x="26" y="98">しょり 9けん</text>
+      <text class="txt-s" x="234" y="98" text-anchor="end">7れんぞく</text>
+      <text class="lbl" x="130" y="114" text-anchor="middle">ループ 2 / 3</text>
+
+      <!-- ベルト -->
+      <rect class="zone" x="26" y="128" width="208" height="200" rx="5"/>
+      <text class="lbl" x="32" y="140">ベルトコンベア(上 → 下)</text>
+      <line x1="88" y1="128" x2="88" y2="328" stroke="var(--line)" stroke-dasharray="4 4"/>
+      <line x1="172" y1="128" x2="172" y2="328" stroke="var(--line)" stroke-dasharray="4 4"/>
+
+      <rect x="116" y="158" width="28" height="28" rx="4" fill="#F0E442" fill-opacity="0.28" stroke="#C7BC2E"/>
+      <text class="lbl" x="150" y="176">次の次</text>
+      <g transform="translate(113,200)">
+        <rect width="34" height="34" rx="4" fill="var(--line-strong)" stroke="var(--muted)"/>
+        <line x1="10" y1="10" x2="24" y2="24" stroke="var(--warn)" stroke-width="2"/>
+        <line x1="24" y1="10" x2="10" y2="24" stroke="var(--warn)" stroke-width="2"/>
+      </g>
+      <text class="lbl" x="154" y="221">次 = ゴミ</text>
+
+      <!-- 判定ゾーン -->
+      <rect x="26" y="264" width="208" height="64" fill="var(--accent-soft)" fill-opacity="0.55" stroke="none"/>
+      <text class="lbl" x="32" y="276">はんてい ゾーン</text>
+      <rect x="110" y="282" width="40" height="40" rx="5" fill="#0072B2" fill-opacity="0.6" stroke="var(--accent)" stroke-width="2"/>
+      <text class="lbl" x="158" y="306">アクティブ</text>
+      <line x1="26" y1="328" x2="234" y2="328" stroke="var(--warn)" stroke-width="2" stroke-dasharray="6 4"/>
+
+      <!-- シュート3口 -->
+      <g>
+        <rect class="card" x="26" y="344" width="66" height="76" rx="5"/>
+        <rect x="44" y="356" width="30" height="30" rx="4" fill="#D55E00" fill-opacity="0.7" stroke="#D55E00"/>
+        <text class="lbl" x="59" y="405" text-anchor="middle">あか</text>
+
+        <rect class="card" x="97" y="344" width="66" height="76" rx="5"/>
+        <rect x="115" y="356" width="30" height="30" rx="4" fill="#0072B2" fill-opacity="0.55" stroke="#0072B2"/>
+        <text class="lbl" x="130" y="405" text-anchor="middle">あお</text>
+
+        <rect class="card" x="168" y="344" width="66" height="76" rx="5"/>
+        <rect x="186" y="356" width="30" height="30" rx="4" fill="#F0E442" fill-opacity="0.5" stroke="#C7BC2E"/>
+        <text class="lbl" x="201" y="405" text-anchor="middle">きいろ</text>
+      </g>
+
+      <!-- スキップ口 -->
+      <rect x="26" y="428" width="208" height="38" rx="5" fill="var(--surface-2)" stroke="var(--muted)" stroke-dasharray="5 3"/>
+      <text class="txt-s" x="130" y="446" text-anchor="middle">スキップ(ゴミばこ)</text>
+      <text class="lbl" x="130" y="459" text-anchor="middle">横長。ゴミはここへ入れる</text>
+
+      <rect class="ad" x="18" y="477" width="224" height="44" rx="4"/>
+      <text class="lbl" x="130" y="503" text-anchor="middle" fill="var(--warn)">バナー予約領域</text>
+    </svg>
+    <dl class="zonekey">
+      <dt>ベルトは縦向き(上 → 下)</dt>
+      <dd>縦画面で長い滑走路が取れ、次の2〜3個が見える = <strong>先読みが成立する</strong>。横向きだと2個しか見えず成立しないため採用不可。</dd>
+      <dt>判定ゾーンとアクティブな箱</dt>
+      <dd>ベルト下端の判定ゾーン内で<strong>最も下の箱がアクティブ</strong>。光る輪郭 + 1.1倍拡大が付く。シュートをタップするとアクティブな箱が飛ぶ。</dd>
+      <dt>シュート3口</dt>
+      <dd><strong>赤・青・黄の3択。</strong>横1列、位置は不変。各口に<strong>そこへ入る箱の見本を常時表示</strong>(「A/B/C」のような抽象ラベルは記憶を要求するので使わない)。</dd>
+      <dt>スキップ口(新規)</dt>
+      <dd><strong>下部に横長で配置。</strong>たまに流れてくる<strong>ゴミ</strong>をここへ入れる。3口より広く取れるので、とっさに押しやすい。</dd>
+      <dt>見本は業務提示中に出す</dt>
+      <dd>業務提示フェーズ(0.8秒・タイマー停止中)に見本を先に表示しておく。<strong>口を読むコストをタイマー外に追い出せる。必須要件。</strong></dd>
+    </dl>
+  </div>
+
+  <div class="note">
+    <span class="label">「スキップ口」がプランナー案より優れている点</span>
+    <p>プランナーは「こわれた箱は<strong>どのシュートにも入れず、そのまま流す</strong>(素通し)」を提案していたが、この案には<strong>「見逃したのか、正解したのか分からない」</strong>という問題があり、それを補うための追加演出が必要だった。</p>
+    <p><strong>スキップ口へ能動的に入れる方式なら、この問題が構造的に消える。</strong>プレイヤーは必ず何かを押すので、押した手応えがそのまま「処理した」という確認になる。<strong>「押さないでおく」という難しい抑制を要求しない</strong>のに、ゴミを見分けるという判断は残る。</p>
+  </div>
+
+  <h3>5-5. カテゴリと難易度 <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">難易度は「カテゴリ」と「レパートリー」で作る</span>
+    <p><strong>色カテゴリと形カテゴリを用意し、種類によって個人差が生じる方針。</strong>色の判別が速い人と形の判別が速い人がいるため、<strong>どちらのカテゴリを引いたかがそのまま当たり外れになる</strong>(§0-5 原則1)。</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>決定</th></tr></thead>
+      <tbody>
+        <tr><td class="key">カテゴリ</td><td><strong>色 / 形</strong>の2種類</td></tr>
+        <tr><td class="key">切り替えの単位</td><td><strong>1ミニゲーム内で固定。</strong>3問×3ループを通して同じカテゴリで行う</td></tr>
+        <tr><td class="key">シュートの見本</td><td>カテゴリに応じて中身が変わる。色なら<strong>赤・青・黄</strong>、形なら3種類の形</td></tr>
+        <tr><td class="key">レパートリー</td><td><strong>色や形の種類を増やせると難易度のばらつきが出る</strong>。プロトタイプでは<strong>6レパートリー</strong>(→ §0-1)</td></tr>
+        <tr><td class="key">ゴミの個数</td><td><strong>1ミニゲームに最低1個、最大3個</strong>混ぜる</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">ゴミが必ず1個は出ることの効果</span>
+    <p><strong>最低1個は保証されるので、「スキップ口を一度も使わずに終わる」ことがない。</strong>スキップ口の存在が毎回きちんと意味を持ち、プレイヤーも「ゴミが来る」と身構えられる。</p>
+    <p>最大3個は9問中の3分の1。<strong>これ以上入れると「仕分け」より「ゴミ探し」のゲームになる</strong>ため、上限として妥当。1〜3個の幅がそのまま当たり外れになる(§0-5 原則1)。</p>
+  </div>
+  <p><strong>1ミニゲーム内で固定にしたことの効果</strong> — 9問を通して見本が変わらないため、<strong>先読みが最大限に働く。</strong>ループの境目で見本を読み直す必要がなく、上級者は最初の1回だけ見本を確認すればあとは箱だけを見ていられる。カテゴリの切り替えを伝える演出も不要になり、実装も軽い。</p>
+  <p>プランナーが提案していた「流速を上げる」「口の数を増やす」「素通しを混入させる」といったレベル連動の難易度設計は<strong>すべて不要</strong>(レベル制を持たないため)。</p>
+
+  <h3>5-6. スコアと失敗の扱い <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>事象</th><th>スコア</th><th>コンボ</th></tr></thead>
+      <tbody>
+        <tr><td class="key">正解(正しい口へ入れた / ゴミをスキップへ入れた)</td><td class="ans">加算</td><td>3問連続で <strong>+1</strong></td></tr>
+        <tr><td class="key">誤答(違う口へ入れた / ゴミを口へ入れた / ゴミ以外をスキップへ入れた)</td><td>なし</td><td><strong>リセット</strong></td></tr>
+        <tr><td class="key">処理しきれずに時間切れ</td><td>さばけたぶんは加算</td><td class="ans"><strong>継続</strong>(リセットしない)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">M3と同じ扱いにする</span>
+    <p><strong>箱を処理しきれなかった場合、コンボはリセットしない。</strong>M3で「12秒で3台さばけなくても失敗ではない」と決めたのと同じ方針。全体ルール(§0-4)の<strong>「あくまで誤答だけが失敗」</strong>がM5にもそのまま適用される。</p>
+    <p>これにより、プランナーが警告していた<strong>「M5だけ失敗率が3〜4倍になり、コンボの処刑場になる」問題は完全に解消した。</strong>取りこぼしは罰されず、間違えたときだけ罰される。</p>
+  </div>
+  <p>プランナーが提案していた「しきい値方式(誤り1個までコンボ維持)」は<strong>不要になった。</strong>時間切れが罰されない以上、複雑なしきい値を設ける理由がない。時間と点数の配分だけで調整できる。</p>
+
+  <h3>5-7. 演出は2層に分ける <span class="chip chip--open">未確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>階層</th><th>タイミング</th><th>演出</th><th class="num">時間</th><th>ゲームは止まるか</th></tr></thead>
+      <tbody>
+        <tr><td class="key">アイテム単位</td><td>1個処理するたび</td><td>正: 箱が口へ吸い込まれる<br>誤: 箱が灰色になり落下<br>ゴミをスキップへ: 専用の反応</td><td class="num">約0.2秒</td><td><strong>止めない</strong></td></tr>
+        <tr><td class="key">ミニゲーム単位</td><td>9問終了 or 時間切れ</td><td>他3種と同じ判定演出</td><td class="num">0.35秒</td><td>止まる</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>「演出0.35秒に揃える」という共通ルールは、ミニゲーム単位の判定にのみ適用する。</strong>アイテム単位のフィードバックは演出ではなく<strong>操作の応答(タップに対する反応)</strong>であり、これを止めるとベルトの流れが破綻する。</p>
+  <div class="note">
+    <span class="label">「正解を見せない」ルールとの整合</span>
+    <p>アイテム単位で誤りを示すことは<strong>「正解を見せる」ことにはならない</strong>(どこへ入れるべきだったかは示さない)。3口なら「残り2つのどちらか」までしか分からず、しかもその箱はもう二度と来ない。<strong>行動可能な情報は一切漏れない。</strong></p>
+  </div>
+</section>
+
+<!-- ============ FLOW ============ -->
+<section id="flow">
+  <h2><span class="num">§6</span> ゲーム全体の流れと画面 <span class="chip chip--changed">変更提案</span></h2>
+  <p class="lede">企画書 §3 を、確定事項(レベル制廃止 / M4不採用 / チュートリアル実装)に合わせて更新したもの。</p>
+
+  <h3>6-1. 起動から結果までの流れ</h3>
+  <div class="scroll">
+    <pre style="font-family:var(--f-mono);font-size:12px;line-height:1.8;margin:0;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:4px;color:var(--ink-2)">[アプリ起動]
+   ↓
+Boot(初期化・データロード) ※短時間のスプラッシュ
+   ↓
+Title(タイトル)
+   ├─→ Tutorial(あそびかた / チュートリアル) … 初回起動時は自動で1回
+   ├─→ Settings(設定) → Credits(クレジット)
+   └─→ [しごとをはじめる]
+          ↓
+       GamePlay(ゲーム本編)
+          ├─ Countdown(3・2・1)       ※オーバーレイ
+          ├─ ミニゲーム × 6〜7          ← 1つ13.15秒
+          ├─ MicroGameIntro(初出時のみ) ※オーバーレイ・タイマー停止中
+          └─ Pause(一時停止)           ※オーバーレイ・バックグラウンド復帰時も
+          ↓ 90秒終了
+       Result(結果)
+          ├─→ [もう一回] → GamePlay へ直行(タイトルを経由しない)
+          └─→ [タイトルへ] → Title</pre>
+  </div>
+  <div class="note alert">
+    <span class="label">企画書からの変更</span>
+    <p><strong><code>Overlay_LevelUp</code>(レベルアップ演出)を削除。</strong>レベル制を持たないため(§0-5 原則1)。企画書ではこれが「テンポの区切り」も兼ねていたが、その役割は<strong>ミニゲームの切り替わり自体</strong>が担う。</p>
+  </div>
+
+  <h3>6-2. 画面一覧 <span class="chip chip--changed">変更提案</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>Prefab名</th><th>種別</th><th>役割</th><th>MVP</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="key"><code>Screen_Boot</code></td><td>画面</td><td>初期化・データロード・ロゴ表示</td><td class="ans">必須</td></tr>
+        <tr><td class="num">2</td><td class="key"><code>Screen_Title</code></td><td>画面</td><td>タイトル、開始、ハイスコア表示、各種導線</td><td class="ans">必須</td></tr>
+        <tr><td class="num">3</td><td class="key"><code>Screen_Tutorial</code></td><td>画面</td><td><strong>形式は未決</strong>(触る形式か読み物か → Q7-3)</td><td class="ans">必須</td></tr>
+        <tr><td class="num">4</td><td class="key"><code>Screen_GamePlay</code></td><td>画面</td><td>HUD + ミニゲーム差し替え領域</td><td class="ans">必須</td></tr>
+        <tr><td class="num">5</td><td class="key"><code>Screen_Result</code></td><td>画面</td><td>スコア・ランク・統計・リトライ導線</td><td class="ans">必須</td></tr>
+        <tr><td class="num">6</td><td class="key"><code>Screen_Settings</code></td><td>画面</td><td>音量、リンク行(規約・ポリシー等)、データリセット</td><td class="ans">必須</td></tr>
+        <tr><td class="num">7</td><td class="key"><code>Screen_Credits</code></td><td>画面</td><td>使用素材のライセンス表記</td><td class="ans">必須</td></tr>
+        <tr><td class="num">8</td><td class="key"><code>Overlay_Countdown</code></td><td>オーバーレイ</td><td>開始カウントダウン</td><td class="ans">必須</td></tr>
+        <tr><td class="num">9</td><td class="key"><code>Overlay_Pause</code></td><td>オーバーレイ</td><td>一時停止・再開・中断</td><td class="ans">必須</td></tr>
+        <tr><td class="num">10</td><td class="key"><code>Overlay_MicroGameIntro</code></td><td>オーバーレイ</td><td>種目の初出時にルールを1枚で示す</td><td class="ans">必須</td></tr>
+        <tr><td class="num">11</td><td class="key"><code>Screen_Records</code></td><td>画面</td><td>累計統計・種目別成績</td><td>任意(MVP除外)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ミニゲームはそれぞれ独立したPrefabとして <code>Screen_GamePlay</code> の差し替え領域に差し込む。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>Prefab名</th><th>対応</th></tr></thead>
+      <tbody>
+        <tr><td class="num">M1</td><td class="key"><code>MicroGame_Letter</code></td><td>手紙を読んでしわけろ</td></tr>
+        <tr><td class="num">M2</td><td class="key"><code>MicroGame_Address</code></td><td>住所でしわけろ</td></tr>
+        <tr><td class="num">M3</td><td class="key"><code>MicroGame_Weight</code></td><td>重さでしわけろ</td></tr>
+        <tr><td class="num">M5</td><td class="key"><code>MicroGame_Wrap</code></td><td>ラッピングしわけ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>画面1つ = Prefab1つ。シーンは薄く保つ。</strong>オーバーレイもミニゲームもすべてPrefab化し、コードで <code>new GameObject</code> して組み立てない(UI設計ガイドライン準拠)。</p>
+
+  <h3>6-3. チュートリアルと初出カード <span class="chip chip--fixed">確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>いつ</th><th>形式</th><th>何を伝えるか</th></tr></thead>
+      <tbody>
+        <tr><td class="key">チュートリアル<br>(<strong>初回起動時</strong>)</td><td><strong>実装する</strong></td><td><strong>ゲーム全体のルール。</strong>90秒であること、3問正解でクリアすること、コンボ、誤答だけが失敗であること</td></tr>
+        <tr><td class="key">初出カード<br>(その種目が初めて出たとき)</td><td><strong>静的なカード1枚</strong></td><td><strong>その種目のルールだけ。</strong>業務提示と同じくタイマー停止中に出すので、テンポを損なわない</td></tr>
+        <tr><td class="key">種目ごとの<br>遊べるチュートリアル</td><td class="key" style="color:var(--warn)"><strong>作らない</strong></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">種目ごとのチュートリアルを作らない代わりに</span>
+    <p>リズム天国の Practice のような「種目ごとに遊んで覚えるパート」は<strong>工数がかかりすぎるため作らない</strong>(ディレクター判断)。</p>
+    <p>その代わり<strong>「そもそも種目ごとのチュートリアルが必要ないくらい、簡単で分かりやすいルールにする」</strong>ことを目標にする。これは §0-5 の<strong>設計原則5</strong>として全種目に適用する。<strong>説明が必要になった時点で、そのルールは複雑すぎる</strong>と考える。</p>
+  </div>
+  <p><strong>初回チュートリアルは必須。</strong>ゲーム全体のルール(90秒・3問クリア・コンボ・誤答だけが失敗)は、種目を見ているだけでは分からないため。初出カードだけではこの層を伝える場がない。</p>
+
+  <h3>6-4. 原則5に照らした現状の点検 <span class="chip chip--open">要検討</span></h3>
+  <p>「説明なしで分かるか」という基準で4種を見直すと、<strong>説明を要する度合いに差がある。</strong></p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>種目</th><th>初見で分かるか</th><th>説明が要りそうな点</th></tr></thead>
+      <tbody>
+        <tr><td class="key">M2 住所</td><td class="ans"><strong>分かる</strong></td><td>ほぼなし。荷物にラベルが貼ってあり、地図を押すだけ。<strong>4種で最も原則5を満たしている</strong></td></tr>
+        <tr><td class="key">M1 手紙</td><td class="ans"><strong>分かる</strong></td><td>手紙を読んで在庫から選ぶ、という構造は見れば分かる。<strong>型A・B・Cでルールは変わらない</strong>(常に「読んで4択から1つ」)ので、型が増えても説明は増えない</td></tr>
+        <tr><td class="key">M5 ラッピング</td><td>おおむね分かる</td><td><strong>スキップ口の使い方</strong>。ゴミに大きな✗が付いていれば「これは違う」とは分かるが、<strong>「下の広い口へ入れる」という対応づけが初見で分かるかは要検証</strong></td></tr>
+        <tr><td class="key">M3 重さ</td><td><strong>最も説明を要する</strong></td><td>①合計を目標値<strong>ちょうど</strong>にする ②<strong>複数選べる</strong> ③<strong>取り消せる</strong> ④オーバーしても続けられる、の4つ。積載メーターが①を視覚化するが、<strong>②③は絵で伝わりにくい</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note alert">
+    <span class="label">M3が原則5から最も遠い</span>
+    <p>M3は4種で唯一<strong>複数選択・取り消し可</strong>という操作を持ち、他3種(1タップで確定)と手触りが違う。<strong>「もう一度押すと取り消せる」ことを、説明なしでどう伝えるか</strong>が課題。</p>
+    <p><strong>考えられる打ち手:</strong> 選んだ箱を明確に持ち上げる/浮かせて「まだ確定していない」と見せる / 積載メーターが目標値を超えたら赤くあふれさせ、<strong>「戻せる」と気づかせる</strong> / 初出カードで「もういちど おすと もどる」の1行だけ添える。</p>
+    <p>ルールを削る方向の選択肢もあるが、<strong>複数選択はM3の中核</strong>(合計を作る遊び)なので削れない。<strong>演出で伝えるのが現実的。</strong></p>
+  </div>
+</section>
+
+<!-- ============ SCORE ============ -->
+<section id="score">
+  <h2><span class="num">§7</span> スコアと記録 <span class="chip chip--changed">変更提案</span></h2>
+
+  <h3>7-1. スコア計算式 <span class="chip chip--fixed">確定</span></h3>
+  <div class="note">
+    <span class="label">確定した式</span>
+    <p style="font-family:var(--f-mono);font-size:14px;margin:8px 0"><strong>1問あたりの得点 = 基本点(100) × コンボ倍率</strong><br>最終スコア = Σ(1問あたりの得点)</p>
+  </div>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>要素</th><th>値</th><th>状態</th></tr></thead>
+      <tbody>
+        <tr><td class="key">基本点</td><td class="num">100</td><td class="ans">維持</td></tr>
+        <tr><td class="key">コンボ倍率</td><td class="num">0〜2連=1.0 / 3〜5連=1.2 / 6〜9連=1.5 / 10連〜=2.0</td><td class="ans">維持(仮値)</td></tr>
+        <tr><td class="key">レベル係数</td><td class="num">—</td><td><strong>削除</strong>。レベル制を持たないため</td></tr>
+        <tr><td class="key">残時間ボーナス</td><td class="num">—</td><td><strong>削除</strong>。速さは「早く終われば次のミニゲームへ移れる」構造で既に報われており、二重に加点しない</td></tr>
+        <tr><td class="key">M5の換算</td><td class="num">3問 = 1件</td><td><strong>M5は3問正解で1件100点</strong>。コンボと同じ丸め方(→ 下記)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <span class="label">M5の「1問」をスコア上どう数えるか <span class="chip chip--fixed" style="margin-left:4px">確定</span></span>
+    <p>M5は1ミニゲームで最大9問だが、<strong>3問正解ごとに1件100点として数える。</strong>これで<strong>4種すべてが1ミニゲームあたり最大300点・最大3コンボで完全に揃う。</strong></p>
+    <div class="scroll"><table>
+      <thead><tr><th>種目</th><th class="num">1ミニゲームの問数</th><th class="num">スコア上の件数</th><th class="num">最大スコア</th><th class="num">最大コンボ</th></tr></thead>
+      <tbody>
+        <tr><td class="key">M1 / M2 / M3</td><td class="num">3</td><td class="num">3</td><td class="num">300</td><td class="num">3</td></tr>
+        <tr><td class="key">M5</td><td class="num">9</td><td class="num">3</td><td class="num">300</td><td class="num">3</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>HUDの「しょり ◯けん」も同じ数え方にする。</strong>M5で9箱さばいても「3けん」と表示する。そうしないとM5だけ件数の桁が変わって見える。</p>
+    <p>これを決める前は、同じ13.15秒に対して<strong>M5だけ900点</strong>入る状態だった。コンボは「3問で1コンボ」に丸めて揃えていたが、<strong>基本点を丸め忘れていた</strong>という取りこぼし。</p>
+  </div>
+  <div class="note alert">
+    <span class="label">サンタランクの閾値は再計算が必要</span>
+    <p>企画書の閾値(一人前1,200 / ベテラン2,200 / スーパー3,200 / マスター4,200)は<strong>レベル係数と残時間ボーナスが乗る前提の数字</strong>だった。それらを削除したため、<strong>現在の式では届かない。</strong></p>
+    <p><strong>概算:</strong> 1プレイ約20問。全問正解でコンボが繋がり続けた場合の平均倍率を1.5とすると <strong>20 × 100 × 1.5 = 3,000点</strong>が上限に近い。<strong>マスター4,200は到達不可能。</strong>閾値は式の変更に合わせて引き直す必要がある(→ Q7-1)。</p>
+  </div>
+  <p><strong>コンボの上限について</strong> — 1ミニゲームあたり最大3コンボ(§5-2)、1プレイ6〜7ミニゲームなので、<strong>理論上の最大コンボは18〜21連</strong>。「10連〜=2.0倍」はプレイ後半をほぼノーミスで通してようやく届く水準で、倍率テーブルとしては妥当。</p>
+
+  <h3>7-2. サンタランク <span class="chip chip--open">閾値は未確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>ランク</th><th>到達イメージ</th></tr></thead>
+      <tbody>
+        <tr><td class="key">見習いサンタ</td><td>初回プレイ</td></tr>
+        <tr><td class="key">一人前サンタ</td><td>ルールを理解した。<strong>初回〜3回目で到達できることが重要</strong>(達成感の初速)</td></tr>
+        <tr><td class="key">ベテランサンタ</td><td>安定してコンボが繋がる</td></tr>
+        <tr><td class="key">スーパーサンタ</td><td>ほぼミスなし</td></tr>
+        <tr><td class="key">サンタマスター</td><td>ほぼ完璧</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>ランクの構成は素案 §10 のまま維持。<strong>閾値はプレイテスト後に確定</strong>し、ScriptableObject で管理する。</p>
+
+  <h3>7-3. 結果画面に表示する情報</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>表示</th></tr></thead>
+      <tbody>
+        <tr><td class="key">サンタランク</td><td>最も大きく。称号アイコン + 演出</td></tr>
+        <tr><td class="key">スコア</td><td>カウントアップ演出(<strong>1.2秒以内</strong>。長い演出はリプレイの妨げ)</td></tr>
+        <tr><td class="key">処理した業務数</td><td>「◯件 処理した」</td></tr>
+        <tr><td class="key">正解率</td><td>「◯/◯ 件 成功」</td></tr>
+        <tr><td class="key">最大コンボ</td><td>「最高 ◯連続」</td></tr>
+        <tr><td class="key">ハイスコア更新</td><td>更新時のみ「NEW RECORD!」を強調</td></tr>
+        <tr><td class="key">種目別成績</td><td><strong>任意。</strong>「地理便 4/5」のような内訳。<strong>4種ぶん</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7-4. リトライ導線(リプレイ性の生命線)</h3>
+  <ul>
+    <li><strong>結果画面の最下部・最大サイズのボタンが「もう一回」。</strong>親指の届く位置に配置</li>
+    <li>「もう一回」→ <strong>タイトルを経由せず GamePlay へ直行</strong>。カウントダウンも1.5秒に短縮</li>
+    <li>結果画面到達からリトライ開始までを <strong>3秒以内</strong>に収める</li>
+    <li>スコアカウントアップ中でもボタンを押せる(演出スキップ)</li>
+  </ul>
+
+  <h3>7-5. セーブデータ</h3>
+  <p>MVPは <strong>PlayerPrefs</strong> で十分(暗号化・改ざん対策は不要。オンラインランキングがないため)。</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>キー</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="key">ハイスコア</td><td>最高スコア</td></tr>
+        <tr><td class="key">最高ランク</td><td>到達した最高のサンタランク</td></tr>
+        <tr><td class="key">累計処理数 / 累計プレイ回数</td><td>—</td></tr>
+        <tr><td class="key">種目別 正解/出題数</td><td><strong>4種ぶん</strong></td></tr>
+        <tr><td class="key">初回起動フラグ</td><td>チュートリアル自動表示の制御</td></tr>
+        <tr><td class="key">ミニゲーム初出フラグ</td><td>初出カード表示の制御(<strong>4種ぶん</strong>)</td></tr>
+        <tr><td class="key">音量設定(BGM/SE)</td><td>—</td></tr>
+        <tr><td class="key">出題履歴</td><td>直近の出題ID(重複回避用)。M1・M2で使う</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ ART ============ -->
+<section id="art">
+  <h2><span class="num">§8</span> アート / サウンド <span class="chip chip--changed">変更提案</span></h2>
+
+  <h3>8-1. アートの方向性</h3>
+  <ul>
+    <li><strong>フラット&amp;太線のポップなベクター調。</strong>影・グラデーションは最小限</li>
+    <li><strong>高速で判別できることが最優先。</strong>短時間で複数の選択肢を見分ける必要があるため、シルエットと色のコントラストを最大化する。装飾より可読性</li>
+    <li>色は<strong>地域色・分類色として意味を持たせる</strong>ため、無闇に使わない(パレットを先に決める)</li>
+    <li><strong>色のみに依存する識別を全種目で禁止する。</strong>特に<strong>赤 × 緑を同時に使わない</strong>(最も一般的な色覚特性で識別できない)。妨害色は 赤/青/黄/白/紫 で運用する</li>
+    <li>キャラクター(サンタ・トナカイ)は HUD の隅と結果画面に登場。<strong>M3ではトナカイの表情が失敗の合図という機能を持つ</strong>(§3-2)ので、表情差分は演出ではなく仕様</li>
+  </ul>
+
+  <h3>8-2. 必要アセット点数(概算) <span class="chip chip--open">未確定</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>種別</th><th class="num">企画書</th><th class="num">改訂</th><th>変更の理由</th></tr></thead>
+      <tbody>
+        <tr><td class="key">M1 在庫アイコン</td><td class="num">40</td><td class="num">48</td><td>24形状 × 2レイヤー着色(ベタ塗り + 線画)。名前テキストを載せないぶん<strong>絵の明瞭さで判別させる必要がある</strong></td></tr>
+        <tr><td class="key">国旗</td><td class="num">60</td><td class="num">42</td><td>初期の採用国を42か国に下方修正。<strong>正確なもの必須</strong>(CC0/PD由来)</td></tr>
+        <tr><td class="key">M2 世界地図</td><td class="num">6</td><td class="num">7</td><td>大陸ボックス → <strong>地図方式に変更</strong>。<strong>6地域を別ファイルで</strong> + 区分線。※ディレクターが用意</td></tr>
+        <tr><td class="key">M3 箱・そり・トナカイ・メーター</td><td class="num">8</td><td class="num">10</td><td>荷札が不要になった(数値を箱に直書き)一方、<strong>トナカイの表情差分</strong>が必要になった</td></tr>
+        <tr><td class="key">M4</td><td class="num">8</td><td class="num">0</td><td><strong>不採用</strong></td></tr>
+        <tr><td class="key">M5 ベルト・シュート・包み紙模様</td><td class="num">8</td><td class="num">14</td><td><strong>スキップ口</strong>が追加。<strong>包み紙の模様5点</strong>をM4と共有する予定だったが単独で持つことに</td></tr>
+        <tr><td class="key">UI部品</td><td class="num">30</td><td class="num">30</td><td><strong>9-slice用pngは事前アセット化必須</strong></td></tr>
+        <tr><td class="key">キャラクター</td><td class="num">10</td><td class="num">10</td><td>サンタ / トナカイ・表情差分</td></tr>
+        <tr><td class="key">背景</td><td class="num">4</td><td class="num">4</td><td>タイトル / 工場 / 結果 / 汎用</td></tr>
+        <tr><td class="key">エフェクト</td><td class="num">8</td><td class="num">7</td><td>レベルアップ演出が不要になった</td></tr>
+        <tr><td class="key">ランク称号アイコン</td><td class="num">5</td><td class="num">5</td><td>—</td></tr>
+        <tr><td class="key"><strong>合計</strong></td><td class="num"><strong>187</strong></td><td class="num"><strong>約177</strong></td><td>M4削除と国旗減が、M1在庫増とM5増でほぼ相殺された</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>アプリアイコン、App Store用スクリーンショットは別途必要。</p>
+
+  <h3>8-3. サウンド <span class="chip chip--changed">変更提案</span></h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>種別</th><th class="num">点数</th><th>内訳</th></tr></thead>
+      <tbody>
+        <tr><td class="key">BGM</td><td class="num">3</td><td>タイトル / ゲーム中 / 結果</td></tr>
+        <tr><td class="key">BGM(テンポ違い)</td><td class="num">0</td><td><strong>不要になった</strong>(下記)</td></tr>
+        <tr><td class="key">SE</td><td class="num">約14</td><td>正解、不正解、時間切れ、タップ、カード飛翔、コンボ更新、カウントダウン、ランク発表、ハイスコア更新、画面遷移、ボタン、ベルトコンベア、スキップ口、そり</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note alert">
+    <span class="label">「だんだん忙しくなる」演出は入れない</span>
+    <p>企画書は「<strong>BGMのテンポがレベルに応じて上がる演出は、忙しさの体感を最も安く高める手段。強く推奨する</strong>」としていたが、<strong>レベル制を持たないことになったため根拠が消えた。</strong></p>
+    <p>ディレクター判断で<strong>テンポは一定</strong>とする。レベル制を持たない方針と最も一貫する。<strong>ただし素案 §14 の「めちゃくちゃ忙しいけど楽しい!」という体験は、その分だけミニゲーム自体のテンポで作る必要がある</strong>点は認識しておく必要がある。</p>
+  </div>
+
+  <h3>8-4. 素材の調達方針</h3>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>項目</th><th>方針</th></tr></thead>
+      <tbody>
+        <tr><td class="key">全体</td><td>有料アセット / 生成AI / 自作の<strong>併用</strong>。ただし<strong>UI部品・キャラ・背景は同一ソースで統一</strong>(バラバラだと安っぽくなる)</td></tr>
+        <tr><td class="key">国旗</td><td><strong>必ずパブリックドメイン / CC0の正確なデータ。生成AIで国旗を描かせない</strong></td></tr>
+        <tr><td class="key">世界地図</td><td><strong>ディレクターが用意する</strong>(6地域を別ファイル / 小さい地域を大きめにデフォルメ)</td></tr>
+        <tr><td class="key">手紙のレイアウト</td><td><strong>ディレクターが用意する</strong></td></tr>
+        <tr><td class="key">フォント</td><td><strong>ディレクターが決める。</strong>商用利用・アプリ組み込み可否と、<strong>英語版の欧文グリフ</strong>を確認する</td></tr>
+        <tr><td class="key">音楽</td><td><strong>既存のクリスマス曲(録音物)を使わない。</strong>「きよしこの夜」等は楽曲がパブリックドメインでも<strong>特定の録音物・編曲には権利がある</strong>。ロイヤリティフリー音源またはオリジナル曲</td></tr>
+        <tr><td class="key">記録</td><td>使用素材のライセンスは <code>docs/licenses.md</code> に<strong>随時記録</strong>し、クレジット画面に反映する。<strong>後からまとめて調べると必ず漏れる</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ QUESTIONS ============ -->
+<section id="questions">
+  <h2><span class="num">§9</span> 質問事項 <span class="chip chip--open">判断待ち</span></h2>
+  <p class="lede">ディレクターに決めてほしい論点。各項目を開くと案と推奨が出る。緑の項目は解決済み。</p>
+
+  <h3>今回の決定で新たに発生した宿題</h3>
+
+  <div class="note alert">
+    <span class="label">「12秒 / 3問」の統一で揃わなかったものが2つある</span>
+    <p>この統一は<strong>コンボの重みは揃えた</strong>(1ミニゲームあたり最大3コンボ)が、<strong>①スコアの重み ②必要時間</strong>の2つが揃っていない。どちらも種目間のバランスに直結する。</p>
+  </div>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q0-11</span>M5のスコア重み <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-07):</b> <b>M5は3問正解 = 1件100点に丸める。</b>コンボと同じ丸め方。これで<b>4種すべてが1ミニゲームあたり最大300点・最大3コンボで完全に揃う。</b>HUDの「しょり ◯けん」も同じ数え方(M5で9箱さばいても「3けん」)。</p>
+      <p class="rec">決める前は、同じ13.15秒に対して<b>M5だけ900点</b>入る状態だった。コンボは丸めて揃えていたが<b>基本点を丸め忘れていた</b>という取りこぼし。→ §7-1</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q0-12</span>M1が12秒で3問を解き切れない件 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-07):</b> <b>上限35文字は維持したまま、短い手紙を混ぜて平均を20〜23文字に抑える。</b>12秒は3問で共有するため、短い手紙で稼いだ余裕を長い手紙に回せる。<b>「毎回35文字」にしないことが要点。</b></p>
+      <p class="rec"><b>現在の3型カタログはすでにこの平均を満たしている</b> — 型A 直接指定=12文字 / 型B 否定・除外=26文字 / 型C 大量=30文字 で<b>平均約23文字</b>。<b>型Aが短いことが効いている</b>ので、型Aの比率を上げればさらに余裕が生まれる。→ §1-6</p>
+      <p class="rec">文字数上限を下げる案・M1だけ2問にする案・M1だけ時間を延ばす案は、いずれも<b>不採用</b>(ディレクターが「ちょうどよい」と判断した分量を削らずに済み、12秒3問の統一も崩さないため)。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q0-13</span>問題プールの枯渇 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p><strong>手作りデータの2種だけで起きる問題。</strong>M3・M5はプロシージャル生成なので6パターンから無限に作れる。</p>
+      <p class="rec"><b>決定(2026-09-07):</b> <b>M1・M2だけプロトタイプの問題数を10レパートリーにする</b>(M3・M5は6のまま)。加えて安全網として、<b>プールを使い切ったら先頭に戻って繰り返す。</b></p>
+      <p class="rec"><b>なぜ起きるか:</b> 「3問正解でクリア」+「誤答したら次の問題へ進む」の組み合わせ。<b>M2はタップ1回で即判定される</b>ので、適当に押せば1〜2秒で1問消費し、12秒あれば6問は簡単に使い切る。10問に増やすと実際にはほぼ到達しない。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q0-14</span>初出カードの表示時間</summary>
+    <div class="body">
+      <p>「業務提示と同じくタイマー停止中に出す」としていたが、<strong>業務提示は0.8秒しかなく、カード1枚を読むには足りない。</strong></p>
+      <p class="rec"><b>決めるべきこと:</b> 初出カード専用の表示時間を設けるか(例: タップするまで待つ / 2〜3秒固定)。初回だけなのでテンポへの影響は限定的。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q0-15</span>「約6〜7ミニゲーム」は最小値であって平均ではない</summary>
+    <div class="body">
+      <p><strong>3問正解した時点で次へ移れる</strong>(§0-3)ので、12秒を使い切る前提の 90 ÷ 13.15 = 6.8 は<strong>最も遅いプレイの値</strong>。</p>
+      <p class="rec">平均8秒で3問終えるなら 90 ÷ 9.15 = <b>約9〜10ミニゲーム</b>。上手い人ほどミニゲーム数も問題数も増える。<b>ランク閾値の概算(20問 × 100 × 1.5 = 3,000点)も過小</b>で、実際の上限は3,000〜5,000点超まで振れる。</p>
+      <p class="rec"><b>影響:</b> サンタランクの閾値は、<b>Q0-11(M5のスコア重み)を決めてから、プレイテストで実測分布を取る</b>という順序でないと決められない。</p>
+    </div>
+  </details>
+
+  <details class="q resolved" open>
+    <summary><span class="qid">Q0-9</span>ミニゲームの構造 — 12秒 / 3問 / 全種目統一 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>1ミニゲーム = 3問。3問正解でクリア。基準時間は全種目12秒に統一。</b>誤答したら次の問題へ進み、3問正解するまで問題が供給される。</p>
+      <p class="rec"><b>スコアとコンボ:</b> <b>正解数だけをスコアにする。</b>時間切れで解けなかった問題は<b>失敗ではなくコンボも継続</b>。<b>あくまで誤答だけが失敗。</b></p>
+      <p class="rec"><b>これで解消した問題が3つある:</b> ① <b>「1問7秒では読解ゲームとして厳しい」というM1の懸念</b> — 12秒をまとめて配分できるので、易しい問題で稼いだ余裕を難しい問題に回せる ② <b>「M3の12秒×3回は90秒の44%を占める」というQ3-6の懸念</b> — 全種目が12秒に揃ったのでM3だけが突出しなくなった ③ <b>「M5では残時間ボーナスが構造的に発生しない」というプランナーの指摘</b> — 速く3問終えれば次のミニゲームへ移れるので、構造自体が残時間ボーナスとして機能する</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q0-10</span>「12秒 / 3問」に伴う再確認 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>① M5の「1問」の定義</b> — <b>3問 × 3ループ = 最大9問</b>と決定(→ Q5-1)。12秒で9個なら1個あたり約1.33秒で、先読みが成立するペースが保たれる。</p>
+      <p class="rec"><b>② M3のオーバー判定</b> — <b>コンボは切らない</b>と決定(→ Q3-7)。</p>
+      <p class="rec"><b>③ 出題順</b> — <b>連続で同じミニゲームが出ないようにし、あとはランダム</b>と決定。制約はこれ1つだけで、全種目を必ず1回出すといった保証はしない。</p>
+      <p class="rec"><b>④ クリアボーナス</b> — <b>付けない</b>と決定。3問揃えても追加点はなく、「クリア」は演出上の概念に留まる。</p>
+    </div>
+  </details>
+
+  <details class="q" open>
+    <summary><span class="qid">Q0-6</span>レベル制の廃止に伴う M2〜M5 の再設計 ★最優先</summary>
+    <div class="body">
+      <p>「レベル制を持たない」という決定により、<strong>M2〜M5の難易度設計が全部前提を失った。</strong>4種とも Lv1〜5 のテーブルで組まれているため。M1は型カタログで作り直したが、他4種はまだ。</p>
+      <p class="rec"><b>影響範囲:</b> <b>残るのはM5だけ</b>(個数・流速・有効な口・素通しの投入Lv)。M2とM3は確認済みで「難易度を設計しない」ことが決まり、M4は不採用になったため。該当セクションには<b>赤い「要再設計」の注記</b>を入れてある。</p>
+      <p class="rec"><b>進め方:</b> M5の確認が済んだ時点で、M5ぶんをplannerへ回せばよい。当初4種まとめて回す想定だったが、M2・M3が個別に確定し、M4が不採用になったため<b>作業量は大幅に減った</b>。</p>
+    </div>
+  </details>
+
+  <details class="q" open>
+    <summary><span class="qid">Q0-7</span>英語版の設計 — 10月末に間に合わせる必要がある</summary>
+    <div class="body">
+      <p>英語対応が初回リリースから入ることになった。<strong>M1は翻訳では成立しない</strong>(読解ゲームの難易度は言語構造に依存する)ため、英語版の設計が必要。→ 詳細は §1-9</p>
+      <p class="rec"><b>決める必要があること:</b> 英語版の文字数上限(語数か文字数か)/ 語彙レベルの基準(教育漢字に相当するもの)/ 型Cが英語でも同じ秒数に収まるか / 48問を対訳にするか言語ごとに別問題にするか。</p>
+      <p class="rec"><b>負荷はM1に集中する。</b>M2〜M5は言語依存が小さく、UI文言と国名の翻訳で足りる見込み。なお<b>在庫カードに名前テキストを載せない決定は英語版にとって有利</b>で、翻訳が不要になる。</p>
+    </div>
+  </details>
+
+  <details class="q" open>
+    <summary><span class="qid">Q0-8</span>M1の判定演出(②)の中身</summary>
+    <div class="body">
+      <p>「選んだ演出は正解・不正解で共通(押下が分かる演出)、そのあとの判定演出は要検討」という決定を受けて、②の具体案が未着手。</p>
+      <p class="rec"><b>確定している制約:</b> SEを入れる / 画面上でも正誤が分かる演出を入れる(音が出せない環境でも判別できる必要がある)/ 正解そのものは提示しない / 4+として罪悪感を与えすぎない / 0.35秒。</p>
+    </div>
+  </details>
+
+  <h3>M1 手紙を読んでしわけろ</h3>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q1-1</span>7.0秒で読み切れる文字数の上限 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>3行 / 1行14文字 / 合計35文字</b>。ディレクターが示した基準の文面(34文字)に合わせた。企画書の45文字から10文字ぶん締めている。あわせて<b>漢字の範囲を教育漢字1026字まで拡大</b>し、<b>分かち書きは全行に一律適用</b>。→ 詳細は §1-7</p>
+      <p class="rec">これで問題データ48問の作成に着手できる。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q1-2</span>1プレイでの M1 の出方</summary>
+    <div class="body">
+      <p>プランナーの当初案(M1は最大3回でキャップ / 1問目には出さない / M4と連続させない)は、<strong>前提が2つとも変わったため作り直しが必要。</strong>① 1ミニゲーム = 3問構成になった ② M4が不採用になった。</p>
+      <p class="rec"><b>今の構造:</b> 90秒で約6〜7ミニゲームの枠に4種。<b>各種目が1〜2回</b>出る計算になる。</p>
+      <p class="rec"><b>残る論点:</b> 全種目を必ず1回は出すのか、完全ランダムでよいのか(→ Q0-10 ③)。<b>M1を1問目に出さない</b>という配慮は今も有効かもしれない(「これは文章を読むゲーム」という第一印象を避ける)。ただし掴み役としての設計は不要という判断が出ている(§2-2)。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q1-3</span>出題文の型 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> 型は <b>A 直接指定 / B 否定・除外 / C 大量</b> の3つ。プランナーが出した10型(推論・時系列・ひっかけ語など)は一旦不採用。<b>レベル制を持たないため、問題のレベル差はこの3型で作る。</b>→ 詳細は §1-4</p>
+      <p class="rec"><b>型Cの絶対条件:</b> 手紙にはほしいものがたくさん書かれるが、<b>4択のうち該当するのは必ず1つだけ</b>。2つ入っている状況は作らない(正解が一意でなくなる)。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q1-7</span>差出人の表示 / カードへの名前併記 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>差出人の顔アイコンと名前は置かない</b>(手紙は本文のみ)。<b>在庫カードの名前テキストも表示しない</b> — 名前を併記しなくても判断できるイラストにすることで担保する。名前は<b>データとしては保持してよい</b>(正誤判定・保守・英語版で使う)。</p>
+      <p class="rec">プランナーは両方とも「必須」として提案していたが、いずれも不採用。<b>読む要素を増やさない</b>という判断。分からないものに出会ったら<b>それは学びとして扱う</b>。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q1-4</span>初期問題数と量産方法 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>プロトタイプでは6レパートリー。</b>「まずは動くこととバランス調整が優先」というディレクター判断。プランナー案の48問(+12月に40問)は<b>後回し</b>。</p>
+      <p class="rec"><b>6問で3型を検証できる。</b>A 直接指定 / B 否定・除外 / C 大量 を各2問ずつ用意すれば、<b>3型それぞれの手応えの違いをプレイテストで確認できる</b>。型カタログが機能するかどうかは、問題数より型の網羅が効く。</p>
+      <p class="rec"><b>量産方法は本番実装時に再検討。</b>プランナーのハイブリッド案(Lv1〜2はテンプレート生成 + レビュー、Lv3〜4は手書き)は、型が3つに絞られレベル制もなくなったため<b>そのままでは使えない</b>。ただし「機械的に作れる型と、人が書かないと『あっ』が作れない型がある」という指摘は有効で、<b>型AとBはテンプレート化しやすく、型Cは人が書く必要がある</b>と考えられる。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q1-5</span>問題データの CSV 列設計</summary>
+    <div class="body">
+      <p><code>id, difficulty, template_type, line1, line2, line3, correct_item_id, distractor_ids, uniqueness_note, review_status, added_version</code></p>
+      <p class="rec"><b>uniqueness_note</b> — 「なぜこの正解が一意か」を書く列。レビューと将来の保守で最重要。<br><b>review_status</b> — <code>draft</code> / <code>approved</code>。approved のみビルドに含める。<br><b>added_version</b> — 12月追加ぶんを識別。「あたらしい しごと」バッジにも使える。</p>
+      <p class="rec">CSV → Editorインポータ → ScriptableObject の流れ。<b>ディレクター自身が表計算で編集できることが量産の生命線。</b></p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q1-6</span>候補カードのアート方式</summary>
+    <div class="body">
+      <p class="rec"><b>プランナー案:</b> <b>2レイヤー着色</b>(ベタ塗りレイヤー + 線画レイヤー)。24種 × 2 = 48ファイル、作画は実質24点で、色バリエーションは無限。線が黒のまま保たれるので単色シルエット方式より見栄えが良い。色ごとに個別素材を作ると144点になり現実的でない。</p>
+      <p class="rec"><b>物24種の内訳案:</b> のりもの4(車/電車/飛行機/船)、ぬいぐるみ5(くま/うさぎ/いぬ/ねこ/きょうりゅう)、スポーツ3(ボール/なわとび/グローブ)、つくる・かく5(クレヨン/ノート/えほん/つみき/パズル)、きるもの3(ぼうし/マフラー/てぶくろ)、そのほか4(ロボット/にんぎょう/たいこ/じてんしゃ)。色6種(赤/青/黄/緑/白/茶)と組み合わせて <b>144バリエーション</b>。</p>
+      <p class="rec"><b>結論:</b> M1 においてアート素材はボトルネックにならない。真のボトルネックは<b>文面の質とレビュー工数</b>。</p>
+    </div>
+  </details>
+
+
+  <details class="q">
+    <summary><span class="qid">Q1-8</span>誤答が続いたときの不満をどう抑えるか</summary>
+    <div class="body">
+      <p>正解を見せない決定により、「なぜ間違えたか分からない」が蓄積しうる。ただし<strong>Q2-1で「あとで自分で調べられる内容にすればよい」という基準が示された</strong>ため、この論点の位置づけが変わった。</p>
+      <p class="rec"><b>M1はこの基準を元々満たしている</b> — 手紙の文面と候補カードは画面に出ており、覚えるべき外部知識ではない。M2の国名と違い「調べる」対象ですらなく、<b>もう一度読めば自分で検証できる</b>。よってM1では追加対応の必要性が低い。</p>
+      <p class="rec"><b>それでも入れるなら:</b> 結果画面で「まちがえた しごと」を振り返れるようにする案。ただし結果画面の設計が重くなり10月末リリースに影響するため、プランナーは<b>12月アップデート候補</b>として提案。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q1-9</span>12月アップデートの範囲</summary>
+    <div class="body">
+      <p class="rec"><b>プランナー案:</b> <b>問題追加 + 新テンプレート型の追加のみ。M1のルール・UI・時間設定は変更しない。</b>既存プレイヤーが身につけた読み方を無駄にしないため。タイトル画面に「あたらしい しごとが ふえました」の告知導線があると更新が伝わる。</p>
+    </div>
+  </details>
+
+  <h3>M2 住所でしわけろ</h3>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-1</span>誤答時の演出 / 学習の担保 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> 「何が正解か分からなければ、<b>あとで自分で調べられるような内容にすればよい</b>。国名は調べれば分かるし、今の時代 画像検索もあるからどうとでも調べられる」</p>
+      <p class="rec"><b>帰結①:</b> 学習をゲーム内で担保する必要がないため、プランナーの「カードを正解の口へ飛ばす」案は<b>不採用</b>。不正解時は押した口が赤く沈むだけ。<br><b>帰結②:</b> あとで調べられることが要件になったため、<b>国名は必ず表示する</b>。Q2-8「国旗のみ表示」は確定的に不採用。</p>
+      <p class="rec">→ 詳細は §2-1</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-2</span>操作方式 — 地図をタップする <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> プランナーの「2列×3行のボックス」案を撤回し、<b>世界地図の地域をタップする方式</b>にする。累積カウンタも<b>地図の各地域に数値を累積する</b>形に変更。「口の数を何個にするか」という論点自体が消滅した。</p>
+      <p class="rec"><b>固定色は維持</b>(追って整理)。→ 詳細は §2-3</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q2-2b</span>地図に描く線 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>国境線は描かない。州(大陸)の区分線は描く。</b>州が当たっていれば正解というルールである以上、どこからどこまでが1つの州かが見えないと押しようがないため、<b>区分線は仕様上の必須要素</b>。国境線を引くと係争地域の帰属を地図上で表明することになるので引かない。地図上に国名も入れない。</p>
+      <p class="rec"><b>注意点:</b> 区分線が通る場所は6州区分の解釈が割れる場所と一致する(ウラル山脈 / スエズ / パナマ地峡 / インドネシア周辺)。ただし<b>これらにまたがる国はすべて出題から除外している</b>ため、線の引き方が正誤に影響することはない。教科書の区分に沿って引けば足りる。</p>
+      <p class="rec"><b>地図素材:</b> タップしやすいように簡略化した世界地図を<b>ディレクターが用意する</b>。「縦画面に世界地図をどう収めるか」という懸念は素材側で解決される。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q2-2c</span>地図のタップ当たり判定 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>各地域の輪郭の内側だけがタップできる。</b>輪郭とは別に見えない領域を重ねる方式は不採用。見た目と判定が完全に一致するので「押したのに反応しない」が起きない。</p>
+      <p class="rec"><b>輪郭の外は無反応</b>(不正解にはしない)。理由は2つ — ① 外した人は押し直すぶん時間を失うので、それが自然なペナルティとして機能する ② <b>反応がないこと自体から「輪郭の内側を押すものだ」と伝わり、次に同じミニゲームが来たときの学びになる。</b></p>
+      <p class="rec"><b>地図素材に付く2条件:</b> ① <b>6地域を別ファイルに分けて書き出す</b>(1枚のフラット画像では地域ごとの判定・色・カウンタができない)② <b>小さい地域を実際の面積比より大きくデフォルメする</b>(当たり判定が輪郭そのものなので、輪郭の大きさ = 押しやすさ。ヨーロッパとオセアニアが44×44ptを下回るおそれ)。→ §2-3</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-3</span>大陸区分の典拠 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>日本の小学校社会科の6州区分を採用。</b>ただし<b>あそびかた画面への明記はしない</b>(区分そのものが一般的で断り書きが不要なため)。</p>
+      <p class="rec"><b>他国でも通用するかの確認結果:</b> おおむね一致する。英語圏の標準は<b>7大陸(6州 + 南極)</b>だが、<b>南極は出題しない</b>ため差が表面化しない。北米と南米を分ける点は日本と英語圏で一致。ラテンアメリカ圏は米州を1つに数えるが、日英配信なら影響しない。<b>6州区分のままで英語版も問題ない。</b>→ 詳細は §2-4</p>
+    </div>
+  </details>
+  <details class="q resolved">
+    <summary><span class="qid">Q2-4</span>除外国リスト <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>除外リストのC分類は問題データから削除する。</b>台湾・イスラエル/パレスチナ・ロシア・ウクライナ・北朝鮮・トルコ・エジプト・カザフスタン・キプロスほか。B分類の保留国も、判断が必要なものは同様に外す。</p>
+      <p class="rec">企画書 §5.2 が「難しい」の例に挙げていた<b>エジプト・トルコも除外対象</b>(2州にまたがり正解が一意に定まらない)。代わりにメキシコ・モロッコ・NZ・パナマを使う。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-5</span>初期の国数 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>プロトタイプでは6か国</b>(全種目共通の「6レパートリー」方針)。プランナー案の42か国は後回し。</p>
+      <p class="rec"><b>6大陸それぞれから1か国ずつ選ぶ</b>と、<b>全地域が最低1回は使われる</b>ので動作確認にも都合がよい。プランナーが指摘していた「オセアニアの候補が少なく、地域が一度も使われない恐れ」も、この選び方なら起きない。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-6</span>国旗素材 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>国旗はディレクターが用意する。</b>flag-icons 等の外部リポジトリからの調達は行わない。</p>
+      <p class="rec"><b>プロトタイプ作成時は、国旗の画像枠だけを用意する</b>(実際の画像は後から差し込む)。素材の調達を待たずに実装と動作確認を進められる。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q2-7</span>国旗を作るときの注意点(ディレクター向け)</summary>
+    <div class="body">
+      <p>国旗をディレクターが用意することになったため、以下は<b>素材制作時の確認事項</b>として引き継ぐ。</p>
+      <p class="rec"><b>比率</b> — 原典どおりに保つ。スイス(1:1)、バチカン(1:1)、ネパール(非長方形)、カタール(11:28)など例外がある。<b>枠に合わせて引き伸ばさず、アスペクト比を維持してフィット</b>させる。</p>
+      <p class="rec"><b>国章</b> — メキシコ、スペイン、ポルトガル等は中央に国章がある。<b>簡略版(国章なし)を使うと不正確、または別国の旗になる。必ず国章ありの正式版を使う。</b></p>
+      <p class="rec"><b>その他</b> — 配色は原典どおり / 表裏でデザインが異なる国(パラグアイ)は表面を使う / <b>影・光沢・はためきエフェクトを付けない</b> / 国名表記は外務省表記に準拠。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q2-8</span>難易度をどう作るか <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>難易度を設計しない。</b>「国の認知度は人によって違うので、それだけで難易度のばらつきは再現できている」というディレクター判断。プランナーのLv1〜4の段階設計(知名度でLv分け・制限時間の短縮・Lv4のみ連続2個)は<b>すべて不要</b>。</p>
+      <p class="rec">M2は<b>レベル制の廃止と最も相性が良い種目</b>。同じ「フランス」でも知っている人には一瞬、知らない人には難問になる。<b>難易度が出題側ではなくプレイヤー側にある。</b>制限時間は12秒固定(3問)、地域は常に6つ、出題は採用リストからランダム。</p>
+      <p class="rec"><b>「国旗のみ表示」は確定的に不採用</b>(Q2-1により、調べる取っかかりである国名を消す選択肢がなくなったため)。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q2-9</span>チュートリアル / 12月アップデートの方向</summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>掴み役としての設計は不要</b>(1問目をM2に固定する案は不採用)。ただし<b>チュートリアルは実装したい</b>とのことで、<b>M2はそこに入れるミニゲームの候補</b>。ルールがタップ1回で完結し最も説明しやすいため。</p>
+      <p class="rec"><b>未検討:</b> チュートリアルの中身(何種目を扱うか / いつ出すか / スキップできるか / 初回のみか)。</p>
+      <p class="rec"><b>12月アップデート(プランナー案・未決):</b> 都道府県版をM2の難易度として足すのではなく、<b>独立した新種目M6「都道府県でしわけろ」</b>として足す。地図方式にしたことで<b>世界地図を日本地図に差し替えるだけになり、流用範囲がさらに広がった。</b>同時に国を+18。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-1</span>ルール — 複数選択・取り消し可・単位なし <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>複数選択あり。取り消し可。合計が目標値ちょうどになったら成立し、次のそりへ移る。</b>プランナーの「6秒で複数選択は成立しない」という指摘は、<b>取り消し可にしたこと</b>と<b>基準時間を6秒 → 12秒に拡大したこと</b>で解消された。プランナーの代案(箱の中身に合計を埋め込む)は撤回。</p>
+      <p class="rec"><b>単位はなし。数値だけ。</b>国によって単位が異なるため(kg / ポンド)。<b>英語版で翻訳が実質ゼロになる</b>という副次効果がある。</p>
+      <p class="rec"><b>1回のM3でそり3台をさばく。基準時間12秒。</b>→ 詳細は §3-1</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-2</span>失敗の扱い <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>目標値を超えたら失敗判定。ただしやり直せる。</b>失敗したことは<b>トナカイの表情が悲しくなる</b>ことで示す。他4種の失敗演出とは異なり、ゲームは止まらない。</p>
+      <p class="rec">M3は<b>失敗しても続けられる唯一の種目</b>になるため、「いま失敗した」ことを伝える手段が別途必要で、それをトナカイの表情が担う。画面を止めずに状態だけを伝えられる。</p>
+      <p class="rec"><b>マイクロゲーム単位の失敗</b>は「12秒で3台さばけなかった」場合のみ。そのときは他4種と同じ0.35秒の判定演出。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-3</span>画面構成と難易度 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>箱は常に6個</b>(3列×2行)。<b>箱の絵に数値を直接書き込む</b>ことでスペースを確保する(荷札を貼る方式は不採用)。</p>
+      <p class="rec"><b>難易度は設計しない。</b>「人や、組み合わせの試行の噛み合わなさ次第で解けない場合が生じるため、ルールだけでばらつきは再現できる」というディレクター判断。プランナーのLv1〜4の段階設計は不要。単位をなくした時点で「単位換算」という難易度軸自体も消えている。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-4</span>問題の自動生成とバリデーション <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> 手作りデータは不要。バリデーションは<b>2条件のみ</b> — ① <b>目標値ちょうどになる組み合わせが6個の箱の中にちょうど1通りだけ存在する</b>(正解の一意性)② <b>同じ数値の箱が2つ以上存在しない</b>。</p>
+      <p class="rec">プランナーは8条件を挙げていたが、<b>そのうち6条件は単位・小数に関するものだった</b>(gは100の倍数のみ / 同じ実重量をgとkgで両方出さない 等)。<b>単位をなくした時点で不要になった。</b>ディレクターの見立てどおり。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-5</span>演出 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>採用:</b> ① <b>積載メーターで視覚化</b>(目標値の位置に赤い縦線。数値が読めなくても直感で分かる)② <b>そりとトナカイが右へスライドして抜け、左から次が入ってくる</b>(プランナー案の「そりが少し沈む」から拡張)③ <b>トナカイの表情</b>(オーバー時に悲しくなる)。</p>
+      <p class="rec"><b>不採用:</b> 荷札に数字を載せる(箱に直接書く方式に変更)/ 文言の業務化(「つみこみ かんりょう」等は削除)。<b>イラストの移動で正解感が分かるため文言は不要</b>というディレクター判断。<b>物が動くほうが速く伝わり、言語にも依存しないので英語版でも有利。</b></p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q3-6</span>M3が90秒プレイに占める比率 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p>基準時間を12秒にした時点では、M3の1サイクルが13.15秒と突出し「最大3回出ると90秒の44%を占める」という問題があった。</p>
+      <p class="rec"><b>Q0-9(全種目12秒 / 3問構成)で自動的に解消。</b>全種目が同じ13.15秒になったため、M3だけが長いという状態ではなくなった。1プレイは<b>約6〜7ミニゲーム</b>で、どの種目が引かれても所要時間は同じ。</p>
+    </div>
+  </details>
+  <details class="q">
+    <summary><span class="qid">Q3-7</span>M3で残っている細部</summary>
+    <div class="body">
+      <p class="rec"><b>オーバー判定 — 解決済み(2026-09-06)。</b><b>コンボは切らない。</b>やり直せる以上、他種目の「誤答」とは性質が違うため。<b>M3ではコンボが切れる場面が実質なくなる</b>(積みすぎても戻せて、時間切れも罰されない)。トナカイの表情だけが失敗を伝える。</p>
+      <p class="rec"><b>数値の範囲</b> — 目標値と箱の数値をいくつからいくつにするか。<b>12秒で3台さばくペース</b>から逆算して決める。プロトタイプでは<b>6レパートリー</b>を用意する(→ §0-1)。</p>
+      <p class="rec"><b>3台の難易度</b> — 1台目を易しく3台目を難しくするのか、3台とも同じプールから引くのか。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q0-1</span>縦画面ゾーニングとHUDの内容</summary>
+    <div class="body">
+      <p class="rec"><b>ゾーニング:</b> 上部セーフエリア160 / HUD 220 / コンテンツ 1284 / バナー160 / 下部セーフエリア96(§0-5)。<b>実機での検証が必要。</b></p>
+      <p class="rec"><b>HUD:</b> のこり時間バー / 処理件数 / コンボ(<b>3以上でのみ表示</b>)。<b>Lv表示は置かない</b>(レベル制を持たないため)。サンタの表情はHUDに置かず<b>結果画面に集約</b>する(レベルアップ演出は削除されたため)。</p>
+    </div>
+  </details>
+  <h3>M5 ラッピングしわけ</h3>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q5-1</span>「1問」の定義と構成 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>1問 = 箱1個。3問 × 3ループ = 最大9問</b>で1ミニゲーム。基準時間は他3種と同じ12秒。</p>
+      <p class="rec"><b>これで先読みが保たれる。</b>12秒で9個なら<b>1個あたり約1.33秒</b>で、元の設計(1個約1秒)に近いペース。「1問=箱1個で3問だけ」にすると12秒で3個になり、ベルトがスカスカになって<b>M5の持ち味が失われる</b>ところだった。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q5-2</span>コンボの数え方 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>3問連続で当たったら1コンボ。最大9問正解で3コンボ。</b></p>
+      <p class="rec"><b>これでコンボの獲得ペースが全種目で揃う。</b>他3種は「3問正解 = 3コンボ」、M5は「9問正解 = 3コンボ」。<b>1ミニゲームあたり最大3コンボという上限が一致する。</b>M5の1問は個別には速く簡単なので、3問まとめて1コンボにすることで種目間の重みが釣り合う。</p>
+      <p class="rec">プランナーが懸念していた「M5がコンボの処刑場になる」も、逆の「コンボ農場になる」も、<b>どちらも回避されている</b>。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q5-3</span>スキップ口の新設 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> シュートは<b>赤・青・黄の3択</b>に加え、<b>下部に横長のスキップ口</b>を置く。たまに流れてくる<b>ゴミ</b>をそこへ入れる。</p>
+      <p class="rec"><b>プランナー案より優れている。</b>プランナーは「こわれた箱はどのシュートにも入れず素通しする」を提案していたが、この案には<b>「見逃したのか正解したのか分からない」</b>という問題があり、補うための追加演出が必要だった。<b>スキップ口へ能動的に入れる方式なら、この問題が構造的に消える。</b>「押さないでおく」という難しい抑制を要求しないのに、ゴミを見分ける判断は残る。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q5-4</span>カテゴリと難易度 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>色カテゴリと形カテゴリ</b>を用意し、<b>1ミニゲーム内では固定</b>(3問×3ループを通して同じカテゴリ)。色の判別が速い人と形の判別が速い人がいるため、<b>どちらを引いたかがそのまま当たり外れになる</b>。色や形のレパートリーを増やすことでばらつきも増やせる。</p>
+      <p class="rec"><b>固定にしたことの効果:</b> 9問を通して見本が変わらないため<b>先読みが最大限に働く</b>。ループの境目で見本を読み直す必要がなく、切り替えを伝える演出も不要で実装も軽い。</p>
+      <p class="rec"><b>未決:</b> 色と形それぞれの種類数。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q5-5</span>処理しきれなかった場合の扱い <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>箱を処理しきれなくてもコンボはリセットしない。</b>M3で「12秒で3台さばけなくても失敗ではない」と決めたのと同じ方針。さばけたぶんのスコアは入る。</p>
+      <p class="rec"><b>プランナーが警告していた「M5だけ失敗率が3〜4倍になりコンボの処刑場になる」問題は完全に解消した。</b>取りこぼしは罰されず、間違えたときだけ罰される。提案されていた<b>しきい値方式は不要になった</b> — 時間切れが罰されない以上、複雑なしきい値を設ける理由がない。時間と点数の配分だけで調整できる。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q5-6</span>M5で残っている細部</summary>
+    <div class="body">
+      <p class="rec"><b>操作方式</b> — プランナー推奨は<b>タップ統一</b>(判定ゾーンのアクティブな箱に対し、下部の固定口をタップ)。決定ログ13「タップ中心で統一」との整合。M5だけフリックを許す選択肢もあるが、その場合は決定ログの修正が必要。</p>
+      <p class="rec"><b>フィードバックの2層構成</b> — アイテム単位は0.2秒・非ブロッキング(ベルトを止めない)、ミニゲーム判定は0.35秒。<b>「演出0.35秒に揃える」共通ルールはミニゲーム単位の判定にのみ適用する</b>という切り分けの承認が必要。</p>
+      <p class="rec"><b>ゴミの個数 — 解決済み(2026-09-06)。</b><b>1ミニゲームに最低1個、最大3個。</b>最低1個が保証されるのでスキップ口が毎回意味を持ち、最大3個は9問中の3分の1で「仕分け」が「ゴミ探し」に変わらない上限。</p>
+      <p class="rec"><b>ベルトの流速と投入間隔</b> — 12秒で9個をどう配分するかは未決。</p>
+      <p class="rec"><b>色と形の種類数</b> — プロトタイプでは<b>6レパートリー</b>(→ §0-1)。本番でどこまで増やすかは未決。</p>
+    </div>
+  </details>
+
+  <h3>ゲーム全体(§6〜§8)</h3>
+
+  <details class="q" open>
+    <summary><span class="qid">Q7-1</span>サンタランクの閾値を引き直す ★要対応</summary>
+    <div class="body">
+      <p>企画書の閾値(一人前1,200 / ベテラン2,200 / スーパー3,200 / マスター4,200)は<strong>レベル係数と残時間ボーナスが乗る前提の数字</strong>だった。両方削除したため<strong>現在の式では届かない。</strong></p>
+      <p class="rec"><b>概算:</b> 1プレイ約20問。全問正解でコンボが繋がり続けた場合の平均倍率を1.5とすると <b>20 × 100 × 1.5 = 3,000点</b>が上限に近い。<b>マスター4,200は到達不可能。</b></p>
+      <p class="rec"><b>決めるべきこと:</b> 閾値をどう引き直すか。<b>「一人前サンタ」に初回〜3回目で到達できること</b>が達成感の初速として重要。実際の分布はプレイテストでないと分からないので、<b>ScriptableObjectで後から調整できる形にしておき、仮値で進める</b>のが現実的。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q7-2</span>コンボ倍率のテーブルはこのままでよいか</summary>
+    <div class="body">
+      <p class="rec"><b>現行(企画書の仮値):</b> 0〜2連=1.0 / 3〜5連=1.2 / 6〜9連=1.5 / 10連〜=2.0</p>
+      <p class="rec"><b>検証:</b> 1ミニゲームあたり最大3コンボ、1プレイ6〜7ミニゲームなので<b>理論上の最大コンボは18〜21連</b>。「10連〜=2.0倍」はプレイ後半をほぼノーミスで通してようやく届く水準で、<b>テーブルとしては妥当</b>と考えられる。</p>
+      <p class="rec">ただし「誤答だけが失敗」という設計(§0-4)により<b>コンボは切れにくい</b>。慎重に飛ばせば繋がり続けるため、<b>実際には2.0倍に届きやすいかもしれない</b>。プレイテストで確認が必要。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q7-3</span>チュートリアルの方針 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec"><b>決定(2026-09-06):</b> <b>ゲーム起動時の初回チュートリアルは実装する。種目ごとの遊べるチュートリアルは作らない</b>(工数がかかりすぎるため)。初出カードは<b>静的なカード1枚</b>のまま。</p>
+      <p class="rec"><b>その代わりに設計原則が1つ増えた</b> — 「<b>そもそも種目ごとのチュートリアルが必要ないくらい、簡単で分かりやすいルールにする</b>」。§0-5 の<b>設計原則5</b>として全種目に適用する。説明が必要になった時点で、そのルールは複雑すぎると考える。</p>
+      <p class="rec"><b>これは素案に立ち返る判断でもある</b> — 素案 §4 は「ゲーム開始直後にプレイヤーが<b>何をすればいいか分かる</b>こと。複雑なルール説明を必要とするミニゲームは避ける」としていた。</p>
+      <p class="rec"><b>調査結果(参考):</b> メイドインワリオもリズム天国も「読み物だけの説明機能」は持たず、両方とも遊べる形式(ワリオウェアのIndex = 遊び直せる一覧 / リズム天国のPractice = 遊べる練習パート)。<b>ワリオウェアのIndexは 12月アップデートの「ミニゲーム一覧」候補として有力。</b></p>
+      <p class="rec"><b>残る宿題:</b> §6-4 の点検により、<b>M3が原則5から最も遠い</b>ことが分かった(複数選択・取り消し可を説明なしでどう伝えるか)。チュートリアルの中身(何を扱うか / スキップできるか / いつでも見返せるか)も未検討。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q7-4</span>「忙しさ」をどこで作るか</summary>
+    <div class="body">
+      <p>BGMのテンポを一定にする決定により、<strong>「だんだん忙しくなる」演出手段がすべてなくなった</strong>(レベル制廃止でゲーム内容も一定、テンポも一定)。</p>
+      <p class="rec"><b>認識しておきたいこと:</b> 素案 §14 が目指す<b>「めちゃくちゃ忙しいけど楽しい!」</b>という体験は、<b>ミニゲーム自体のテンポだけで作る</b>ことになる。90秒という短さ、12秒で3問という密度、種目が次々切り替わること、の3つが忙しさの源。</p>
+      <p class="rec">プレイテストで「忙しさが足りない」と感じた場合の打ち手を、あらかじめ考えておくとよい(制限時間を12秒より短くする / 1プレイを90秒より短くする など)。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q7-5</span>アセット点数の改訂を承認するか</summary>
+    <div class="body">
+      <p class="rec"><b>企画書187点 → 改訂約177点。</b>M4削除(-8)と国旗減(-18)が、M1在庫増(+8)とM5増(+6)でほぼ相殺された。→ §8-2</p>
+      <p class="rec"><b>注意:</b> M1の在庫アイコンが増えたのは、<b>名前テキストを載せない決定の帰結</b>。絵だけで何かが分かる必要があるため、明瞭さへの要求が上がっている。<b>点数より1点あたりの質が重要</b>になった。</p>
+    </div>
+  </details>
+
+  <h3>共通</h3>
+
+  <details class="q">
+    <summary><span class="qid">Q0-2</span>画面下端の予約領域 — 2つの壁打ちで数値が食い違っています ★要調整</summary>
+    <div class="body">
+      <p>2回の壁打ちで、それぞれ独立に実測値を出した結果、<strong>数値が一致しませんでした。</strong></p>
+      <p class="rec"><b>M2/M3側の壁打ち:</b> 上部セーフエリア160 / バナー160 / 下部セーフエリア96 → <b>下端合計 256px</b><br><b>M5側の壁打ち:</b> 上部162 / バナー186 / 下部94 → <b>下端合計 280px</b></p>
+      <p class="rec">どちらも「1pt ≒ 2.75px」換算で、アダプティブバナーの想定高さ(50pt vs 60pt強)の差。<b>企画書§4.1の200pxはどちらの見積もりでも不足</b>という点では一致しています。<b>全画面に波及するため、実装着手前に実機で確定させる必要があります</b>(→ 開発確認 #8)。</p>
+    </div>
+  </details>
+
+  <details class="q resolved">
+    <summary><span class="qid">Q0-3</span>出題順の制約 <span class="chip chip--fixed">解決済み</span></summary>
+    <div class="body">
+      <p class="rec">プランナーは「M1(読む)とM4(数える)はどちらも静的な種目で、連続すると5〜6秒の静止が2回続くため、出題キューに『連続させない』制約を追加すべき」と提案していた。</p>
+      <p class="rec"><b>M4が不採用になったため、この制約は不要になった。</b>静的な種目がM1だけになり、そもそも連続しようがない。</p>
+      <p class="rec"><b>ただし残る論点:</b> 90秒で約6〜7ミニゲームの枠に<b>4種をどう割り当てるか</b>。全種目を必ず1回は出すのか、完全ランダムでよいのか(→ Q0-10 ③)。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q0-4</span>色覚多様性への配慮をプロジェクト全体の方針として明文化するか</summary>
+    <div class="body">
+      <p class="rec"><b>プランナー案: 明文化する。</b>「色のみに依存する識別を全種目で禁止する」。M2の地図(色 + 地域名テキストの併記)、M5の包み紙の模様と分類軸に波及する。<b>M4が不採用になったため、包み紙の模様はM5が単独で用意することになった。</b></p>
+      <p class="rec">App Review の必須要件ではないが、<b>ユーザーレビューでの不満に直結する</b>領域。</p>
+    </div>
+  </details>
+
+  <details class="q">
+    <summary><span class="qid">Q0-5</span>アート素材点数の上方修正を承認するか</summary>
+    <div class="body">
+      <p class="rec">企画書§8.2 は M5=8点 と見積もっているが、模様・フィードバック素材の計上漏れがある。<b>M5 ≒ 14点</b>への修正を推奨。</p>
+      <p class="rec"><b>M4が不採用になったため、M4ぶん(約15点)は丸ごと不要になった。</b>ただしM5がM4と共有する予定だった箱と模様を単独で持つことになるので、実質の削減はそれより小さい。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ DEV ============ -->
+<section id="dev">
+  <h2><span class="num">§10</span> 開発チームへの確認事項</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th class="num">#</th><th>内容</th><th>出所</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>シーン上シングルトンの解決方式、Text / TextMeshPro の選択、Safe Area 対応方式 — <strong>途中変更が全 Prefab に波及するため最初に決める必要がある</strong></td><td>UI設計ガイドライン</td></tr>
+        <tr><td class="num">2</td><td>2レイヤー着色方式のカード Prefab 化と、色を CSV データから指定する仕組みの実現性(<code>Image.color</code> を2枚目にだけ適用する構造)</td><td>M1</td></tr>
+        <tr><td class="num">3</td><td>バナー予約領域とセーフエリアを確保したうえで「手紙3行 + 候補6枚 + 差出人アイコン」が iPhone 縦画面に収まるか</td><td>M1</td></tr>
+        <tr><td class="num">4</td><td>分かち書きテキストの折り返し制御(意図しない位置で改行されないか。TextMeshPro の禁則処理設定)</td><td>M1</td></tr>
+        <tr><td class="num">5</td><td>手紙エリアと候補エリアを近づけるレイアウトが、ディレクターの手調整と両立するか(Prefab-first 方針との整合)</td><td>M1</td></tr>
+        <tr><td class="num">6</td><td><strong>種目を後から追加しやすい構造</strong>(1種追加 = 1Prefab + 1スクリプト + データ追加で済む形)が組めるか</td><td>12月アップデート方針</td></tr>
+        <tr><td class="num">7</td><td>10月末リリースというスケジュールの実現可能性</td><td>企画壁打ち</td></tr>
+        <tr><td class="num">8</td><td><strong>縦画面ゾーニングの実機検証</strong>(上部SA 160 / 下部SA 96 / バナー160 の想定値が実機と合うか。特にアダプティブバナーの実高さ)</td><td>共通</td></tr>
+        <tr><td class="num">9</td><td>Lvによって選択肢の数が変わるとき、<strong>既存要素の位置を動かさずに増減させる</strong>Prefab構造(非表示にするだけで済むか)</td><td>M2 / M3</td></tr>
+        <tr><td class="num">10</td><td>国旗をSVGで扱うか、PNGに変換して取り込むか。<strong>国章の細部が潰れないラスタライズ設定</strong></td><td>M2</td></tr>
+        <tr><td class="num">11</td><td>国旗のアスペクト比を維持したまま枠内にフィットさせる実装(スイス1:1、ネパール非長方形などの例外対応)</td><td>M2</td></tr>
+        <tr><td class="num">12</td><td>カードが「正解の口へ飛ぶ」放物線アニメーションを、<strong>Prefab-first方針(レイアウト値に触れない)と両立して実装できるか</strong></td><td>M2</td></tr>
+        <tr><td class="num">13</td><td>各口の「積んだ数」カウンタの状態管理(1プレイ内でリセット)</td><td>M2</td></tr>
+        <tr><td class="num">14</td><td><strong>M3の生成とバリデーション</strong> — 6個の箱の部分集合63通りを試し、目標値になる組み合わせがちょうど1通りかを判定する。計算量は小さいはずだが、<strong>条件を満たす組み合わせが見つかるまでのリトライを含めて業務提示0.8秒の間に完了するか</strong></td><td>M3</td></tr>
+        <tr><td class="num">15</td><td>積載メーターのアニメーション、および<strong>そりとトナカイが右へ抜けて左から次が入る</strong>スライド演出の実装コスト。<strong>1回のM3で3回発生する</strong>ため、テンポを損なわない長さに収まるか</td><td>M3</td></tr>
+        <tr><td class="num">15b</td><td>M3の<strong>複数選択の状態管理</strong> — 選択・取り消し・合計の即時判定。そり3台をまたいで選択状態がリセットされること</td><td>M3</td></tr>
+        <tr><td class="num">18</td><td>ベルト上の箱を最大4個同時に動かし、<strong>低スペック端末を含めて60fpsを維持できるか</strong>。<strong>12秒で9個をさばくペース</strong>で破綻しないか</td><td>M5</td></tr>
+        <tr><td class="num">18b</td><td><strong>スキップ口</strong>(下部横長)のタップ領域が、3口と干渉せずに確保できるか。とっさに押す操作なので誤タップが起きやすい位置関係</td><td>M5</td></tr>
+        <tr><td class="num">18c</td><td>「3問連続正解で1コンボ」の状態管理。<strong>ループの区切りをまたいだカウント</strong>と、誤答時のリセット</td><td>M5</td></tr>
+        <tr><td class="num">19</td><td>アクティブ判定(「判定ゾーン内で最も下の箱」)の実装で、境界での取り違えが起きないか。<strong>誤操作が理不尽に直結する</strong></td><td>M5</td></tr>
+        <tr><td class="num">20</td><td>マイクロゲーム内部が「連続処理」でも、<code>MicroGameBase</code> の契約(Setup / Begin / Finish)を他4種と同一に保てるか</td><td>M5</td></tr>
+        <tr><td class="num">21</td><td>「アイテム単位フィードバック(0.2秒・非ブロッキング)」と「マイクロゲーム判定(0.35秒・ブロッキング)」の2層構成が実装上問題ないか</td><td>M5</td></tr>
+        <tr><td class="num">22</td><td>90秒で約6〜7ミニゲームの枠に<strong>4種をどう割り当てるか</strong>(全種目を必ず1回は出すのか、完全ランダムか)。bag方式との両立</td><td>共通</td></tr>
+        <tr><td class="num">23</td><td>2レイヤー着色方式を、M5の箱スプライト + 模様レイヤーにも適用できるか(素材点数の削減が成立するか)</td><td>M5</td></tr>
+        <tr><td class="num">24</td><td><strong>光過敏性発作(PSE)への配慮</strong> — M5の判定ラインやコンボ演出で毎秒3回を超える点滅を作らないこと。審査要件ではないが実装ガイドとして明記</td><td>共通</td></tr>
+        <tr><td class="num">25</td><td><strong>地図の輪郭内タップの実装方式</strong> — 各地域の輪郭内側のみを当たり判定にする。UnityUIなら <code>Image.alphaHitTestMinimumThreshold</code>(スプライトの Read/Write Enabled が必要でメモリコストが増える)か、<code>PolygonCollider2D</code> + Physics2DRaycaster が候補。<strong>どちらが妥当か、6地域ぶんのコストが許容範囲か</strong></td><td>M2</td></tr>
+        <tr><td class="num">25b</td><td>輪郭の外(海・区分線の上)をタップしたときに<strong>確実に無反応</strong>にできるか(誤って不正解判定されない)。地図の背景がタップを拾わない構造にする</td><td>M2</td></tr>
+        <tr><td class="num">25c</td><td>6地域を別スプライトに分けた状態で、<strong>ディレクターが位置・サイズを手調整できるか</strong>(Prefab-first方針との整合)。地域の重なり順とタップの優先順位</td><td>M2</td></tr>
+        <tr><td class="num">26</td><td>地図上の累積カウンタ(地域ごとの数値)の状態管理と、1プレイ内でのリセット</td><td>M2</td></tr>
+        <tr><td class="num">27</td><td>荷物の「包装イラスト + 国旗ラベル + 国名ラベル」を1つのPrefabで組み、ラベルだけデータ差し替えできる構造</td><td>M2</td></tr>
+        <tr><td class="num">28</td><td><strong>チュートリアルの実装方式</strong> — 通常のゲームループを流用するのか専用フローを作るのか。初回起動時のみか、いつでも見返せるか</td><td>共通</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  サンタのお仕事(仮) / マイクロゲーム仕様整理 — 2026-09-06<br>
+  出典: docs/design/サンタのお仕事_企画素案.md、docs/design/サンタのお仕事_企画書.md(第1段階・未確定)、docs/design/決定ログ.md、プランナーによる各種目の壁打ち<br>
+  本書は企画確定前の整理であり、確定版の仕様書ではない。
+</footer>
+
+</div>
+</body>
+</html>

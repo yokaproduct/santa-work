@@ -1,0 +1,245 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e1909b481a18b49a749721c51c17f0, type: 3}
+  m_Name: WrapGeneratorSettings
+  m_EditorClassIdentifier: Santa.Runtime::Santa.MicroGames.Wrap.WrapGeneratorSettings
+  presets:
+  - id: R01
+    category: 0
+    enabled: 1
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 0, b: 0, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 1
+      debugLabel: "\u3042\u304B"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 2
+      debugLabel: "\u3042\u304A"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.15, g: 0.75, b: 0.25, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 3
+      debugLabel: "\u307F\u3069\u308A"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 1
+  - id: R02
+    category: 0
+    enabled: 1
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 0, b: 0, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 1
+      debugLabel: "\u3042\u304B"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 2
+      debugLabel: "\u3042\u304A"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.15, g: 0.75, b: 0.25, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 3
+      debugLabel: "\u307F\u3069\u308A"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 0
+  - id: R03
+    category: 0
+    enabled: 1
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 0, b: 0, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 1
+      debugLabel: "\u3042\u304B"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.2, g: 0.4, b: 0.9, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 2
+      debugLabel: "\u3042\u304A"
+    - shapeSprite: {fileID: 0}
+      color: {r: 0.15, g: 0.75, b: 0.25, a: 1}
+      patternSprite: {fileID: 0}
+      colorId: 3
+      debugLabel: "\u307F\u3069\u308A"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+  - id: R04
+    category: 1
+    enabled: 0
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u307E\u308B"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u3055\u3093\u304B\u304F"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u3057\u304B\u304F"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 2
+  - id: R05
+    category: 1
+    enabled: 0
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u307B\u3057"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u30CF\u30FC\u30C8"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u3064\u304D"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 0
+  - id: R06
+    category: 1
+    enabled: 0
+    chuteSamples:
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u307E\u308B"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u307B\u3057"
+    - shapeSprite: {fileID: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      patternSprite: {fileID: 0}
+      debugLabel: "\u3057\u304B\u304F"
+    sequence:
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 1
+      chuteIndex: -1
+    - isTrash: 0
+      chuteIndex: 2
+    - isTrash: 0
+      chuteIndex: 0
+    - isTrash: 0
+      chuteIndex: 1
+    - isTrash: 1
+      chuteIndex: -1
+  boxSpacing: 180
+  beltSpeed: 135
+  catchUpMultiplier: 3
+  itemFeedbackDuration: 0.2
+  boxCount: 9
+  trashMin: 1
+  trashMax: 3
+  trashSprite: {fileID: 21300000, guid: 424aa78cacc4400ab8cff69b9e9c3eca, type: 3}
+  redBoxSprite: {fileID: 21300000, guid: 11c40e4e46a4421580371f20b32ac1dc, type: 3}
+  blueBoxSprite: {fileID: 21300000, guid: 6ec3b81586d546e1a8388d3c2d8b942e, type: 3}
+  greenBoxSprite: {fileID: 21300000, guid: a2194a9d7dbd40d790983734caf79cba, type: 3}
