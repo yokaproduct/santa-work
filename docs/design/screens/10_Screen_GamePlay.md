@@ -659,8 +659,8 @@ public class SessionState
 | タイミング | SE |
 |---|---|
 | 業務提示の表示 | `se_microgame_start`(★2026-09-15 仮素材 `Assets/Audio/SE/test/merry.wav` 1.42秒。**`[Prompt]` 開始の瞬間に1回だけ**) |
-| 件が成立 | `se_correct`(★2026-09-16 仮素材 `Assets/Audio/SE/test/yes.wav` 0.69秒。出典不明・要確認) |
-| 誤答 | `se_wrong`(★2026-09-16 仮素材 `Assets/Audio/SE/test/no.wav` 0.58秒。出典不明・要確認) |
+| 件が成立 | `se_correct`(★2026-09-16 仮素材 `Assets/Audio/SE/test/yes.wav` 0.69秒。~~出典不明・要確認~~ ★2026-09-16 ディレクター申告により自作と確認) |
+| 誤答 | `se_wrong`(★2026-09-16 仮素材 `Assets/Audio/SE/test/no.wav` 0.58秒。~~出典不明・要確認~~ ★2026-09-16 ディレクター申告により自作と確認) |
 | ミニゲーム時間切れ | `se_timeup`(**中立的な音。`se_wrong` を流用しない**) |
 | コンボが3以上に到達 / 更新 | `se_combo` |
 | カウントダウン「3・2・1」 | `se_countdown` |
