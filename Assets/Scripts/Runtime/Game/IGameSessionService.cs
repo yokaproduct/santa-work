@@ -38,6 +38,22 @@ namespace Santa.Game
         /// <summary>終了演出フェーズの長さ(秒)。`GameBalanceSettings.FinishSequenceDuration`。</summary>
         float FinishSequenceDuration { get; }
 
+        /// <summary>
+        /// ★2026-09-17 追加。カウントダウン(`Phase == Countdown`)の現在ステップ番号(0始まり)。
+        /// `CountdownOverlayController` はこれを毎フレーム読むだけで、自分の時計を持たない
+        /// (`30_Overlay_Countdown.md` §4.3)。`Phase != Countdown` の間は意味を持たない。
+        /// </summary>
+        int CountdownStepIndex { get; }
+
+        /// <summary>カウントダウンの総ステップ数(例: Normalなら4=「3→2→1→スタート!」)。</summary>
+        int CountdownStepCount { get; }
+
+        /// <summary>現在のカウントダウンステップに入ってからの経過秒。ポーズ中は進まない。</summary>
+        float CountdownStepElapsed { get; }
+
+        /// <summary>カウントダウン1ステップの長さ(秒)。</summary>
+        float CountdownStepDuration { get; }
+
         /// <summary>直近に終了したセッションの結果。`Screen_Result` は SessionEnded を待たず、
         /// 自分の Start() でこれを読むだけでよい(画面遷移の前に発火するイベントを取りこぼさないため)。</summary>
         SessionResult? LastResult { get; }
@@ -66,7 +82,21 @@ namespace Santa.Game
         void StartSession(GameModeDefinition mode, bool retry);
         void SetPaused(bool paused);
 
-        /// <summary>Overlay_Pause の「タイトルへ」。スコア・統計を一切記録しない(共通仕様 §2.4)。</summary>
+        /// <summary>
+        /// ★2026-09-17追加。HUDの `PauseButton`(手動)から呼ぶ唯一の入口。`SetPaused(true)` に加えて
+        /// `Overlay_Pause` の表示まで行う(自動ポーズ = `OnApplicationPause`/`OnApplicationFocus` と
+        /// 同じ経路。31_Overlay_Pause.md §1.1)。
+        /// </summary>
+        void RequestPause();
+
+        /// <summary>
+        /// ★2026-09-17追加。`Overlay_Pause` の「つづける」から呼ぶ。`Overlay_Pause` を閉じてから
+        /// 短縮版カウントダウン(1.5秒)を再生し、終了後にポーズ前のフェーズへ戻る
+        /// (`31_Overlay_Pause.md` §4.2/§6.2、`30_Overlay_Countdown.md` §6.2)。
+        /// </summary>
+        void ResumeFromPause();
+
+        /// <summary>Overlay_Pause の「やめる」。スコア・統計を一切記録しない(共通仕様 §2.4)。</summary>
         void QuitWithoutRecording();
 
         /// <summary>Overlay_MicroGameIntro 側がタップを検知したら呼ぶ。</summary>

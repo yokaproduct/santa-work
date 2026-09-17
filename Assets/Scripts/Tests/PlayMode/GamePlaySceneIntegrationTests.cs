@@ -13,8 +13,15 @@ using UnityEngine.UI;
 namespace Santa.Tests
 {
     /// <summary>
-    /// `Main.unity` を実際にロードし、Title → ModeSelect → GamePlay → Result → もう一回 の
+    /// `Main.unity` を実際にロードし、
+    /// **Title(統合後のホーム画面)の開始ボタン → GamePlay → Result → もう一回** の
     /// 一連の流れを、本物のPrefab(Screen_Title 等)を使って検証する結合テスト。
+    ///
+    /// ★2026-09-17: `Screen_ModeSelect` は `Screen_Title` に統合され廃止された(02_Screen_Title.md §0.3)。
+    /// 旧来の「Title → ModeSelect → GamePlay」の経路は無くなり、Titleの `PlayButton_Time90` を押すと
+    /// 直接 `Screen_GamePlay` へ進むようになった。あわせて `Overlay_Countdown` が
+    /// `ShowScreen(GamePlay)` で即座に閉じられずに実際に表示されること(30_Overlay_Countdown.md §7-1の
+    /// 再発防止)も検証する。
     ///
     /// GameSessionControllerTests.cs がロジック単体のテストであるのに対し、こちらは
     /// 「実際にシーンをロードして、実際のPrefabのボタンを押したら本当に動くか」を確認する。
@@ -42,33 +49,27 @@ namespace Santa.Tests
         }
 
         [UnityTest]
-        public IEnumerator FullLoop_TitleToModeSelectToGamePlayToResultToRetry_CompletesWithoutErrors()
+        public IEnumerator FullLoop_TitleToGamePlayToResultToRetry_CompletesWithoutErrors()
         {
-            // --- Title ---
+            // --- Title(統合後のホーム画面) ---
             var screenLayer = GameObject.Find("UICanvas/ScreenLayer");
             Assert.IsNotNull(screenLayer, "ScreenLayer が見つからない(Main.unityの構成が変わった?)");
+            var overlayLayer = GameObject.Find("UICanvas/OverlayLayer");
+            Assert.IsNotNull(overlayLayer, "OverlayLayer が見つからない");
 
             yield return WaitForChild(screenLayer.transform, "Screen_Title(Clone)", 3f);
             var titleScreen = FindChild(screenLayer.transform, "Screen_Title(Clone)");
             Assert.IsNotNull(titleScreen, "起動時に Screen_Title が表示されなかった");
 
-            var tapButton = titleScreen.GetComponentInChildren<Button>(includeInactive: true);
-            Assert.IsNotNull(tapButton, "Screen_Title にButtonが無い");
-            tapButton.onClick.Invoke();
-            yield return null;
-
-            // --- ModeSelect ---
-            yield return WaitForChild(screenLayer.transform, "Screen_ModeSelect(Clone)", 3f);
-            var modeSelectScreen = FindChild(screenLayer.transform, "Screen_ModeSelect(Clone)");
-            Assert.IsNotNull(modeSelectScreen, "Screen_Title のタップで Screen_ModeSelect へ遷移しなかった");
+            var titleRefs = titleScreen.GetComponent<TitleScreenRefs>();
+            Assert.IsNotNull(titleRefs, "TitleScreenRefs が見つからない(統合作業が未反映?)");
+            Assert.IsNotNull(titleRefs.PlayButtonTime90, "PlayButton_Time90 が見つからない");
 
             // テストを高速化するため、常設サービスの GameSessionController にデバッグ用の
             // セッション短縮を仕込む(実行時のみの変更。アセットやシーンには保存しない)。
+            // ★カウントダウン自体(GameBalanceSettings.countdownNormal 3.0秒)は意図的に上書きしない。
+            //   Overlay_Countdown が実際に表示され続けることを検証したいため。
             var gameSession = ServiceLocator.Get<IGameSessionService>();
-            // playDurationは、テストコード側がカードをタップしにいく実時間の余裕を持たせるため
-            // 短すぎない値にする(0.3秒などにすると、バッチモードのフレームが不規則な場合に
-            // クリックする前にT2が0になってFinish()され、ボタンが操作不能になることがある。
-            // 実際にこの問題を踏んだ)。
             SetPrivateField(gameSession, "debugSessionDurationOverride", 5.0f);
             SetPrivateField(gameSession, "debugPlayDurationOverride", 3.0f);
 #if UNITY_EDITOR
@@ -78,20 +79,33 @@ namespace Santa.Tests
             SetPrivateField(gameSession, "debugForceMicroGame", letterDefinition);
 #endif
 
-            var playButton = modeSelectScreen.GetComponentInChildren<StartSessionAndNavigateButton>(true)?.GetComponent<Button>();
-            Assert.IsNotNull(playButton, "PlayButton_Time90 が見つからない");
-            playButton.onClick.Invoke();
+            titleRefs.PlayButtonTime90.onClick.Invoke();
             yield return null;
 
-            // --- GamePlay ---
+            // --- GamePlay(ModeSelectを経由せず直行する) ---
             yield return WaitForChild(screenLayer.transform, "Screen_GamePlay(Clone)", 3f);
             var gamePlayScreen = FindChild(screenLayer.transform, "Screen_GamePlay(Clone)");
-            Assert.IsNotNull(gamePlayScreen, "「90びょうモード」のタップで Screen_GamePlay へ遷移しなかった");
+            Assert.IsNotNull(gamePlayScreen, "「90びょうモード」のタップで Screen_GamePlay へ直接遷移しなかった");
 
             var refs = gamePlayScreen.GetComponent<GamePlayScreenRefs>();
             Assert.IsNotNull(refs, "GamePlayScreenRefs が見つからない");
 
-            // ミニゲームが実際にInstantiateされる(=Countdown完了)のを待つ。
+            // ★30_Overlay_Countdown.md §7-1 の再発防止: ShowScreen(GamePlay) の直後に
+            // Overlay_Countdown が即座に閉じられず、実際に表示され続けること。
+            yield return WaitForChild(overlayLayer.transform, "Overlay_Countdown(Clone)", 2f);
+            Assert.IsNotNull(FindChild(overlayLayer.transform, "Overlay_Countdown(Clone)"),
+                "Screen_GamePlay表示後にOverlay_Countdownが表示されなかった(ShowScreenで即座に閉じられている疑い)");
+            Assert.AreEqual(0, refs.MicroGameSlot.childCount,
+                "カウントダウン表示中なのにミニゲームが先に生成されてしまっている");
+            Assert.AreEqual("", refs.Hud.MicroGameNameText.text,
+                "カウントダウン中はミニゲーム名を空欄にするはず(仮文字が見えたままになっていないか)");
+
+            // カウントダウン(既定3.0秒)が終わるまで待つ。終わったら Overlay_Countdown は閉じる。
+            yield return WaitUntilOrFail(
+                () => FindChild(overlayLayer.transform, "Overlay_Countdown(Clone)") == null,
+                6f, "Overlay_Countdown が既定の長さで終了しなかった");
+
+            // ミニゲームが実際にInstantiateされる(=Countdown完了後の初回Prepare)のを待つ。
             yield return WaitUntilOrFail(() => refs.MicroGameSlot.childCount > 0, 5f,
                 "MicroGameSlot にミニゲームがInstantiateされなかった");
 
@@ -181,19 +195,26 @@ namespace Santa.Tests
             Assert.IsNotNull(summaryText);
             Assert.IsFalse(string.IsNullOrEmpty(summaryText.text), "結果画面にスコアが表示されていない");
 
-            // --- もう一回 ---
+            // --- もう一回(Titleを経由せずGamePlayへ直行する。カウントダウンはShort=1.5秒) ---
             var retryButton = resultScreen.GetComponentInChildren<StartSessionAndNavigateButton>(true)?.GetComponent<Button>();
             Assert.IsNotNull(retryButton, "RetryButton が見つからない");
             retryButton.onClick.Invoke();
             yield return null;
 
             yield return WaitForChild(screenLayer.transform, "Screen_GamePlay(Clone)", 3f);
-            Assert.IsNotNull(FindChild(screenLayer.transform, "Screen_GamePlay(Clone)"),
-                "「もう一回」で Screen_GamePlay に戻らなかった");
+            var retryGamePlayScreen = FindChild(screenLayer.transform, "Screen_GamePlay(Clone)");
+            Assert.IsNotNull(retryGamePlayScreen, "「もう一回」で Screen_GamePlay に戻らなかった");
 
             // 2回目のセッションでスコアが正しく初期化されているか(リセット漏れの再確認)。
             Assert.AreEqual(0, gameSession.State.Score, "「もう一回」で前回のスコアがリセットされていない");
             Assert.AreEqual(0, gameSession.State.ClearedUnits);
+
+            // ★2026-09-17: 「はじめから」相当の再初期化(HUD初期状態への復帰)の確認。
+            // ここでは新規Instantiateされた画面のOnEnableでの初期化を確認する形になるが、
+            // ミニゲーム名が仮文字のまま残っていないことは変わらず保証されるべき値なので検証する。
+            var retryRefs = retryGamePlayScreen.GetComponent<GamePlayScreenRefs>();
+            Assert.AreEqual("", retryRefs.Hud.MicroGameNameText.text,
+                "「もう一回」直後、カウントダウン中にミニゲーム名が空欄になっていない");
         }
 
         private static Transform FindChild(Transform parent, string name)

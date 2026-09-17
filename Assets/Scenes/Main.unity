@@ -1173,6 +1173,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: dd049a59cd9f3ef4c87b10aa5e924f1f, type: 3}
   seSameIdCooldown: 0.05
   bgmBaseVolumeScale: 0.6
+  masterVolumeScale: 0.7
 --- !u!114 &1033745298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1202,15 +1203,17 @@ MonoBehaviour:
   screenPrefabs:
   - id: 1
     prefab: {fileID: 1434083678589638974, guid: 2ef6c56005d4e6b45925d7c723de88fb, type: 3}
-  - id: 2
-    prefab: {fileID: 3785789919136024695, guid: 87ff895a871256f449a9ad90f0e0151e, type: 3}
   - id: 3
     prefab: {fileID: 31000, guid: 39bb48e1d9604055bba23a6de033b1ef, type: 3}
   - id: 5
     prefab: {fileID: 3620579282086151341, guid: 9db2e614f7583714e813c386fed83e58, type: 3}
   - id: 6
     prefab: {fileID: 2535921636348319850, guid: f20be61152b25c74891aaf4d00dbbea9, type: 3}
-  overlayPrefabs: []
+  overlayPrefabs:
+  - id: 0
+    prefab: {fileID: 307812817075366390, guid: 8ab34034d95ca7145955f962aeed749f, type: 3}
+  - id: 1
+    prefab: {fileID: 6382725114997732969, guid: 4338ea1f48140cc47955021ff7200a84, type: 3}
 --- !u!4 &1033745300
 Transform:
   m_ObjectHideFlags: 0

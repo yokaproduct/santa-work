@@ -38,9 +38,10 @@ namespace Santa.Core
 
         // bgm_title を使う画面(共通仕様 §11.1 / 各screens/*.md)。GamePlay(bgm_gameplay)とResult(bgm_result)は
         // GameSessionController が担当するため、ここには含めない。
+        // ★2026-09-17: ModeSelect は Screen_Title に統合され廃止(02_Screen_Title.md §0.3)。
         private static readonly HashSet<ScreenId> BgmTitleScreens = new HashSet<ScreenId>
         {
-            ScreenId.Title, ScreenId.ModeSelect, ScreenId.Settings, ScreenId.Credits,
+            ScreenId.Title, ScreenId.Settings, ScreenId.Credits,
         };
 
         private GameObject _currentScreenInstance;

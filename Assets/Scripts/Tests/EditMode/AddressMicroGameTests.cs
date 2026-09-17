@@ -100,10 +100,10 @@ namespace Santa.Tests.EditMode
         // ------------------------------------------------------------------
 
         [Test]
-        public void Prepare_ShowsFirstCountry_AndDisablesInput_AndReflectsCarriedOverCounters()
+        public void Prepare_ShowsFirstCountry_AndDisablesInput()
         {
             var table = CreateTable(("jp", "日本", "Japan", "asia"), ("fr", "フランス", "France", "europe"));
-            var (game, refs, regions) = CreateAddressMicroGame();
+            var (game, refs, _) = CreateAddressMicroGame();
 
             var sessionStore = new Dictionary<string, IMicroGameSessionState>();
             var existingState = new AddressSessionState
@@ -119,12 +119,10 @@ namespace Santa.Tests.EditMode
             Assert.IsFalse(string.IsNullOrEmpty(refs.CountryNameText.text), "Prepare 直後に国名が表示されているべき(業務提示中に読ませるため。共通仕様 §4.3)");
             Assert.IsFalse(refs.WorldMapHitTester.InputEnabled, "Begin() 前は当たり判定が無効なはず");
 
-            var asiaRegion = regions.First(r => r.RegionId == "asia");
-            Assert.AreEqual("5", asiaRegion.RegionCounterText.text,
-                "セッション状態から引き継いだ累積数がRegionCounterTextに反映されているべき(§4.7)");
-
-            var europeRegion = regions.First(r => r.RegionId == "europe");
-            Assert.AreEqual("0", europeRegion.RegionCounterText.text, "未登場の地域は0のはず");
+            // ★2026-09-17 ディレクター指示: 地図上のカウンタ表示は廃止したが、
+            //   引き継いだ累積値自体はセッション状態にそのまま残っているべき(§4.7)。
+            Assert.AreEqual(5, existingState.DeliveredPerRegion["asia"],
+                "表示を廃止しても、セッション状態の累積値自体は変化しないはず");
         }
 
         [Test]
@@ -140,11 +138,12 @@ namespace Santa.Tests.EditMode
         }
 
         [Test]
-        public void CorrectRegionTap_RaisesUnitClearedOnly_AndIncrementsCounter_AndAdvancesToNextCountry()
+        public void CorrectRegionTap_RaisesUnitClearedOnly_AndIncrementsSessionCounter_AndAdvancesToNextCountry()
         {
             var table = CreateTable(("jp", "日本", "Japan", "asia"), ("fr", "フランス", "France", "europe"));
-            var (game, refs, regions) = CreateAddressMicroGame();
-            game.Prepare(BuildContext(table, new Dictionary<string, IMicroGameSessionState>()));
+            var (game, refs, _) = CreateAddressMicroGame();
+            var sessionStore = new Dictionary<string, IMicroGameSessionState>();
+            game.Prepare(BuildContext(table, sessionStore));
             game.Begin();
 
             int unitCleared = 0, missed = 0, allCleared = 0;
@@ -154,24 +153,29 @@ namespace Santa.Tests.EditMode
 
             string firstCountryText = refs.CountryNameText.text;
             string correctRegionId = ResolveRegionIdForCountryName(firstCountryText);
-            var correctRegion = regions.First(r => r.RegionId == correctRegionId);
 
             TapRegion(refs, correctRegionId);
 
             Assert.AreEqual(1, unitCleared, "正解タップは OnUnitCleared を1回だけ発火するべき");
             Assert.AreEqual(0, missed, "正解タップで OnMissed が発火してはならない");
             Assert.AreEqual(0, allCleared, "1件目では OnAllUnitsCleared は発火しないはず");
-            Assert.AreEqual("1", correctRegion.RegionCounterText.text, "正解した地域のカウンタが+1されるべき");
+
+            // ★2026-09-17 ディレクター指示: 地図上のカウンタ表示は廃止したが、
+            //   セッション状態の累積値自体は引き続き+1されるべき(§4.7)。
+            var state = (AddressSessionState)sessionStore["address"];
+            Assert.AreEqual(1, state.DeliveredPerRegion[correctRegionId], "正解した地域のセッション累積数が+1されるべき");
+
             Assert.AreNotEqual(firstCountryText, refs.CountryNameText.text, "正解後は次の荷物へ即座に切り替わるべき(待ち時間ゼロ)");
             Assert.IsTrue(refs.WorldMapHitTester.InputEnabled, "3件に達していないので、次の問へ進んだ後は再び押せるようになるべき");
         }
 
         [Test]
-        public void WrongRegionTap_RaisesMissedOnly_AndDoesNotIncrementAnyCounter()
+        public void WrongRegionTap_RaisesMissedOnly_AndDoesNotIncrementAnySessionCounter()
         {
             var table = CreateTable(("jp", "日本", "Japan", "asia"));
-            var (game, refs, regions) = CreateAddressMicroGame();
-            game.Prepare(BuildContext(table, new Dictionary<string, IMicroGameSessionState>()));
+            var (game, refs, _) = CreateAddressMicroGame();
+            var sessionStore = new Dictionary<string, IMicroGameSessionState>();
+            game.Prepare(BuildContext(table, sessionStore));
             game.Begin();
 
             int unitCleared = 0, missed = 0;
@@ -182,10 +186,9 @@ namespace Santa.Tests.EditMode
 
             Assert.AreEqual(0, unitCleared, "誤答は OnUnitCleared を発火してはならない");
             Assert.AreEqual(1, missed, "誤答は OnMissed を1回発火するべき");
-            foreach (var region in regions)
-            {
-                Assert.AreEqual("0", region.RegionCounterText.text, "誤答では累積数を増やしてはならない(§4.3)");
-            }
+
+            var state = (AddressSessionState)sessionStore["address"];
+            CollectionAssert.IsEmpty(state.DeliveredPerRegion, "誤答では累積数を増やしてはならない(§4.3)");
         }
 
         [Test]
@@ -283,11 +286,13 @@ namespace Santa.Tests.EditMode
             TapRegion(refsA, clearedRegionId); // 1件正解
 
             // ★実際のゲームでは1回目のPrefabは破棄され、2回目のM2出現で新しいインスタンスが生成される。
-            var (gameB, refsB, regionsB) = CreateAddressMicroGame();
+            var (gameB, _, _) = CreateAddressMicroGame();
             gameB.Prepare(BuildContext(table, sessionStore, new System.Random(2)));
 
-            var clearedRegionB = regionsB.First(r => r.RegionId == clearedRegionId);
-            Assert.AreEqual("1", clearedRegionB.RegionCounterText.text,
+            // ★2026-09-17 ディレクター指示: 表示(RegionCounterText)は廃止したが、
+            //   GetOrCreateState経由で引き継がれるセッション状態自体は変わらない(§4.7)。
+            var state = (AddressSessionState)sessionStore["address"];
+            Assert.AreEqual(1, state.DeliveredPerRegion[clearedRegionId],
                 "2回目のM2出現でも、1回目で貯まった累積数(GetOrCreateState経由)が引き継がれるべき(共通仕様 §4.7)");
         }
 
@@ -403,6 +408,50 @@ namespace Santa.Tests.EditMode
             {
                 Assert.IsTrue(refs.Regions.Any(r => r.RegionId == regionId), $"'{regionId}' に対応する RegionRefs が無い");
             }
+        }
+
+        [Test]
+        public void Prefab_Regions_HaveNoCounterTextElement()
+        {
+            // ★2026-09-17 ディレクター指示: 地域名と重なって見づらいカウンタ表示(旧 RegionCounterText)を
+            //   プレハブから削除した。GameObjectそのものが残っていないことを確認する。
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            if (prefab == null)
+            {
+                Assert.Ignore($"{PrefabPath} が見つかりません。");
+                return;
+            }
+
+            var refs = prefab.GetComponent<AddressMicroGameRefs>();
+            Assert.IsNotNull(refs, "AddressMicroGameRefs が付いているべき");
+
+            foreach (var region in refs.Regions)
+            {
+                Assert.IsNull(region.transform.Find("RegionCounterText"),
+                    $"'{region.RegionId}' に RegionCounterText が残っている(削除されているべき)");
+                Assert.IsNotNull(region.RegionNameText, $"'{region.RegionId}' の RegionNameText は残っているべき");
+            }
+        }
+
+        [Test]
+        public void Prefab_HasNoTapFeedbackMarker()
+        {
+            // ★2026-09-11 ディレクター決定・2026-09-17 実装: タップ位置に出していた共通マーカー
+            // `TapFeedbackImage` を廃止した。GameObjectそのものが残っていないことを確認する。
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            if (prefab == null)
+            {
+                Assert.Ignore($"{PrefabPath} が見つかりません。");
+                return;
+            }
+
+            Assert.IsNull(prefab.transform.Find("WorldMap/TapFeedbackImage"),
+                "TapFeedbackImage が Prefab に残っている(ディレクター決定により削除されているべき)");
+
+            var refs = prefab.GetComponent<AddressMicroGameRefs>();
+            Assert.IsNotNull(refs, "AddressMicroGameRefs が付いているべき");
+            var field = typeof(AddressMicroGameRefs).GetField("tapFeedbackImage", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.IsNull(field, "AddressMicroGameRefs.tapFeedbackImage フィールドが残っている(削除されているべき)");
         }
 
         private RegionLookupTable BuildRealLookupTableOrIgnore()
@@ -526,13 +575,10 @@ namespace Santa.Tests.EditMode
             go.transform.SetParent(parent, false);
 
             var nameText = CreateTextChild(go.transform, "RegionNameText");
-            var counterText = CreateTextChild(go.transform, "RegionCounterText");
-            counterText.text = "0";
 
             var regionRefs = go.AddComponent<RegionRefs>();
             SetPrivateField(regionRefs, "regionId", regionId);
             SetPrivateField(regionRefs, "regionNameText", nameText);
-            SetPrivateField(regionRefs, "regionCounterText", counterText);
 
             return regionRefs;
         }

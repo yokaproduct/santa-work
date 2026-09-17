@@ -1,6 +1,37 @@
-# 03 `Screen_ModeSelect` —— モードと導線の選択
+# 03(廃止)`Screen_ModeSelect` —— モードと導線の選択
 
-- 作成: 2026-09-07 / プランナー(サブエージェント)
+> # この画面は廃止されました(2026-09-17 ディレクター決定)
+>
+> **`Screen_Title` と統合しました。実装しません。**ディレクターの判断理由:「BGMが一致する点と、それぞれの画面で特有にしたい操作がないため、同じ画面で設定やゲーム選択をできる方針にしてよいと判断した」。
+> 統合後の仕様は **[02_Screen_Title.md](02_Screen_Title.md)(第3版・2026-09-17 ディレクター確定)** が正です。
+> **確定した内容**: 画面名は `Screen_Title` のまま / `Screen_Title.prefab` を土台にし、この画面からは `PlayButton_Time90` だけを移植(位置・サイズは仮置き値とみなし引き継がない)/ 全面タップは廃止 / `ScreenId.ModeSelect` は廃止(他の数値は固定)/ 背景は IMG-BG-01。本書は**廃止の記録**と、**§6(12月の時間無制限モードの設計余地)の参照先**として残します。
+>
+> **developer は下の「移管先の表」だけを読めば足ります。**本文の要素名・レイアウト値・遷移先は**すべて失効**しています(§6 の設計要件と論点 E1〜E6 だけは引き続き有効)。
+>
+> **ファイル名について**: 既存の慣例(`99_廃止_Screen_Tutorial.md`)に合わせるなら `99_廃止_Screen_ModeSelect.md` への改名が望ましい。
+> 他の文書から `99_廃止_Screen_ModeSelect.md` §6 を多数参照しているため、**改名する場合は取りまとめ役が `git mv` し、参照をまとめて置き換える**こと(プランナーはファイルの改名・削除ができないため、名前は据え置いた)。
+
+## ★移管先(2026-09-17)
+
+| 旧 ModeSelect の要素・仕組み | 統合後 | 記載先 |
+|---|---|---|
+| `PlayButton_Time90`(`ModeTitleText` / `ModeDescText`) | **`Screen_Title` へ移植**(Prefab の要素ごと複製。子の `Label` は `ModeTitleText` に改名) | 02 §0.4 / §2 |
+| `RecordPanel`(ハイスコア・最高ランク)/ §3.2 記録表示のルール | `Screen_Title` に新規作成。ルールはそのまま | 02 §3.1 |
+| `ComingSoonPanel` / §3.1 告知パネルにする理由 / §3.3 初回は出さない | `Screen_Title` に新規作成。ルールはそのまま | 02 §3.2 / §3.3 |
+| `FirstTimeHint` / §4.4 初回案内の演出 | `Screen_Title` に新規作成。ルールはそのまま | 02 §4.5 |
+| `NewContentBadge`(12月) | `Screen_Title` に新規作成(MVPは非表示) | 02 §2 |
+| §4.3 `santa.firstLaunchDone` を立てる場所 | **`Screen_Title` の開始ボタン** | 02 §4.4 |
+| `HeaderRoot` / `HeaderText`「しごとを えらぶ」 | **廃止**(ロゴが見出しを兼ねる) | 02 §1.1 |
+| `BackButton`(→ Title) | **廃止**(戻る先が無い) | 02 §1.1 |
+| `SettingsButton`(下部中央) | **廃止。**`Screen_Title` 右上の既存の設定ボタンに一本化 | 02 §0.1 |
+| 遷移先「`Screen_Result` / `Overlay_Pause` の『やめる』」 | **`Screen_Title` へ** | 00 §2.1 / 11 / 31 |
+| `ScreenId.ModeSelect` / `Screen_ModeSelect.prefab` / `Main.unity` の登録 | **廃止。**`ScreenId` の他の数値は変えない | 02 §0.3 |
+| §5 チュートリアル廃止で引き受けたルール①「90秒」 | `Screen_Title` の開始ボタンの文字「90びょう モード」が引き続き担う | 99_廃止_Screen_Tutorial.md §2 |
+| **§6 時間無制限モードへの設計余地(`GameModeDefinition` / E1〜E6)** | **有効なまま本書に残す** | 本書 §6 |
+
+---
+
+- 作成: 2026-09-07 / プランナー(サブエージェント)/ **廃止: 2026-09-17**
 - **前提: [00_共通仕様.md](00_共通仕様.md) を先に読むこと。**
 - Prefab: `Assets/Prefabs/UI/Screens/Screen_ModeSelect.prefab`
 - スクリプト: `ModeSelectScreenRefs` / `ModeSelectScreenController`

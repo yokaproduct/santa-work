@@ -109,7 +109,6 @@ namespace Santa.MicroGames.Letter
                 string itemId = i < _currentCardItemIds.Length ? _currentCardItemIds[i] : "";
                 var stockItem = _table.FindStockItem(itemId);
 
-                card.DebugLabel.text = itemId;
                 // ★1枚画像方式(2026-09-13 ディレクター決定)。
                 //   icon が設定されていればそのまま(色を乗算しない)。未設定の間は baseColor によるプレースホルダ表示。
                 if (stockItem?.icon != null)

@@ -16,7 +16,7 @@ namespace Santa.UI
     /// </summary>
     public class GamePlayScreenController : ScreenControllerBase<GamePlayScreenRefs>
     {
-        [Header("MVPでは常にこのモードを使う(§13-10-G1 / 03_Screen_ModeSelect.md §6.1)")]
+        [Header("MVPでは常にこのモードを使う(§13-10-G1 / 99_廃止_Screen_ModeSelect.md §6.1)")]
         [SerializeField] private GameModeDefinition defaultMode;
 
         private IGameSessionService _session;
@@ -48,11 +48,7 @@ namespace Santa.UI
             _session.PhaseChanged += HandlePhaseChanged;
             _session.PausedChanged += HandlePausedChanged;
 
-            // HUD初期化(件数0 / コンボ非表示 / T1バー満タン。共通仕様 §4.1)。
-            Refs.Hud.UnitCountValueText.text = "0";
-            SetComboVisible(false);
-            Refs.Hud.SessionTimeBarFill.fillAmount = 1f;
-            _t1FillAtFinishStart = 1f;
+            ResetHudToInitialState();
 
             // ★2026-09-15: 業務提示・終了演出の見た目は PromptEffectPlayer / FinishEffectPlayer が
             // 自分の OnEnable() で初期状態(非表示)にする。ここでは重複して触らない。
@@ -154,6 +150,13 @@ namespace Santa.UI
             // 点滅せず動き続ける(共通仕様 §3.5)。
             switch (phase)
             {
+                case GameSessionPhase.Countdown:
+                    // ★2026-09-17(30_Overlay_Countdown.md §5.2 / 02_Screen_Title.md 実装差分):
+                    // セッション開始のたびに必ず通るフェーズ。「はじめから」のように画面を作り直さず
+                    // 同じ Screen_GamePlay インスタンスで再開する経路(OnEnableが再実行されない)でも、
+                    // HUDとPromptBackdropを初期状態に戻すため、OnEnableと同じ初期化をここでも行う。
+                    ResetHudToInitialState();
+                    break;
                 case GameSessionPhase.SelectAndPrepare:
                     Refs.PromptEffectPlayer?.CoverProblem();
                     break;
@@ -167,8 +170,7 @@ namespace Santa.UI
                     break;
             }
 
-            // 業務提示中・判定演出中・オーバーレイ表示中・★終了演出中は非活性(共通仕様 §6.1 H4)。
-            Refs.Hud.PauseButton.interactable = phase == GameSessionPhase.Play;
+            RefreshPauseButtonInteractable();
         }
 
         private void HandlePausedChanged(bool paused)
@@ -179,11 +181,46 @@ namespace Santa.UI
             {
                 Refs.PromptEffectPlayer?.ResetAnimationKeepCover();
             }
+
+            // ★2026-09-17追加: Overlay_Pause実装に伴い、Phaseが変わらないままポーズ⇔復帰する経路
+            // (例: [Play]中に自動ポーズ→Overlay_Pauseの「つづける」で復帰)が増えたため、
+            // PhaseChangedだけでなくここでも再評価する(31_Overlay_Pause.md §6.2)。
+            RefreshPauseButtonInteractable();
+        }
+
+        /// <summary>
+        /// 共通仕様 §6.1 H4: ポーズボタンが押せるのは[Play]中かつ非ポーズのときだけ。
+        /// (ポーズ中は`Overlay_Pause`のBlockerが覆うため物理的にも押せないが、念のため二重に保証する)。
+        /// </summary>
+        private void RefreshPauseButtonInteractable()
+        {
+            Refs.Hud.PauseButton.interactable = _session.Phase == GameSessionPhase.Play && !_session.IsPaused;
         }
 
         private void SetComboVisible(bool visible)
         {
             Refs.Hud.ComboGroup.alpha = visible ? 1f : 0f;
+        }
+
+        /// <summary>
+        /// HUD・PromptBackdropを初期状態(件数0/コンボ非表示/T1バー満タン/ミニゲーム名は空欄/進捗ドットは空)
+        /// に戻す(共通仕様 §4.1、30_Overlay_Countdown.md §5.2「実装の現状との差」)。
+        /// 画面生成直後(OnEnable)と、同じ画面インスタンスのままセッションを開始し直す経路
+        /// (Countdownフェーズ開始のたび。「はじめから」等)の両方から呼ぶ。
+        /// </summary>
+        private void ResetHudToInitialState()
+        {
+            Refs.Hud.UnitCountValueText.text = "0";
+            SetComboVisible(false);
+            Refs.Hud.SessionTimeBarFill.fillAmount = 1f;
+            _t1FillAtFinishStart = 1f;
+
+            // ★カウントダウン中は仮文字「ミニゲーム名」や前回の進捗ドットを見せない。
+            Refs.Hud.MicroGameNameText.text = "";
+            Refs.UnitProgressDots.ResetDots();
+            _unitsClearedInCurrentMicroGame = 0;
+
+            Refs.PromptEffectPlayer?.ResetToIdle();
         }
     }
 }

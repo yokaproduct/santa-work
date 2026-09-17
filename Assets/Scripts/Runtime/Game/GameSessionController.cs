@@ -57,6 +57,9 @@ namespace Santa.Game
         /// <summary>現在のフェーズ(Prompt / Finish)に入ってからの経過秒。ポーズ中は進まない。§12.4/§13.4。</summary>
         private float _phaseElapsedTime;
 
+        /// <summary>カウントダウンの現在ステップに入ってからの経過秒。ポーズ中は進まない(30_Overlay_Countdown.md §4.3)。</summary>
+        private float _countdownStepElapsedTime;
+
         /// <summary>
         /// `[Prompt]` 中にバックグラウンド移行でポーズしたとき true にする。
         /// 復帰(SetPaused(false))後、業務提示を t=0 からやり直すために使う(§12.7)。
@@ -69,6 +72,16 @@ namespace Santa.Game
         /// <summary>`[Finish]` 中にバックグラウンドへ移行したら true。以後は残りの演出を飛ばして即座に結果画面へ(§13.6)。</summary>
         private bool _skipFinishRemainder;
 
+        /// <summary>
+        /// `Overlay_Pause` を表示中か。手動(HUDの`PauseButton`)・自動(バックグラウンド移行)の
+        /// どちらの経路でもここを true にする。★PA-6: 表示中に再度ポーズ要求が来ても
+        /// 二重に処理しないための唯一のガード(31_Overlay_Pause.md §4.3/§6)。
+        /// </summary>
+        private bool _pauseOverlayVisible;
+
+        /// <summary>`Overlay_Pause` の「つづける」で走る、短縮カウントダウン→復帰のコルーチン。</summary>
+        private Coroutine _resumeRoutine;
+
         public SessionState State { get; private set; }
         public GameModeDefinition Mode { get; private set; }
         public GameSessionPhase Phase { get; private set; } = GameSessionPhase.Idle;
@@ -77,6 +90,16 @@ namespace Santa.Game
         public float PhaseElapsed => _phaseElapsedTime;
         public float PromptDuration => balance != null ? balance.PromptDuration : 0f;
         public float FinishSequenceDuration => balance != null ? balance.FinishSequenceDuration : 0f;
+
+        /// <summary>
+        /// カウントダウンのステップ情報(30_Overlay_Countdown.md §4.3)。`CountdownOverlayController` はこれを
+        /// 毎フレーム読むだけで、自分の時計を持たない(`PromptEffectPlayer` が `PhaseElapsed` を読むのと同じ方式)。
+        /// `Phase != Countdown` の間は意味を持たない(直近の値が残る)。
+        /// </summary>
+        public int CountdownStepIndex { get; private set; } = -1;
+        public int CountdownStepCount { get; private set; }
+        public float CountdownStepElapsed => _countdownStepElapsedTime;
+        public float CountdownStepDuration { get; private set; }
 
         /// <summary>
         /// 直近に Finish() を呼んだ理由。Prompt中断(§3.5)のように Finish が一度も
@@ -123,6 +146,29 @@ namespace Santa.Game
 
             if (!pauseStatus) return;
 
+            EnterPause();
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (Phase == GameSessionPhase.Idle) return;
+            if (Phase == GameSessionPhase.Finish)
+            {
+                if (!hasFocus) HandleFinishBackgrounded();
+                return;
+            }
+            if (!hasFocus) EnterPause();
+        }
+
+        /// <summary>
+        /// 自動(バックグラウンド移行)・手動(HUDの`PauseButton`)共通のポーズ開始処理
+        /// (`31_Overlay_Pause.md` §1.1/§4.1/§4.3)。
+        /// </summary>
+        private void EnterPause()
+        {
+            if (Phase == GameSessionPhase.Idle || Phase == GameSessionPhase.Finish) return;
+            if (_pauseOverlayVisible) return; // ★PA-6: 二重処理防止
+
             // ★2026-09-15 追加(§12.7): [Prompt]中のバックグラウンド移行は、復帰後に
             // 業務提示をt=0からやり直す。1.42秒の単発SEは途中から再開できないため、鳴らし直す。
             if (Phase == GameSessionPhase.Prompt)
@@ -135,17 +181,87 @@ namespace Santa.Game
             }
 
             SetPaused(true);
+            _pauseOverlayVisible = true;
+
+            // ★[Countdown]/[Intro]中にポーズした場合、ShowOverlay(Pause)が優先順位により
+            // 表示中のOverlay_Countdown/Overlay_MicroGameIntroを自動的に閉じる
+            // (ScreenFlowManager.ShowOverlayの優先度調停。30 §6.1 / 31 §4.4)。
+            if (ServiceLocator.TryGet<IScreenFlowService>(out var flow))
+            {
+                flow.ShowOverlay(OverlayId.Pause);
+            }
         }
 
-        private void OnApplicationFocus(bool hasFocus)
+        public void RequestPause()
         {
-            if (Phase == GameSessionPhase.Idle) return;
-            if (Phase == GameSessionPhase.Finish)
+            EnterPause();
+        }
+
+        public void ResumeFromPause()
+        {
+            if (_resumeRoutine != null) return; // 多重クリック防止
+            _resumeRoutine = StartCoroutine(ResumeFromPauseRoutine());
+        }
+
+        /// <summary>
+        /// `Overlay_Pause` の「つづける」処理(`31_Overlay_Pause.md` §4.2/§6.2)。
+        /// ★先に Overlay_Pause を閉じてから短縮版カウントダウンを出す(§7-3。優先順位のため)。
+        /// この間もポーズ(T1/T2/microGame/BGM)は解除しない。カウントダウン終了後、
+        /// ポーズ前のフェーズに応じて復帰する。
+        /// ★実装上の簡略化(取りまとめ役への報告事項): [Countdown]フェーズ中にポーズした場合、
+        /// 元の `PlayCountdownSteps` コルーチンは中断された位置から復帰後に無音・無表示のまま
+        /// 続きを消化する(仕様が求める「完全に最初から3・2・1をやり直す」ではなく、
+        /// 「短縮カウントダウンの後に短い無音の間が入ることがある」という差異がある)。
+        /// </summary>
+        private IEnumerator ResumeFromPauseRoutine()
+        {
+            if (ServiceLocator.TryGet<IScreenFlowService>(out var flow))
             {
-                if (!hasFocus) HandleFinishBackgrounded();
-                return;
+                flow.HideOverlay(OverlayId.Pause);
             }
-            if (!hasFocus) SetPaused(true);
+
+            var resumePhase = Phase;
+
+            if (ServiceLocator.TryGet<IScreenFlowService>(out var flowShow))
+            {
+                flowShow.ShowOverlay(OverlayId.Countdown);
+            }
+
+            // ★ignorePauseGate: true。_paused はこの間ずっと true のままだが(ポーズは解除しない)、
+            // このカウントダウン自体は進める(通常の30_Overlay_Countdown.md §4.3のポーズ中断とは別物)。
+            yield return PlayCountdownSteps(balance.CountdownRetry, balance.CountdownRetryStepDuration, ignorePauseGate: true);
+
+            if (ServiceLocator.TryGet<IScreenFlowService>(out var flowHide))
+            {
+                flowHide.HideOverlay(OverlayId.Countdown);
+            }
+            CountdownStepIndex = -1;
+
+            _pauseOverlayVisible = false; // ★以後の自動ポーズを再び受け付ける
+
+            if (resumePhase == GameSessionPhase.Intro)
+            {
+                // ★31_Overlay_Pause.md §4.4 / 10_Screen_GamePlay.md §12.7: 初出カードを再表示する。
+                // まだOKが押されていない(_introDismissed==false)ため、ShowIntroAndWaitの待ちはそのまま有効。
+                // T1はOK押下まで停止したままにするため、ここではSetPaused(false)を呼ばない。
+                if (ServiceLocator.TryGet<IScreenFlowService>(out var flowIntro))
+                {
+                    flowIntro.ShowOverlay(OverlayId.MicroGameIntro);
+                }
+            }
+            else
+            {
+                if (resumePhase == GameSessionPhase.Prompt)
+                {
+                    // RunPromptPhaseのループが次にpaused==falseを観測したタイミングで
+                    // 業務提示をt=0からやり直す(§12.7と同じ仕組み)。
+                    _promptNeedsRestart = true;
+                }
+
+                SetPaused(false);
+            }
+
+            _resumeRoutine = null;
         }
 
         private void HandleFinishBackgrounded()
@@ -176,6 +292,13 @@ namespace Santa.Game
                 StopCoroutine(_sessionRoutine);
                 CleanUpCurrentMicroGame();
             }
+            if (_resumeRoutine != null)
+            {
+                // ★「はじめから」がポーズ復帰中(短縮カウントダウン表示中)に呼ばれた場合の後始末。
+                StopCoroutine(_resumeRoutine);
+                _resumeRoutine = null;
+            }
+            _pauseOverlayVisible = false;
 
             // ★常設サービスとして残り続けるための必須リセット(§13-10-G1で取りまとめ役から指摘された
             // 「前回のセッション状態が残るリスク」への対応)。特に _paused は「はじめから」
@@ -188,6 +311,10 @@ namespace Santa.Game
             _promptNeedsRestart = false;
             _finishSaved = false;
             _skipFinishRemainder = false;
+            _countdownStepElapsedTime = 0f;
+            CountdownStepIndex = -1;
+            CountdownStepCount = 0;
+            CountdownStepDuration = 0f;
             LastMicroGameFinishReason = null;
             CurrentMicroGameDefinition = null;
             LastResult = null;
@@ -230,12 +357,19 @@ namespace Santa.Game
                 StopCoroutine(_sessionRoutine);
                 _sessionRoutine = null;
             }
+            if (_resumeRoutine != null)
+            {
+                StopCoroutine(_resumeRoutine);
+                _resumeRoutine = null;
+            }
+            _pauseOverlayVisible = false;
             CleanUpCurrentMicroGame();
             SetPhase(GameSessionPhase.Idle);
 
             if (ServiceLocator.TryGet<IScreenFlowService>(out var flow))
             {
-                flow.ShowScreen(ScreenId.ModeSelect);
+                // ★2026-09-17: 遷移先はScreen_Title(旧Screen_ModeSelect。02_Screen_Title.md §0.3で統合・廃止)。
+                flow.ShowScreen(ScreenId.Title);
             }
         }
 
@@ -677,6 +811,14 @@ namespace Santa.Game
         private IEnumerator RunCountdown(bool retry)
         {
             SetPhase(GameSessionPhase.Countdown);
+
+            // ★2026-09-17(30_Overlay_Countdown.md §7-1の落とし穴対応): 開始ボタンは
+            // 「StartSession(ここでコルーチンが始まり最初のyieldまでに動く)→ ShowScreen(GamePlay)」の順で
+            // 呼ばれる。ShowScreenは表示中のオーバーレイを閉じるため、画面遷移より前にオーバーレイを
+            // 出すと即座に閉じられてしまう。Screen_GamePlayの表示(BindMicroGameSlot済み)を待ってから
+            // 出す。この待ち(通常1フレーム)はカウントダウンの長さ(duration)に含めない。
+            yield return new WaitUntil(() => _microGameSlot != null);
+
             float duration = retry ? balance.CountdownRetry : balance.CountdownNormal;
             float stepDuration = retry ? balance.CountdownRetryStepDuration : balance.CountdownNormalStepDuration;
 
@@ -691,17 +833,20 @@ namespace Santa.Game
             {
                 flow2.HideOverlay(OverlayId.Countdown);
             }
+
+            CountdownStepIndex = -1;
         }
 
         /// <summary>
         /// カウントダウンを「3・2・1・スタート!」のようなステップに分割し、
         /// 最後の1ステップ(「スタート!」)以外の頭で `se_countdown` を、最後のステップの頭で `se_start` を鳴らす
-        /// (30_Overlay_Countdown.md §4.1)。
-        /// ★`Overlay_Countdown` 自体(数字の見た目の表示)はまだ実装されていない(意図的に省略中)。
-        /// ここでは音の再生タイミングだけを仕様どおりに再現し、合計の待ち時間は既存の
-        /// `CountdownNormal` / `CountdownRetry`(duration)を厳密に守る(値そのものは変更しない)。
+        /// (30_Overlay_Countdown.md §4.1)。`CountdownOverlayController` が読む
+        /// `CountdownStepIndex`/`CountdownStepCount`/`CountdownStepElapsed`/`CountdownStepDuration` を更新する。
+        /// ★2026-09-17: `WaitForSecondsRealtime` はポーズ中も進んでしまうため、`WaitRealtimeWhileT1Runs` と
+        /// 同様にフレーム単位でポーズを確認しながら経過時間を積む形に直した(§7-2)。
+        /// 合計の待ち時間は既存の `CountdownNormal` / `CountdownRetry`(duration)を厳密に守る(値は変更しない)。
         /// </summary>
-        private IEnumerator PlayCountdownSteps(float duration, float stepDuration)
+        private IEnumerator PlayCountdownSteps(float duration, float stepDuration, bool ignorePauseGate = false)
         {
             // duration ぶんを stepDuration 単位で均等割りする。仕様どおりの値(3.0s/0.75s=4, 1.5s/0.5s=3)
             // ならちょうど割り切れるが、Editorで異なる値に調整されても最低2ステップ(カウント1回+スタート1回)を保証する。
@@ -710,16 +855,22 @@ namespace Santa.Game
 
             IAudioManager audio = ServiceLocator.TryGet<IAudioManager>(out var am) ? am : null;
 
-            float remaining = duration;
-            for (int i = 0; i < totalSteps - 1; i++)
-            {
-                audio?.PlaySe(AudioIds.Se.Countdown);
-                yield return new WaitForSecondsRealtime(actualStep);
-                remaining -= actualStep;
-            }
+            CountdownStepCount = totalSteps;
+            CountdownStepDuration = actualStep;
 
-            audio?.PlaySe(AudioIds.Se.Start);
-            yield return new WaitForSecondsRealtime(Mathf.Max(0f, remaining));
+            for (int i = 0; i < totalSteps; i++)
+            {
+                CountdownStepIndex = i;
+                _countdownStepElapsedTime = 0f;
+                audio?.PlaySe(i < totalSteps - 1 ? AudioIds.Se.Countdown : AudioIds.Se.Start);
+
+                while (_countdownStepElapsedTime < actualStep)
+                {
+                    yield return null;
+                    if (!ignorePauseGate && _paused) continue;
+                    _countdownStepElapsedTime += ClampedUnscaledDeltaTime();
+                }
+            }
         }
 
         private IEnumerator ShowIntroAndWait(MicroGameDefinition def)

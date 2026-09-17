@@ -12,6 +12,12 @@ namespace Santa.MicroGames.Address
     /// ★2026-09-10: 実素材(6地域を色分けした `WorldMap.png`)の投入に伴い、当たり判定を
     /// 矩形の `Button` × 6 から <see cref="WorldMapHitTester"/> による色キー判定へ置き換えた
     /// (取りまとめ役への実装依頼。開発チーム技術判断 M2-1 の決定)。
+    ///
+    /// ★2026-09-17 ディレクター指示: 世界地図上の地域名(`RegionNameText`)と累積カウンタ
+    /// (旧 `RegionCounterText`)が重なって見づらいため、地図上のカウンタ表示を廃止した。
+    /// セッションを通じた累積値自体(`AddressSessionState.DeliveredPerRegion`。§4.7)は
+    /// 表示しないだけで引き続き加算しており、正解判定・進捗(`OnUnitCleared` 等)・
+    /// ハイライト演出には影響しない。
     /// </summary>
     public class AddressMicroGame : MicroGameBase
     {
@@ -57,7 +63,6 @@ namespace Santa.MicroGames.Address
             });
 
             BindWorldMap();
-            RefreshAllRegionCounters();
             LoadNextCountry();
             SetRegionsInteractable(false);
         }
@@ -150,15 +155,14 @@ namespace Santa.MicroGames.Address
             if (correct)
             {
                 _unitsCleared++;
-                int delivered = IncrementDelivered(region.RegionId);
-                UpdateRegionCounterText(region, delivered);
-                PlayRegionFeedback(region, localPoint, correctHit: true);
+                IncrementDelivered(region.RegionId); // ★表示はしないが、セッションの累積値そのものは§4.7のまま保持する。
+                PlayRegionFeedback(region, correctHit: true);
                 RaiseUnitCleared();
             }
             else
             {
                 _unitsMissed++;
-                PlayRegionFeedback(region, localPoint, correctHit: false);
+                PlayRegionFeedback(region, correctHit: false);
                 RaiseMissed();
             }
 
@@ -182,32 +186,10 @@ namespace Santa.MicroGames.Address
             return null;
         }
 
-        private int IncrementDelivered(string regionId)
+        private void IncrementDelivered(string regionId)
         {
             _sessionState.DeliveredPerRegion.TryGetValue(regionId, out int count);
-            count++;
-            _sessionState.DeliveredPerRegion[regionId] = count;
-            return count;
-        }
-
-        private void RefreshAllRegionCounters()
-        {
-            if (refs.Regions == null) return;
-
-            foreach (var region in refs.Regions)
-            {
-                if (region == null) continue;
-                _sessionState.DeliveredPerRegion.TryGetValue(region.RegionId, out int count);
-                UpdateRegionCounterText(region, count);
-            }
-        }
-
-        private static void UpdateRegionCounterText(RegionRefs region, int count)
-        {
-            if (region.RegionCounterText != null)
-            {
-                region.RegionCounterText.text = count.ToString();
-            }
+            _sessionState.DeliveredPerRegion[regionId] = count + 1;
         }
 
         private void SetRegionsInteractable(bool interactable)
@@ -225,56 +207,29 @@ namespace Santa.MicroGames.Address
         /// (`21_MicroGame_Address.md` §1.1「正解は一切示さない」)。
         ///
         /// ★2026-09-10: 地図が1枚のスプライトになり地域ごとのImageが無くなったため、
-        /// 「押した座標そのものに出す共通マーカー」+「地域名・カウンタのパンチスケール」に変更した
+        /// 「地域自体のスケール変化」で押下・正誤を示す方式にした
         /// (旧実装は地域のImage.colorを直接塗り替えていた。取りまとめ役への報告事項)。
+        /// ★2026-09-17: カウンタのパンチスケール演出は、カウンタ表示自体の廃止に伴い削除した。
+        /// ★2026-09-17(2): タップ位置に出していた共通マーカー(`TapFeedbackImage`)はディレクター決定
+        /// (2026-09-11)により廃止した。地域自体のスケール変化のみでフィードバックを示す。
         /// </summary>
-        private void PlayRegionFeedback(RegionRefs region, Vector2 localPoint, bool correctHit)
+        private void PlayRegionFeedback(RegionRefs region, bool correctHit)
         {
-            var coroutine = StartCoroutine(RegionFeedbackRoutine(region, localPoint, correctHit));
+            var coroutine = StartCoroutine(RegionFeedbackRoutine(region, correctHit));
             _activeEffectCoroutines.Add(coroutine);
         }
 
-        private IEnumerator RegionFeedbackRoutine(RegionRefs region, Vector2 localPoint, bool correctHit)
+        private IEnumerator RegionFeedbackRoutine(RegionRefs region, bool correctHit)
         {
-            var marker = refs.TapFeedbackImage;
-            if (marker != null)
-            {
-                marker.gameObject.SetActive(true);
-                marker.rectTransform.anchoredPosition = localPoint;
-                marker.rectTransform.localScale = Vector3.one * 0.6f;
-                marker.color = Color.white;
-            }
-
             region.transform.localScale = Vector3.one * 0.95f;
             yield return new WaitForSeconds(PressEffectDuration);
 
             // 正解/不正解で分岐。正解=光る(明るいまま少し膨らむ)。不正解=赤み方向へ沈む。
-            if (marker != null)
-            {
-                marker.color = correctHit ? new Color(0.55f, 1f, 0.6f, 0.9f) : new Color(1f, 0.4f, 0.4f, 0.9f);
-                marker.rectTransform.localScale = Vector3.one * (correctHit ? 1.4f : 1.1f);
-            }
             region.transform.localScale = correctHit ? Vector3.one * 1.03f : Vector3.one * 0.92f;
-
-            if (correctHit && region.RegionCounterText != null)
-            {
-                StartCoroutine(PunchScale(region.RegionCounterText.transform));
-            }
 
             yield return new WaitForSeconds(ResultEffectDuration);
 
             region.transform.localScale = Vector3.one;
-            if (marker != null)
-            {
-                marker.gameObject.SetActive(false);
-            }
-        }
-
-        private static IEnumerator PunchScale(Transform target)
-        {
-            target.localScale = Vector3.one * 1.3f;
-            yield return new WaitForSeconds(0.15f);
-            target.localScale = Vector3.one;
         }
 
         private void StopAllRegionEffectsAndResetVisuals()
@@ -285,22 +240,12 @@ namespace Santa.MicroGames.Address
             }
             _activeEffectCoroutines.Clear();
 
-            if (refs.TapFeedbackImage != null)
-            {
-                refs.TapFeedbackImage.gameObject.SetActive(false);
-            }
-
             if (refs.Regions == null) return;
 
             foreach (var region in refs.Regions)
             {
                 if (region == null) continue;
-
                 region.transform.localScale = Vector3.one;
-                if (region.RegionCounterText != null)
-                {
-                    region.RegionCounterText.transform.localScale = Vector3.one;
-                }
             }
         }
     }

@@ -4,6 +4,10 @@
 - **前提: [00_共通仕様.md](00_共通仕様.md) と [10_Screen_GamePlay.md](10_Screen_GamePlay.md) を先に読むこと。**
 - Prefab: `Assets/Prefabs/UI/Screens/Screen_Result.prefab`
 - スクリプト: `ResultScreenRefs` / `ResultScreenController`
+- **追記: 2026-09-17 / プランナー** —— **ディレクター決定: `Screen_ModeSelect` を `Screen_Title` に統合。**「やめる」の遷移先を **`Screen_Title`** に変更(§1.1 / §3 R10 / §4.3)。
+  **★実装: `Screen_Result.prefab` の「やめる」ボタンの `ScreenNavButton.target` が値 2(ModeSelect)になっているので、`Title`(値 1)に付け替える**(`02_Screen_Title.md` §0.3)。
+  あわせて「もう一回」のカウントダウン(1.5秒)が無表示・無音で待っている件を §4.4 に注記。
+  **★2026-09-17(2) ディレクター決定: カウントダウンは「2・1・スタート!」を表示する(1.5秒のまま)。**「もう一回」から操作まで約3.0秒は了承済み(§1.1 / §4.4)。
 
 > **レイアウト値の所有権**: 本書の px・座標・サイズは**初回生成時の初期値**であり、**以後はディレクターの所有物**。
 
@@ -26,16 +30,18 @@
 | | 画面 | 条件 |
 |---|---|---|
 | 遷移元 | `Screen_GamePlay` | **セッションタイマーが0になった(正常終了)のみ。★2026-09-15: `Screen_GamePlay` の終了演出「しゅうりょう!」(1.5秒)が終わった直後に遷移してくる**(`10_Screen_GamePlay.md` §13) |
-| **遷移先** | `Screen_GamePlay` | **「もう一回」→ タイトルを経由しない。カウントダウンは1.5秒** |
-| **遷移先** | **`Screen_ModeSelect`** | **「やめる」**(★2026-09-07 決定。旧「タイトルへ」→ `Screen_Title` から変更) |
+| **遷移先** | `Screen_GamePlay` | **「もう一回」→ タイトルを経由しない。カウントダウンは1.5秒**(「2・1・スタート!」を表示。★2026-09-17 決定) |
+| **遷移先** | **`Screen_Title`**(★2026-09-17。ホーム画面) | **「やめる」**(2026-09-07 に「タイトルへ」→「やめる」/ `Screen_ModeSelect` へ変更 → **2026-09-17 に ModeSelect が Title に統合されたため `Screen_Title` へ**) |
 
 > **【2026-09-07 決定】「タイトルへ」の遷移先を `Screen_ModeSelect` に変更し、ラベルを「やめる」にした。**
 > **理由**: `Screen_Title` が機能を持たなくなった(ロゴとデザインだけ)ため、
 > そこへ戻すと**「何も無い画面を経由して、さらに1タップして `Screen_ModeSelect` へ行く」**ことになり、
 > 1プレイ90秒のゲームで毎回1タップの摩擦が発生していた。
 > **`Screen_ModeSelect` へ戻せば、ハイスコアがすぐ見え、次のプレイにも1タップで入れる。**
+>
+> **【2026-09-17】`Screen_ModeSelect` は `Screen_Title` に統合された。**上の理由(ハイスコアがすぐ見え、次のプレイに1タップで入れる)は、**統合後の `Screen_Title` でそのまま満たされる。**ラベルは「やめる」のまま。
 
-> **`Overlay_Pause` からの中断ではここへ来ない。** 中断時はスコアを記録せず `Screen_ModeSelect` へ直行する
+> **`Overlay_Pause` からの中断ではここへ来ない。** 中断時はスコアを記録せず ~~`Screen_ModeSelect`~~ **`Screen_Title`** へ直行する
 > (共通仕様 §2.4)。**したがってこの画面に表示されるのは常に「90秒を完走した結果」だけ。**
 
 ---
@@ -111,7 +117,7 @@ Screen_Result                             stretch 全面
 | R7 | `MaxComboText` | 「さいこう ◯れんぞく」 | 常時 | — |
 | R8 | `Row_MicroGameScore` ×4 | **種目別の処理件数**(§3.2) | 常時(**4種すべて。0件でも表示**) | — |
 | R9 | `RetryButton` | **「もう一回」。この画面の主役。最下部・最大サイズ** | 常時 | **常に活性。カウントアップ中でも押せる** |
-| R10 | `QuitButton` | **「やめる」→ `Screen_ModeSelect` へ** | 常時 | 常に活性 |
+| R10 | `QuitButton` | **「やめる」→ `Screen_Title` へ**(★2026-09-17。旧 `Screen_ModeSelect`) | 常時 | 常に活性 |
 
 ### 3.1 数値の定義(共通仕様 §6.1 と一致させること)
 
@@ -221,7 +227,11 @@ Screen_Result                             stretch 全面
 | 要素 | 操作 | 処理 |
 |---|---|---|
 | `RetryButton` | タップ | ① `se_button` ② カウントアップを即完了 ③ `Screen_Result` を破棄 ④ **`Screen_GamePlay` へ直行**(`retry = true` → カウントダウン **1.5秒**)⑤ BGM を `bgm_gameplay` へ ⑥ バナーを非表示に |
-| `QuitButton` | タップ | ① `se_button` ② カウントアップを即完了 ③ **`Screen_ModeSelect` へ** ④ BGM を `bgm_title` へ |
+| `QuitButton` | タップ | ① `se_button` ② カウントアップを即完了 ③ **`Screen_Title` へ**(★2026-09-17。旧 `Screen_ModeSelect`)④ BGM を `bgm_title` へ(最初から再生) |
+
+> **★2026-09-17 注意: 「やめる」の2度押しで、次の画面の開始ボタンに当たる。**
+> この画面の `QuitButton`(初期値: 画面下端から約 696〜816px、横400px・中央)と、`Screen_Title` の `PlayButton_Time90`(同 約 780〜1100px、横900px・中央)は**縦に約36px重なる。**
+> **`Screen_Title` 側の0.3秒の入力遅延で吸収する**(`02_Screen_Title.md` §4.2)。**この画面のボタン位置は変えない**(ディレクターの所有物)。
 | 画面の空白部分 | タップ | カウントアップ中なら即完了。それ以外は何もしない |
 
 ### 4.4 「3秒以内」の検算
@@ -238,6 +248,9 @@ Screen_Result                             stretch 全面
 ```
 
 **演出の完了を待つ実装にすると 1.2 + 0.2 + 1.5 = 2.9秒**となり、ぎりぎりになる。
+
+> **★2026-09-17 決定: カウントダウン1.5秒は「2・1・スタート!」を表示する(長さは変えない)。**上の検算(最短2.0秒)はそのまま有効。
+> その後に業務提示1.5秒が続くので、「もう一回」を押してから操作できるまで約3.0秒になる。**ディレクター了承済み**(`30_Overlay_Countdown.md` §0.2)。
 **スキップ可にしておくことが「3秒以内」を守る鍵。**
 
 > **★2026-09-15 注記: この画面の手前に終了演出(1.5秒)が入った。**
@@ -290,7 +303,7 @@ BGM: `bgm_result`
 
 - **セーブデータには既に累計統計が入っている**(`santa.totalUnits` / `santa.totalPlays` /
   `santa.micro.<id>.cleared` / `.attempted`)。**追加のセーブ項目は不要。**
-- **導線は `Screen_Title` か `Screen_Settings` に1行足すだけで済む**(どちらもリスト構造 or 固定配置)。
+- **導線は `Screen_Title` か `Screen_Settings` に1行足すだけで済む**(どちらもリスト構造 or 固定配置)。★2026-09-17: 統合後の `Screen_Title` なら **`RecordPanel` を押せるようにする**のが自然(`02_Screen_Title.md` §4.3)。
 - **`Row_MicroGameScore.prefab` をそのまま流用できる。**
 - → **MVPで先回りして作るものは何もない。** 追加時のコストは小さい。
 

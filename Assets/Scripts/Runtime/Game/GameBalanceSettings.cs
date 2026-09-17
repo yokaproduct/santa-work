@@ -7,7 +7,7 @@ namespace Santa.Game
     /// 調整用パラメータ。共通仕様 00_共通仕様.md §12。すべて仮値であり、Editorから変更できること。
     ///
     /// ★セッション長(90秒)はここに置かない。GameModeDefinition.sessionDuration が唯一の情報源
-    /// (`03_Screen_ModeSelect.md` §6.1 R1: 「GameSessionControllerはGameBalanceSettings.sessionDurationを
+    /// (`99_廃止_Screen_ModeSelect.md` §6.1 R1: 「GameSessionControllerはGameBalanceSettings.sessionDurationを
     /// 直接読まない」)。時間無制限モードの拡張性を壊さないための意図的な分離。
     /// </summary>
     [CreateAssetMenu(menuName = "Santa/Game Balance Settings", fileName = "GameBalanceSettings")]
@@ -37,6 +37,12 @@ namespace Santa.Game
         [SerializeField] private float countdownNormalStepDuration = 0.75f;
         [Tooltip("例: 1.5秒÷0.5秒=3ステップ(2→1→スタート!)。")]
         [SerializeField] private float countdownRetryStepDuration = 0.5f;
+
+        [Header("画面共通")]
+        [Tooltip("★2026-09-17新設(02_Screen_Title.md §4.2)。Screen_Titleに入ってからPlayButton_Time90/" +
+                 "SettingsButtonが操作可能になるまでの遅延(秒)。起動直後の連打対策・Resultの「やめる」からの" +
+                 "残留タップ対策。")]
+        [SerializeField] private float titleInputDelaySeconds = 0.3f;
 
         [Header("件数・スコア")]
         [SerializeField] private int requiredUnits = 3;
@@ -68,6 +74,7 @@ namespace Santa.Game
         public float CountdownRetry => countdownRetry;
         public float CountdownNormalStepDuration => countdownNormalStepDuration;
         public float CountdownRetryStepDuration => countdownRetryStepDuration;
+        public float TitleInputDelaySeconds => titleInputDelaySeconds;
         public int RequiredUnits => requiredUnits;
         public int BaseScore => baseScore;
         public IReadOnlyList<ComboTier> ComboTiers => comboTiers;

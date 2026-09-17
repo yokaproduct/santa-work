@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a618eaf542dbcb48ad902454c0399f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Santa.Runtime::Santa.UI.ScreenNavButton
-  target: 2
+  target: 1
   playButtonSe: 1
 --- !u!1 &2535921636348319850
 GameObject:

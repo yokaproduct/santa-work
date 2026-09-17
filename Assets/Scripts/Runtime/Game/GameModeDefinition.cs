@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Santa.Game
 {
     /// <summary>
-    /// モード定義。`03_Screen_ModeSelect.md` §6.1(2026-09-07 承認: MVPから導入)。
+    /// モード定義。`99_廃止_Screen_ModeSelect.md` §6.1(2026-09-07 承認: MVPから導入)。
     /// MVPでは `GameModeDefinition_Time90.asset` の1つだけを使う。
     /// 12月の時間無制限モードのため、GameSessionController は「90秒固定」で作り込まない
     /// (R1〜R5。同ファイル §6.1 参照)。

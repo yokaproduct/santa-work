@@ -304,9 +304,13 @@ namespace Santa.Tests
             // 以前の PauseButtonController はローカルに _paused を持っていたため、
             // 自動ポーズ後に「ポーズボタンを1回押す」という自然な操作をしても
             // ローカル状態とズレて再開しなかった。修正後は IGameSessionService.IsPaused を
-            // 唯一の真実として反転させる。ここではボタンのUIを介さず、修正後のロジックと
-            // 完全に同じ呼び出し(`session.SetPaused(!session.IsPaused)`)を1回だけ行い、
-            // それだけで実際に再開してセッションが完走することを確認する。
+            // 唯一の真実として読む。
+            // ★2026-09-17: Overlay_Pause実装に伴い、実際のPauseButtonControllerは
+            // RequestPause()(ポーズに入るだけ)しか呼ばなくなり、再開はOverlay_Pauseの
+            // 「つづける」(ResumeFromPause)からのみ行われるようになった。
+            // このテストはその変更以前からある「状態機械としての正しさ」の下位テストとして、
+            // 低レベルのSetPaused直接トグルでも自動ポーズから復帰できることを引き続き確認する
+            // (実際のボタンの配線は PauseOverlayControllerTests 等、別の検証範囲)。
             var dummy = TestFactory.CreateDummyTemplate();
             // ★2026-09-15 修正: 何も正解させない(空の台本)。以前は Begin() 直後に3件まとめて
             // 成立させていたが、即座に成立すると Judge→Teardown→[Finish](終了演出。§3.9)まで
@@ -344,6 +348,242 @@ namespace Santa.Tests
 
             yield return WaitUntilOrFail(() => result.HasValue, 5f,
                 "自動ポーズからの復帰後、セッションが完走しなかった(実プレイで再現した不具合の再発)");
+        }
+
+        // ================= ★2026-09-17 追加: Overlay_Pause(31_Overlay_Pause.md)関連のテスト =================
+        //
+        // ★検証の限界: ここでは実際の Overlay_Pause.prefab / PauseOverlayController は使わず、
+        // GameSessionController が正しいタイミングで ShowOverlay(Pause) / ResumeFromPause / StartSession /
+        // QuitWithoutRecording を呼び分けること(状態機械としての正しさ)だけを検証する。
+        // ボタンの実配線(PauseOverlayController → IGameSessionService)は
+        // GamePlaySceneIntegrationTests.cs のような実シーン結合テストの範囲外にとどまっている
+        // (取りまとめ役への報告事項)。
+
+        [UnityTest]
+        public IEnumerator AutoPause_DuringCountdown_ShowsPauseOverlay_AndResumeFromPauseCompletesSession()
+        {
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+            // ★FakeScreenFlowService.ShowOverlayは常にtrueを返すため、ISaveManager未登録のままだと
+            // 初出カード待ち(WaitUntil(_introDismissed))で永久にハングする。既読扱いにして回避する。
+            ServiceLocator.Register<ISaveManager>(new FakeSaveManager());
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 0.05f, playDuration: 3f, judgeEffectDuration: 0.05f,
+                countdownNormal: 0.3f, countdownRetry: 0.05f, minRemainingTimeToStartNewMicroGame: 100f);
+            ReflectionTestUtil.SetPrivateField(balance, "countdownNormalStepDuration", 0.1f);
+
+            SessionResult? result = null;
+            _controller.SessionEnded += r => result = r;
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Countdown, 3f,
+                "[Countdown] フェーズに入らなかった");
+
+            InvokePrivate(_controller, "OnApplicationPause", true);
+
+            Assert.IsTrue(_controller.IsPaused, "[Countdown]中の背景移行で自動ポーズしていない");
+            CollectionAssert.Contains(fakeFlow.ShowOverlayCalls, OverlayId.Pause,
+                "[Countdown]中の自動ポーズでOverlay_Pauseが表示されなかった");
+
+            _controller.ResumeFromPause();
+
+            yield return WaitUntilOrFail(() => !_controller.IsPaused, 3f,
+                "「つづける」後もポーズが解除されなかった([Countdown]中の自動ポーズから復帰できない不具合の再発。" +
+                "30_Overlay_Countdown.md §7-5)");
+            CollectionAssert.Contains(fakeFlow.HideOverlayCalls, OverlayId.Pause,
+                "「つづける」でOverlay_Pauseが閉じられなかった");
+
+            yield return WaitUntilOrFail(() => result.HasValue, 5f,
+                "[Countdown]中のポーズから復帰後、セッションが完走しなかった");
+        }
+
+        [UnityTest]
+        public IEnumerator AutoPause_DuringPrompt_ShowsPauseOverlay_AndResumeRestartsPromptAndCompletesSession()
+        {
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+            ServiceLocator.Register<ISaveManager>(new FakeSaveManager()); // ★初出カード待ちのハング回避(上記コメント参照)
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 1.0f, playDuration: 3f, judgeEffectDuration: 0.05f,
+                countdownNormal: 0.02f, countdownRetry: 0.05f, minRemainingTimeToStartNewMicroGame: 100f);
+
+            SessionResult? result = null;
+            _controller.SessionEnded += r => result = r;
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Prompt, 3f,
+                "[Prompt] フェーズに入らなかった");
+
+            // 業務提示が少し進んだ状態でバックグラウンドへ移行する。
+            yield return new WaitForSecondsRealtime(0.2f);
+            InvokePrivate(_controller, "OnApplicationPause", true);
+
+            Assert.IsTrue(_controller.IsPaused, "[Prompt]中の背景移行で自動ポーズしていない");
+            CollectionAssert.Contains(fakeFlow.ShowOverlayCalls, OverlayId.Pause,
+                "[Prompt]中の自動ポーズでOverlay_Pauseが表示されなかった");
+
+            _controller.ResumeFromPause();
+
+            yield return WaitUntilOrFail(() => !_controller.IsPaused, 3f,
+                "「つづける」後もポーズが解除されなかった");
+
+            // §12.7: 業務提示はt=0からやり直すため、[Prompt]をもう一度通ってから[Play]へ進むはず。
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Play, 3f,
+                "「つづける」後、業務提示が再開されず[Play]へ進まなかった(t=0からやり直す仕様。§12.7)");
+
+            yield return WaitUntilOrFail(() => result.HasValue, 5f,
+                "[Prompt]中のポーズから復帰後、セッションが完走しなかった");
+        }
+
+        [UnityTest]
+        public IEnumerator AutoPause_DuringPlay_ShowsPauseOverlay_AndResumeContinuesSession()
+        {
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+            ServiceLocator.Register<ISaveManager>(new FakeSaveManager()); // ★初出カード待ちのハング回避(上記コメント参照)
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 0.05f, playDuration: 2f, judgeEffectDuration: 0.05f,
+                countdownNormal: 0.02f, countdownRetry: 0.05f, minRemainingTimeToStartNewMicroGame: 100f);
+
+            SessionResult? result = null;
+            _controller.SessionEnded += r => result = r;
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 1.0f);
+
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Play, 3f,
+                "[Play] フェーズに入らなかった");
+
+            // ★手動ポーズ(HUDのPauseButtonController が呼ぶ)と同じ入口を使う。
+            _controller.RequestPause();
+
+            Assert.IsTrue(_controller.IsPaused, "RequestPause() でポーズしていない");
+            CollectionAssert.Contains(fakeFlow.ShowOverlayCalls, OverlayId.Pause,
+                "手動ポーズでOverlay_Pauseが表示されなかった");
+
+            float remainingAtPauseTime = _controller.State.RemainingTime;
+            yield return new WaitForSecondsRealtime(0.2f);
+            Assert.AreEqual(remainingAtPauseTime, _controller.State.RemainingTime, "ポーズ中なのにT1が進んでしまっている");
+
+            _controller.ResumeFromPause();
+
+            yield return WaitUntilOrFail(() => !_controller.IsPaused, 3f, "「つづける」後もポーズが解除されなかった");
+
+            yield return WaitUntilOrFail(() => result.HasValue, 5f,
+                "[Play]中のポーズから復帰後、セッションが完走しなかった");
+        }
+
+        [Test]
+        public void RequestPause_WhileAlreadyPauseOverlayIsVisible_DoesNotShowOverlayTwice()
+        {
+            // ★PA-6再発防止テスト: Overlay_Pause表示中に再度ポーズ要求が来ても二重に処理しない。
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            var balance = TestFactory.CreateBalance();
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            _controller.RequestPause();
+            Assert.AreEqual(1, fakeFlow.ShowOverlayCalls.Count, "1回目のRequestPauseでOverlay_Pauseが表示されるべき");
+
+            _controller.RequestPause();
+            InvokePrivate(_controller, "OnApplicationPause", true);
+
+            Assert.AreEqual(1, fakeFlow.ShowOverlayCalls.Count,
+                "Overlay_Pause表示中に再度ポーズ要求が来ても、二重にShowOverlayが呼ばれてはならない(PA-6)");
+        }
+
+        [Test]
+        public void RestartFromPause_ResetsSessionState()
+        {
+            // 31_Overlay_Pause.md §4.2「はじめから」: PauseOverlayController は
+            // Overlay_Pauseを閉じてから session.StartSession(session.Mode, retry: true) を呼ぶ。
+            // ここではその2手目(StartSessionの再初期化)がポーズ中に呼ばれても
+            // セッション状態を正しく初期化することを検証する。
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new[] { DummyMicroGame.Step.Clear, DummyMicroGame.Step.Clear, DummyMicroGame.Step.Clear });
+            var balance = TestFactory.CreateBalance(promptDuration: 0.02f, playDuration: 5f, judgeEffectDuration: 0.02f,
+                countdownNormal: 0.02f, minRemainingTimeToStartNewMicroGame: 100f);
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            _controller.RequestPause();
+            Assert.IsTrue(_controller.IsPaused);
+
+            // 「はじめから」相当: PauseOverlayController が行う2手をそのまま再現する。
+            if (ServiceLocator.TryGet<IScreenFlowService>(out var flow))
+            {
+                flow.HideOverlay(OverlayId.Pause);
+            }
+            _controller.StartSession(_controller.Mode, retry: true);
+
+            Assert.IsFalse(_controller.IsPaused, "「はじめから」はポーズ状態を引き継いではならない(再発防止。§13-10-G1)");
+            Assert.AreEqual(0, _controller.State.Score, "「はじめから」で前回のスコアがリセットされていない");
+            Assert.AreEqual(0, _controller.State.ClearedUnits);
+            Assert.AreEqual(GameSessionPhase.Countdown, _controller.Phase, "「はじめから」はCountdownフェーズからやり直すはず");
+        }
+
+        [Test]
+        public void QuitFromPause_NavigatesToTitle_WithoutRecording()
+        {
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+            var fakeSave = new FakeSaveManager();
+            ServiceLocator.Register<ISaveManager>(fakeSave);
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            var balance = TestFactory.CreateBalance();
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            _controller.RequestPause();
+            Assert.IsTrue(_controller.IsPaused);
+
+            _controller.QuitWithoutRecording();
+
+            Assert.AreEqual(GameSessionPhase.Idle, _controller.Phase, "「やめる」後はIdleフェーズに戻るべき");
+            Assert.AreEqual(ScreenId.Title, fakeFlow.LastShownScreen, "「やめる」は Screen_Title へ遷移するべき(決定ログ §4-10)");
+            Assert.IsFalse(fakeSave.CommitCalled, "「やめる」はスコア・統計・ハイスコアを一切記録してはならない(共通仕様 §2.4)");
+        }
+
+        [UnityTest]
+        public IEnumerator Finish_DoesNotShowPauseOverlay_OnApplicationPause()
+        {
+            // 13.6: 終了演出中はOverlay_Pauseを一切出さない(結果は確定済みで、
+            // 「やめる」を選べると確定したスコアを捨てられてしまうため)。
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+            ServiceLocator.Register<ISaveManager>(new FakeSaveManager()); // ★初出カード待ちのハング回避(上記コメント参照)
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 0.02f, playDuration: 0.05f, judgeEffectDuration: 0.02f,
+                countdownNormal: 0.02f, minRemainingTimeToStartNewMicroGame: 100f, finishSequenceDuration: 1.0f);
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 0.1f);
+
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Finish, 5f,
+                "[Finish] フェーズに入らなかった");
+
+            InvokePrivate(_controller, "OnApplicationPause", true);
+
+            Assert.IsFalse(_controller.IsPaused, "終了演出中に自動ポーズしてしまっている(§13.6)");
+            CollectionAssert.DoesNotContain(fakeFlow.ShowOverlayCalls, OverlayId.Pause,
+                "終了演出中にOverlay_Pauseを表示してしまっている(§13.6)");
         }
 
         private static void InvokePrivate(object target, string methodName, params object[] args)
@@ -480,6 +720,162 @@ namespace Santa.Tests
 
             int count = fakeAudio.SeCallCounts.TryGetValue(Santa.Core.AudioIds.Se.MicroGameStart, out var c) ? c : 0;
             Assert.AreEqual(1, count, "se_microgame_start が1ミニゲームにつき1回だけ再生されていない(二重再生の再発)");
+        }
+
+        // ================= ★2026-09-17 追加: カウントダウン(30_Overlay_Countdown.md)関連のテスト =================
+
+        [UnityTest]
+        public IEnumerator Countdown_Normal_StepsThroughFourStepsInOrder_WithStepCountExposed()
+        {
+            // countdownNormal(0.12) ÷ countdownNormalStepDuration(0.03) = 4ステップ(3→2→1→スタート!)。
+            // 本番の3.0秒/0.75秒と同じ比率(4ステップ)を保ったまま高速化している。
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 0.02f, playDuration: 5f, judgeEffectDuration: 0.02f,
+                countdownNormal: 0.12f, minRemainingTimeToStartNewMicroGame: 100f);
+            ReflectionTestUtil.SetPrivateField(balance, "countdownNormalStepDuration", 0.03f);
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            var seenSteps = new List<int>();
+            int? lastCount = null;
+            yield return WaitUntilOrFail(() =>
+            {
+                if (_controller.Phase != GameSessionPhase.Countdown) return true; // Countdownを抜けたら終了
+                int idx = _controller.CountdownStepIndex;
+                if (idx >= 0 && (seenSteps.Count == 0 || seenSteps[seenSteps.Count - 1] != idx))
+                {
+                    seenSteps.Add(idx);
+                    lastCount = _controller.CountdownStepCount;
+                }
+                return false;
+            }, 5f, "Countdownフェーズが終了しなかった");
+
+            Assert.AreEqual(4, lastCount, "CountdownStepCountが4(3→2→1→スタート!)になっていない");
+            CollectionAssert.AreEqual(new[] { 0, 1, 2, 3 }, seenSteps, "カウントダウンのステップが0→1→2→3の順に進んでいない");
+        }
+
+        [UnityTest]
+        public IEnumerator Countdown_DoesNotAdvance_WhilePaused()
+        {
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+
+            var balance = TestFactory.CreateBalance(promptDuration: 0.02f, playDuration: 5f, judgeEffectDuration: 0.02f,
+                countdownNormal: 1.0f, minRemainingTimeToStartNewMicroGame: 100f);
+            ReflectionTestUtil.SetPrivateField(balance, "countdownNormalStepDuration", 0.5f);
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            yield return WaitUntilOrFail(() => _controller.Phase == GameSessionPhase.Countdown, 3f,
+                "[Countdown] フェーズに入らなかった");
+
+            _controller.SetPaused(true);
+            float elapsedAtPause = _controller.CountdownStepElapsed;
+            yield return new WaitForSecondsRealtime(0.3f);
+
+            Assert.AreEqual(GameSessionPhase.Countdown, _controller.Phase, "ポーズ中にCountdownが終わってしまった");
+            Assert.AreEqual(elapsedAtPause, _controller.CountdownStepElapsed,
+                "ポーズ中にカウントダウンのステップ経過時間が進んでしまっている(§4.3)");
+
+            _controller.SetPaused(false);
+            yield return WaitUntilOrFail(() => _controller.Phase != GameSessionPhase.Countdown, 3f,
+                "ポーズ解除後もCountdownが終わらない");
+        }
+
+        [UnityTest]
+        public IEnumerator RunCountdown_WaitsForMicroGameSlotBound_BeforeShowingOverlay()
+        {
+            // ★30_Overlay_Countdown.md §7-1 の再発防止テスト: MicroGameSlotが渡される前に
+            // ShowOverlay(Countdown) を呼んでしまうと、直後の ShowScreen(GamePlay) でオーバーレイが
+            // 即座に閉じられてしまう。MicroGameSlotが未バインドの間はオーバーレイを出さないこと。
+            var fakeFlow = new FakeScreenFlowService();
+            ServiceLocator.Register<IScreenFlowService>(fakeFlow);
+
+            _controller.BindMicroGameSlot(null); // ★未バインド状態を再現する
+
+            var dummy = TestFactory.CreateDummyTemplate();
+            dummy.ConfigureScript(new DummyMicroGame.Step[0]);
+            var balance = TestFactory.CreateBalance(promptDuration: 0.02f, playDuration: 5f, judgeEffectDuration: 0.02f,
+                countdownNormal: 0.2f, minRemainingTimeToStartNewMicroGame: 100f);
+            ReflectionTestUtil.SetPrivateField(balance, "countdownNormalStepDuration", 0.1f);
+
+            ConfigureBalanceAndForcedMicroGame(dummy, balance, sessionDuration: 5f);
+
+            // 数フレーム待っても、MicroGameSlot未バインドの間はオーバーレイが出ないこと。
+            yield return null;
+            yield return null;
+            yield return null;
+            Assert.AreEqual(GameSessionPhase.Countdown, _controller.Phase);
+            Assert.IsFalse(fakeFlow.ShowOverlayCalls.Contains(OverlayId.Countdown),
+                "MicroGameSlot未バインドなのにOverlay_Countdownを表示してしまった(§7-1)");
+            Assert.AreEqual(-1, _controller.CountdownStepIndex, "スロット未バインドなのにカウントダウンのステップが進んでいる");
+
+            // MicroGameSlotが渡されたら、そこから初めてオーバーレイを表示しカウントダウンを進める。
+            _controller.BindMicroGameSlot(_slot);
+            yield return WaitUntilOrFail(() => fakeFlow.ShowOverlayCalls.Contains(OverlayId.Countdown), 3f,
+                "MicroGameSlotのバインド後もOverlay_Countdownが表示されなかった");
+            yield return WaitUntilOrFail(() => _controller.CountdownStepIndex >= 0, 3f,
+                "MicroGameSlotのバインド後もカウントダウンのステップが進まなかった");
+        }
+
+        private class FakeScreenFlowService : IScreenFlowService
+        {
+            public readonly List<OverlayId> ShowOverlayCalls = new List<OverlayId>();
+            public readonly List<OverlayId> HideOverlayCalls = new List<OverlayId>();
+            public ScreenId CurrentScreen { get; private set; }
+            public ScreenId? LastShownScreen { get; private set; }
+            public event System.Action<ScreenId> ScreenChanged;
+
+            public void ShowScreen(ScreenId id)
+            {
+                CurrentScreen = id;
+                LastShownScreen = id;
+                ScreenChanged?.Invoke(id);
+            }
+
+            public bool ShowOverlay(OverlayId id)
+            {
+                ShowOverlayCalls.Add(id);
+                return true;
+            }
+
+            public void HideOverlay(OverlayId id)
+            {
+                HideOverlayCalls.Add(id);
+            }
+        }
+
+        /// <summary>テスト用の最小 ISaveManager 実装。`CommitSessionResult` が呼ばれたかだけを記録する。</summary>
+        private class FakeSaveManager : Santa.Core.ISaveManager
+        {
+            public bool CommitCalled { get; private set; }
+
+            public int SaveVersion => 1;
+            public int HighScore => 0;
+            public int BestRankIndex => 0;
+            public int TotalUnits => 0;
+            public int TotalPlays => 0;
+            public bool FirstLaunchDone { get; set; }
+            public float BgmVolume { get; set; } = 1f;
+            public float SeVolume { get; set; } = 1f;
+            public string Language { get; set; } = "ja";
+
+            public (int cleared, int attempted) GetMicroGameStats(string microGameId) => (0, 0);
+            public bool IsMicroIntroSeen(string microGameId) => true; // ★Introのテストと干渉しないよう常に既読扱い
+            public void SetMicroIntroSeen(string microGameId, bool seen) { }
+            public void SetRecentQuestions(string microGameId, string commaSeparatedIds) { }
+
+            public bool CommitSessionResult(
+                int score, int rankIndex, int clearedUnits,
+                IReadOnlyDictionary<string, (int cleared, int missed)> perMicroGame)
+            {
+                CommitCalled = true;
+                return false;
+            }
+
+            public void ResetAllData(Santa.MicroGames.MicroGameCatalog catalog) { }
         }
 
         /// <summary>テスト用の最小 IAudioManager 実装。呼び出し回数だけを記録する。</summary>

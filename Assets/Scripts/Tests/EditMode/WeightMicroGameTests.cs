@@ -482,6 +482,55 @@ namespace Santa.Tests.EditMode
         }
 
         // ------------------------------------------------------------
+        // ★2026-09-17 ディレクター指示: TargetValueText と LoadMeter の重なりを解消
+        // ------------------------------------------------------------
+
+        [Test]
+        public void Prefab_TargetValueText_DoesNotOverlap_LoadMeter_Or_SledPanel()
+        {
+            const string prefabPath = "Assets/Prefabs/UI/MicroGames/MicroGame_Weight.prefab";
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            if (prefab == null)
+            {
+                Assert.Ignore($"{prefabPath} が見つかりません。");
+                return;
+            }
+
+            var refs = prefab.GetComponent<WeightMicroGameRefs>();
+            Assert.IsNotNull(refs);
+            Assert.IsNotNull(refs.LoadMeterRect, "loadMeterRect が未設定");
+
+            var sledPanel = prefab.transform.Find("SledPanel") as RectTransform;
+            Assert.IsNotNull(sledPanel, "SledPanel が見つからない");
+
+            var targetRect = refs.TargetValueText.rectTransform;
+
+            // ★TargetValueText / LoadMeter / SledPanel はいずれも同じ親(MicroGame_Weight直下)の
+            //   top-anchor(anchorMin=anchorMax=(0.5,1))なので、親のサイズに関係なく
+            //   ローカルのY値だけで上端・下端を比較できる。
+            var (targetTop, targetBottom) = VerticalSpan(targetRect);
+            var (meterTop, meterBottom) = VerticalSpan(refs.LoadMeterRect);
+            var (sledTop, sledBottom) = VerticalSpan(sledPanel);
+
+            bool overlapsMeter = targetTop > meterBottom && targetBottom < meterTop;
+            bool overlapsSled = targetTop > sledBottom && targetBottom < sledTop;
+
+            Assert.IsFalse(overlapsMeter,
+                $"TargetValueText(上端{targetTop}/下端{targetBottom})がLoadMeter(上端{meterTop}/下端{meterBottom})と重なっている");
+            Assert.IsFalse(overlapsSled,
+                $"TargetValueText(上端{targetTop}/下端{targetBottom})がSledPanel(上端{sledTop}/下端{sledBottom})と重なっている");
+        }
+
+        /// <summary>top-anchor(anchorMin=anchorMax=(0.5,1))のRectTransformの、親を基準にした
+        /// 上端・下端のY値(下向きが負)を返す。値が大きい(0に近い)ほど上にある。</summary>
+        private static (float top, float bottom) VerticalSpan(RectTransform rect)
+        {
+            float top = rect.anchoredPosition.y + (1f - rect.pivot.y) * rect.sizeDelta.y;
+            float bottom = rect.anchoredPosition.y - rect.pivot.y * rect.sizeDelta.y;
+            return (top, bottom);
+        }
+
+        // ------------------------------------------------------------
         // 契約: Finish / SetPaused
         // ------------------------------------------------------------
 

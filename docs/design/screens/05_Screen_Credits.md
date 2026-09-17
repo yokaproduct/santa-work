@@ -4,6 +4,7 @@
 - **前提: [00_共通仕様.md](00_共通仕様.md) を先に読むこと。**
 - Prefab: `Assets/Prefabs/UI/Screens/Screen_Credits.prefab`
 - スクリプト: `CreditsScreenRefs` / `CreditsScreenController`
+- **追記: 2026-09-17 / プランナー** —— `Screen_ModeSelect` の `Screen_Title` への統合(ディレクター決定)に合わせ、§1.1 の遷移元から ModeSelect を外し、**「もどる」は常に `Screen_Settings` へ戻る**に確定(§4.3 / C1 の記述と一致させた)。
 
 > **レイアウト値の所有権**: 本書の px・座標・サイズは**初回生成時の初期値**であり、**以後はディレクターの所有物**。
 
@@ -22,9 +23,9 @@
 
 | | 画面 | 条件 |
 |---|---|---|
-| 遷移元 | `Screen_Settings` | 「クレジット」の行 |
-| 遷移元 | `Screen_ModeSelect` | 「クレジット」ボタン(**`03_Screen_ModeSelect.md` §8-3 で置くか決める**) |
-| **遷移先** | **来た画面へ戻る** | 「もどる」。**遷移元を保持して戻る**(`Screen_Settings` または `Screen_ModeSelect`) |
+| 遷移元 | `Screen_Settings` | 「クレジット」の行(★**唯一の入口**。行そのものは後回し中。`04_Screen_Settings.md` §0) |
+| ~~遷移元~~ | ~~`Screen_ModeSelect`~~ | ~~「クレジット」ボタン~~ **2026-09-07 に「置かない」と決定済み。さらに 2026-09-17 に `Screen_ModeSelect` は `Screen_Title` に統合(廃止)** |
+| **遷移先** | **`Screen_Settings`** | 「もどる」。**★2026-09-17 確定: 入口が設定画面だけなので、常に `Screen_Settings` へ戻る**(遷移元を保持する仕組みは不要) |
 
 **この画面から他へは行かない**(外部リンクを除く)。
 

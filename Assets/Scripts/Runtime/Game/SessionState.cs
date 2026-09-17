@@ -13,7 +13,7 @@ namespace Santa.Game
         /// <summary>T1の残り秒数。無制限モード(mode.IsEndless)では未使用。</summary>
         public float RemainingTime;
 
-        /// <summary>経過秒数。無制限モードの表示用(`03_Screen_ModeSelect.md` §6.1 R3)。</summary>
+        /// <summary>経過秒数。無制限モードの表示用(`99_廃止_Screen_ModeSelect.md` §6.1 R3)。</summary>
         public float ElapsedTime;
 
         public int Score;
