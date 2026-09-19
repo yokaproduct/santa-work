@@ -44,6 +44,11 @@ namespace Santa.Game
                  "残留タップ対策。")]
         [SerializeField] private float titleInputDelaySeconds = 0.3f;
 
+        [Tooltip("★2026-09-19新設(ディレクター指示: 「ゲーム起動時に、フェードインからスタートする仕様に" +
+                 "してください。2秒くらいで設定してみて」)。アプリ起動直後、黒(不透明)から画面が見えてくるまでの" +
+                 "秒数。0を指定するとフェードなしで即表示になる。起動時の1回だけ再生される(BootFadeController)。")]
+        [SerializeField] private float bootFadeInSeconds = 2.0f;
+
         [Header("件数・スコア")]
         [SerializeField] private int requiredUnits = 3;
         [SerializeField] private int baseScore = 100;
@@ -75,6 +80,7 @@ namespace Santa.Game
         public float CountdownNormalStepDuration => countdownNormalStepDuration;
         public float CountdownRetryStepDuration => countdownRetryStepDuration;
         public float TitleInputDelaySeconds => titleInputDelaySeconds;
+        public float BootFadeInSeconds => bootFadeInSeconds;
         public int RequiredUnits => requiredUnits;
         public int BaseScore => baseScore;
         public IReadOnlyList<ComboTier> ComboTiers => comboTiers;

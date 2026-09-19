@@ -44,5 +44,13 @@ namespace Santa.Tests.EditMode
             var balance = CreateDefault();
             Assert.Greater(balance.MinRemainingTimeToStartNewMicroGame, balance.PromptDuration);
         }
+
+        [Test]
+        public void BootFadeInSeconds_DefaultsTo2_0Seconds()
+        {
+            var balance = CreateDefault();
+            Assert.AreEqual(2.0f, balance.BootFadeInSeconds, 0.001f,
+                "起動時フェードインの既定値がディレクター指示(2026-09-19、約2秒)と一致しない");
+        }
     }
 }
